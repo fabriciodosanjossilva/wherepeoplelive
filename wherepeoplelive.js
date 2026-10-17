@@ -53,19 +53,22 @@ async function processDB() {
 
 	citiesAll.sort((a, b) => sortByProperty(b, a, "properties.pop"));
 
-	nameIndex = [];
+	nameIndex = new Map();
 	citiesAll.forEach((city, c) => {
 		let names = [city.properties.displayName].concat(cityRows[city.properties.dbIndex][3].split(","));
 		names.forEach(name => {
 			name = convertSearchName(name);
 			if (name && name != "") {
-				nameIndex.push({ name: name, index: c });
+				let cityIndexes = nameIndex.get(name);
+				if (!cityIndexes) {
+					cityIndexes = [];
+					nameIndex.set(name, cityIndexes);
+				}
+				if (cityIndexes[cityIndexes.length - 1] != c) {
+					cityIndexes.push(c);
+				}
 			}
 		});
-	});
-	nameIndex.sort((a, b) => sortByProperty(a, b, "name"));
-	nameIndex = nameIndex.filter(function(elem, pos, array) {
-		return pos==0 || elem.index != array[pos-1].index || elem.name != array[pos-1].name;
 	});
 	
 	citiesAll.forEach(city => delete city.properties.dbIndex);
@@ -181,33 +184,19 @@ function searchName() {
     }
 
 	name = convertSearchName(name);
-	let pos = binarySearch(name, nameIndex, "name");
-	if (pos < 0) {
+	let cityIndexes = nameIndex.get(name);
+	if (!cityIndexes) {
 		showMessage("Nome não encontrado.", 3000);
 		return;
 	}
 
 	let citiesGuessed = [];
-	let city = cities[nameIndex[pos].index];
-	if (!city.guessed && !city.revealed) {
-		citiesGuessed.push(city);
-	}
-	let newPos = pos - 1;
-	while(newPos >= 0 && nameIndex[newPos].name == name) {
-		city = cities[nameIndex[newPos].index];
+	cityIndexes.forEach(cityIndex => {
+		let city = cities[cityIndex];
 		if (!city.guessed && !city.revealed) {
 			citiesGuessed.push(city);
 		}
-		newPos--;
-	}
-	newPos = pos + 1;
-	while(newPos < nameIndex.length && nameIndex[newPos].name == name) {
-		city = cities[nameIndex[newPos].index];
-		if (!city.guessed && !city.revealed) {
-			citiesGuessed.push(city);
-		}
-		newPos++;
-	}
+	});
 
 	document.getElementById("search").value = "";
 	let center = map.getCenter();
@@ -359,24 +348,6 @@ function showHideCountryBoundaries() {
 
 function convertSearchName(name) {
 	return name.replace(/[ '"-.]/g, '').normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
-}
-
-function binarySearch(elem, arr, prop) {
-    let m = 0;
-    let n = arr.length - 1;
-    while (m <= n) {
-        let k = (n + m) >> 1;
-        if (elem > arr[k][prop]) {
-            m = k + 1;
-        }
-		else if(elem < arr[k][prop]) {
-            n = k - 1;
-        }
-		else {
-            return k;
-        }
-    }
-    return ~m;
 }
 
 function sortByProperty(a, b, property) {
