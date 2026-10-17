@@ -68,6 +68,7 @@ async function processDB() {
 		city.properties.id = copyString(cityRow[0]);
 		city.properties.pop = parseInt(cityRow[14], 10);
 		city.properties.displayName = displayName;
+		city.capital = cityRow[7] == "PPLC"; // coluna 8: feature code (PPLC = capital)
 		city.guessed = false;
 		city.revealed = false;
 		city.marked = false;
@@ -226,16 +227,16 @@ function cityInBounds(city, bounds) {
 }
 
 function cityColor(city) {
-	if (city.guessed) {
-		return "green";
-	}
 	if (city.revealed) {
-		return "orange";
+		return "#dbb81e";
 	}
-	if (city.marked) {
-		return "green";
+	if (city.guessed || city.marked) {
+		return "#2d7d2d";
 	}
-	return "#ff0000";
+	if (city.capital) {
+		return "#5555FF";
+	}
+	return "#ff2222";
 }
 
 function refreshCityColor(city) {
@@ -262,6 +263,7 @@ function startGame() {
 		city.guessed = false;
 		city.revealed = false;
 		city.marked = false;
+		refreshCityColor(city); // senão os círculos já renderizados mantêm a cor da partida anterior
 	});
 	map.setView(initCenter, initZoom);
 	
