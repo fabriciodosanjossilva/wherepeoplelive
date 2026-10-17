@@ -1,5 +1,10 @@
 [
 	{
+		"name": "Saara Ocidental",
+		"lon": -14.096285,
+		"lat": 24.242298
+	},
+	{
 		"name": "Argélia",
 		"lon": 2.9999825,
 		"lat": 28.0000272
