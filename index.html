@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="utf-8">
+	<meta name="author" content="Fabrício Silva">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>Where People Live</title>
+	<link rel="stylesheet" href="wherepeoplelive.css"/>
+	<link rel="stylesheet" href="leaflet-1.9.4.css"/>
+	<script src="leaflet-1.9.4-min.js"></script>
+	<script src="turf-7.4.0-min.js"></script>
+	<script src="db.js"></script>
+	<script src="wherepeoplelive.js"></script>
+</head>
+<body class="fullscreen">
+	<div id="game" class="fullscreen">
+		<div id="map"></div>
+		<div id="panel">
+			<div id="message"></div>
+			<div id="toolbar">
+				<input type="text" id="search" autocomplete="off" spellcheck="false" onkeydown="searchName()">
+				<input type="checkbox" checked id="showGuessedLabels" onchange="showHideGuessedLabels()">
+				<input type="checkbox" checked id="showRevealedLabels" onchange="showHideRevealedLabels()">
+				<input type="checkbox" checked id="showCountryLabels" onchange="showHideCountryLabels()">
+				<input type="checkbox" checked id="showCountryBoundaries" onchange="showHideCountryBoundaries()">
+				<div id="pointsPop" class="pointsPop"></div>
+				<input type="button" id="restartGame" value="X" onclick="restartGame()">
+			</div>
+		</div>
+	</div>
+	<div id="splash" class="fullscreen">
+		<div>Where People Live</div>
+	</div>
+	<script>
+	window.onload = function() { init() };
+	</script>
+</body>
+</html>
