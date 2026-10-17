@@ -156,12 +156,12 @@ function startGame() {
 	let previousState = localStorage.getItem("state");
 	if (previousState) {
 		previousState = JSON.parse(previousState);
-		previousState.guessed.forEach(previousCity => {
-			let citiesFound = cities.filter(city => city.displayName==previousCity.displayName && turf.distance(city, previousCity)<1);
+		previousState.guessed.forEach(previousCityId => {
+			let citiesFound = cities.filter(city => city.properties.id == previousCityId);
 			cityGuessed(citiesFound);
 		});
-		previousState.revealed.forEach(previousCity => {
-			let citiesFound = cities.filter(city => city.displayName==previousCity.displayName && turf.distance(city, previousCity)<1);
+		previousState.revealed.forEach(previousCityId => {
+			let citiesFound = cities.filter(city => city.properties.id == previousCityId);
 			citiesFound.forEach(city => markCity(city, false, true));
 		});
 	}
@@ -253,7 +253,7 @@ function markCity(city, guessedNow, revealedNow) {
 		let tooltip = L.tooltip([city.geometry.coordinates[1], city.geometry.coordinates[0]], {content: city.properties.displayName, permanent: true, direction: "right", className: "cityToolTipGuessed" });
 		tooltip.addTo(cityGuessedLabelsLayerGroup);
 		cityRadius(city);
-		state.guessed.push({ type: city.type, properties: city.properties, geometry: city.geometry });
+		state.guessed.push(city.properties.id);
 		localStorage.setItem("state", JSON.stringify(state));
 	}
 	if (revealedNow && !city.guessed) {
@@ -264,7 +264,7 @@ function markCity(city, guessedNow, revealedNow) {
 		}
 		let tooltip = L.tooltip([city.geometry.coordinates[1], city.geometry.coordinates[0]], {content: city.properties.displayName, permanent: true, direction: "right", className: "cityToolTipRevealed" });
 		tooltip.addTo(cityRevealedLabelsLayerGroup);
-		state.revealed.push({ type: city.type, properties: city.properties, geometry: city.geometry });
+		state.revealed.push(city.properties.id);
 		localStorage.setItem("state", JSON.stringify(state));
 	}
 
