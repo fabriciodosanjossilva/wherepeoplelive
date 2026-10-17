@@ -7,11 +7,13 @@ let countryLabelsLayerGroup;
 
 let countryLabels;
 let cities;
-let citiesAll;
 let nameIndex;
+let citiesRenderer;
+let renderedCities;
 
 let initBounds = [[-30, 134], [56, -114]];
 let radiusKm = 60;
+let circlesMinZoom = 5;
 let firstGuess;
 let pointsPop;
 let state;
@@ -41,38 +43,67 @@ async function processDB() {
 	let response = await fetch("cities5000.txt");
 	let citiesText = new TextDecoder("utf-8").decode(await response.arrayBuffer());
 	let cityRows = citiesText.split(/\r?\n/).filter(line => line.trim() != "").map(line => line.split("\t"));
+	citiesText = null;
 
-	citiesAll = cityRows.map((cityRow, c) => {
-		let city = turf.point([parseFloat(cityRow[5]), parseFloat(cityRow[4])]);
-		city.properties.dbIndex = c;
-		city.properties.id = cityRow[0];
-		city.properties.pop = parseInt(cityRow[14]);
-		city.properties.displayName = cityRow[1];
-		return city;
-	});
-
-	citiesAll.sort((a, b) => sortByProperty(b, a, "properties.pop"));
+	// Ordena apenas os índices das linhas por população, em vez de ordenar os
+	// objetos e guardar um dbIndex em cada um (o que forçava um "delete" e o
+	// objeto a entrar em dictionary mode).
+	let order = new Int32Array(cityRows.length);
+	for (let i = 0; i < order.length; i++) {
+		order[i] = i;
+	}
+	order.sort((a, b) => parseInt(cityRows[b][14], 10) - parseInt(cityRows[a][14], 10));
 
 	nameIndex = new Map();
-	citiesAll.forEach((city, c) => {
-		let names = [city.properties.displayName].concat(cityRows[city.properties.dbIndex][3].split(","));
-		names.forEach(name => {
-			name = convertSearchName(name);
-			if (name && name != "") {
-				let cityIndexes = nameIndex.get(name);
-				if (!cityIndexes) {
-					cityIndexes = [];
-					nameIndex.set(name, cityIndexes);
-				}
-				if (cityIndexes[cityIndexes.length - 1] != c) {
-					cityIndexes.push(c);
-				}
-			}
-		});
-	});
-	
-	citiesAll.forEach(city => delete city.properties.dbIndex);
+	cities = new Array(cityRows.length);
+	for (let c = 0; c < order.length; c++) {
+		let cityRow = cityRows[order[c]];
+		let displayName = copyString(cityRow[1]);
+		let city = turf.point([parseFloat(cityRow[5]), parseFloat(cityRow[4])]);
+		city.properties.id = copyString(cityRow[0]);
+		city.properties.pop = parseInt(cityRow[14], 10);
+		city.properties.displayName = displayName;
+		city.guessed = false;
+		city.revealed = false;
+		city.marked = false;
+		city.circleLayer = null;
+		city.radiusLayer = null;
+		cities[c] = city;
+
+		let names = [displayName].concat(copyString(cityRow[3]).split(","));
+		for (let n = 0; n < names.length; n++) {
+			addNameIndex(convertSearchName(names[n]), c);
+		}
+	}
+	// Libera as linhas (dezenas de MB) usadas apenas para montar a base.
+	cityRows.length = 0;
 	countriesDB = null;
+}
+
+function copyString(str) {
+	// O V8 representa substrings longas como "SlicedString", que mantém vivo o
+	// buffer do arquivo inteiro (15 MB). Copia para uma string independente.
+	return str.length >= 13 ? str.split("").join("") : str;
+}
+
+function addNameIndex(name, cityIndex) {
+	if (name == "") {
+		return;
+	}
+	let cityIndexes = nameIndex.get(name);
+	if (cityIndexes === undefined) {
+		// Guarda um número simples quando o nome aponta para uma única cidade
+		// (a grande maioria), economizando um array por nome.
+		nameIndex.set(name, cityIndex);
+	}
+	else if (typeof cityIndexes === "number") {
+		if (cityIndexes != cityIndex) {
+			nameIndex.set(name, [cityIndexes, cityIndex]);
+		}
+	}
+	else if (cityIndexes[cityIndexes.length - 1] != cityIndex) {
+		cityIndexes.push(cityIndex);
+	}
 }
 
 function initMap() {
@@ -100,10 +131,13 @@ function initMap() {
 	countryLabelsLayerGroup = L.layerGroup();
 	countryLabels.forEach(country => L.tooltip([country.lat, country.lon], {content: country.displayName, permanent: true, direction: "center", className: "countryLabel"}).addTo(countryLabelsLayerGroup));
 
+	citiesRenderer = L.canvas({ padding: 0.5 });
+	renderedCities = new Set();
 	citiesLayerGroup = L.layerGroup().addTo(map);
+	map.on('moveend zoomend', updateVisibleCities);
 
 	map.on('zoomend', function() {
-		if (map.getZoom() < 5) {
+		if (map.getZoom() < circlesMinZoom) {
 			document.getElementById("showGuessedLabels").disabled = true;
 			map.removeLayer(cityGuessedLabelsLayerGroup);
 			document.getElementById("showRevealedLabels").disabled = true;
@@ -126,9 +160,103 @@ function initMap() {
 	});
 }
 
+// Renderiza apenas as cidades visíveis na viewport, e somente a partir do zoom
+// em que os círculos têm tamanho significativo. Evita manter ~70 mil camadas
+// Leaflet (e seus elementos no DOM) na memória ao mesmo tempo.
+function updateVisibleCities() {
+	if (!cities || !map || !renderedCities) {
+		return;
+	}
+	if (map.getZoom() < circlesMinZoom) {
+		clearRenderedCities();
+		return;
+	}
+	let bounds = map.getBounds().pad(0.2);
+	let visible = new Set();
+	let toAdd = [];
+	for (let i = 0; i < cities.length; i++) {
+		let city = cities[i];
+		if (cityInBounds(city, bounds)) {
+			visible.add(city);
+			if (!city.circleLayer) {
+				toAdd.push(city);
+			}
+		}
+	}
+	renderedCities.forEach(city => {
+		if (!visible.has(city)) {
+			citiesLayerGroup.removeLayer(city.circleLayer);
+			city.circleLayer = null;
+			renderedCities.delete(city);
+		}
+	});
+	// Adiciona das menores para as maiores, para manter as maiores por cima.
+	for (let i = toAdd.length - 1; i >= 0; i--) {
+		let city = toAdd[i];
+		let circle = L.circle([city.geometry.coordinates[1], city.geometry.coordinates[0]], {
+			renderer: citiesRenderer,
+			weight: 0,
+			fillColor: cityColor(city),
+			fillOpacity: 1,
+			radius: Math.sqrt(city.properties.pop / 3.14159) * 15
+		});
+		circle.city = city;
+		circle.on("click", function (e) {
+			markCity(e.target.city, false, true);
+		});
+		city.circleLayer = circle;
+		renderedCities.add(city);
+		citiesLayerGroup.addLayer(circle);
+	}
+}
+
+function clearRenderedCities() {
+	if (renderedCities.size == 0) {
+		return;
+	}
+	citiesLayerGroup.clearLayers();
+	renderedCities.forEach(city => {
+		city.circleLayer = null;
+	});
+	renderedCities.clear();
+}
+
+function cityInBounds(city, bounds) {
+	let lat = city.geometry.coordinates[1];
+	if (lat < bounds.getSouth() || lat > bounds.getNorth()) {
+		return false;
+	}
+	let west = bounds.getWest();
+	let east = bounds.getEast();
+	if (east - west >= 360) {
+		return true;
+	}
+	// Normaliza para lidar com a viewport virando o mundo (worldCopyJump).
+	let lon = west + (((city.geometry.coordinates[0] - west) % 360) + 360) % 360;
+	return lon <= east;
+}
+
+function cityColor(city) {
+	if (city.guessed) {
+		return "green";
+	}
+	if (city.revealed) {
+		return "orange";
+	}
+	if (city.marked) {
+		return "green";
+	}
+	return "#ff0000";
+}
+
+function refreshCityColor(city) {
+	if (city.circleLayer) {
+		city.circleLayer.setStyle({ fillColor: cityColor(city) });
+	}
+}
+
 function startGame() {
 	document.getElementById("splash").style.display = "none";
-	citiesLayerGroup.clearLayers();
 	cityGuessedLabelsLayerGroup.clearLayers();
 	cityRevealedLabelsLayerGroup.clearLayers();
 
@@ -136,24 +264,19 @@ function startGame() {
 	document.getElementById("pointsPop").innerHTML = "0";
 	pointsPop = 0;
 	state = { guessed : [], revealed : [] };
-	
-	cities = JSON.parse(JSON.stringify(citiesAll));
-	for (let i=cities.length-1; i >= 0; i--) {
-		let city = cities[i];
-		//let gb = ("0"+Math.floor((255-255*((Math.min(2000000, city.properties.pop) - 10000) / 2000000))).toString(16)).slice(-2);
-		let circle = L.circle([city.geometry.coordinates[1], city.geometry.coordinates[0]], {
-			weight: 0,
-			fillColor: "#ff0000",// + gb + gb,
-			fillOpacity: 1,
-			radius: Math.sqrt(city.properties.pop / 3.14159) * 15
-		});
-		circle.addTo(citiesLayerGroup);
-		circle.city = city;
-		circle.on("click", function (e) {
-			markCity(e.target.city, false, true);
-		});
-		city.circleLayer = circle;
-	}
+
+	// Reaproveita a base única (sem clonar ~70 mil objetos) e apenas reinicia
+	// o estado do jogo.
+	cities.forEach(city => {
+		if (city.radiusLayer) {
+			map.removeLayer(city.radiusLayer);
+			city.radiusLayer = null;
+		}
+		city.guessed = false;
+		city.revealed = false;
+		city.marked = false;
+	});
+	clearRenderedCities();
 	map.fitBounds(initBounds);
 	
 	let previousState = localStorage.getItem("state");
@@ -185,13 +308,14 @@ function searchName() {
 
 	name = convertSearchName(name);
 	let cityIndexes = nameIndex.get(name);
-	if (!cityIndexes) {
+	if (cityIndexes === undefined) {
 		showMessage("Nome não encontrado.", 3000);
 		return;
 	}
+	let indexes = typeof cityIndexes === "number" ? [cityIndexes] : cityIndexes;
 
 	let citiesGuessed = [];
-	cityIndexes.forEach(cityIndex => {
+	indexes.forEach(cityIndex => {
 		let city = cities[cityIndex];
 		if (!city.guessed && !city.revealed) {
 			citiesGuessed.push(city);
@@ -199,7 +323,7 @@ function searchName() {
 	});
 
 	if (citiesGuessed.length == 0) {
-		let revealed = cityIndexes.some(cityIndex => cities[cityIndex].revealed);
+		let revealed = indexes.some(cityIndex => cities[cityIndex].revealed);
 		showMessage(revealed ? "Cidade já revelada." : "Cidade já adivinhada.", 3000);
 		return;
 	}
@@ -232,17 +356,6 @@ function cityGuessed(citiesGuessed) {
 }
 
 function markCity(city, guessedNow, revealedNow) {
-	if (revealedNow) {
-		if (!city.revealed && !city.guessed) {
-			city.circleLayer.setStyle({fillColor: "orange" });
-		}
-	}
-	else {
-		if (!city.marked) {
-			city.circleLayer.setStyle({fillColor: "green" });
-		}
-	}
-
 	if (guessedNow) {
 		city.guessed = true;
 		let tooltip = L.tooltip([city.geometry.coordinates[1], city.geometry.coordinates[0]], {content: city.properties.displayName, permanent: true, direction: "right", className: "cityToolTipGuessed" });
@@ -269,6 +382,7 @@ function markCity(city, guessedNow, revealedNow) {
 			pointsPop += city.properties.pop;
 		}
 	}
+	refreshCityColor(city);
 }
 
 function cityRadius(city) {
@@ -288,6 +402,7 @@ function cityRadius(city) {
 	}
 	else {
 		map.removeLayer(city.radiusLayer);
+		city.radiusLayer = null;
 	}
 }
 
@@ -356,14 +471,3 @@ function convertSearchName(name) {
 	return name.replace(/[ '"-.]/g, '').normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
 }
 
-function sortByProperty(a, b, property) {
-	let valueA = property.split('.').reduce((o, i) => o[i], a);
-	let valueB = property.split('.').reduce((o, i) => o[i], b);
-	if (valueA < valueB){
-		return -1;
-	}
-	if (valueA > valueB){
-		return 1;
-	}
-	return 0;
-}
