@@ -198,6 +198,12 @@ function searchName() {
 		}
 	});
 
+	if (citiesGuessed.length == 0) {
+		let revealed = cityIndexes.some(cityIndex => cities[cityIndex].revealed);
+		showMessage(revealed ? "Cidade já revelada." : "Cidade já adivinhada.", 3000);
+		return;
+	}
+
 	document.getElementById("search").value = "";
 	let center = map.getCenter();
 	let centerPoint = turf.point([center.lng, center.lat]);
@@ -245,7 +251,7 @@ function markCity(city, guessedNow, revealedNow) {
 		state.guessed.push(city.properties.id);
 		localStorage.setItem("state", JSON.stringify(state));
 	}
-	if (revealedNow && !city.guessed) {
+	if (revealedNow && !city.guessed && !city.revealed) {
 		city.revealed = true;
 		if (!document.getElementById("showRevealedLabels").checked) {
 			document.getElementById("showRevealedLabels").checked = true;
