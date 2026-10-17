@@ -5,15 +5,16 @@ let cityRevealedLabelsLayerGroup;
 let countryBoundariesLayerGroup;
 let countryLabelsLayerGroup;
 
-let countryLabels;
+let countries;
 let cities;
 let nameIndex;
 let citiesRenderer;
 let renderedCities;
 
-let initBounds = [[-30, 134], [56, -114]];
+let initCenter = [-13, -49];
+let initZoom = 3;
 let radiusKm = 60;
-let circlesMinZoom = 5;
+let labelsMinZoom = 5;
 let firstGuess;
 let pointsPop;
 let state;
@@ -36,13 +37,15 @@ function searchFocus() {
 }
 
 async function processDB() {
-	// Carrega as duas bases em paralelo; o conteúdo de boundaries.json é
+	// Carrega as três bases em paralelo; o conteúdo de boundaries.json é
 	// descartado após o JSON.parse (o script principal não retém mais ~250 KB).
-	let [boundariesResponse, response] = await Promise.all([
+	let [boundariesResponse, countriesResponse, response] = await Promise.all([
 		fetch("boundaries.json"),
+		fetch("countries.json"),
 		fetch("cities5000.txt")
 	]);
 	countryBoundaries = await boundariesResponse.json();
+	countries = await countriesResponse.json();
 	let citiesText = new TextDecoder("utf-8").decode(await response.arrayBuffer());
 	let cityRows = citiesText.split(/\r?\n/).filter(line => line.trim() != "").map(line => line.split("\t"));
 	citiesText = null;
@@ -109,8 +112,8 @@ function addNameIndex(name, cityIndex) {
 
 function initMap() {
 	map = L.map('map', {
-		center: [0,0],
-		zoom: 4,
+		center: initCenter,
+		zoom: initZoom,
 		minZoom: 2,
 		maxZoom: 7,
 		worldCopyJump: true,
@@ -135,10 +138,11 @@ function initMap() {
 	citiesRenderer = L.canvas({ padding: 0.5 });
 	renderedCities = new Set();
 	citiesLayerGroup = L.layerGroup().addTo(map);
+
 	map.on('moveend zoomend', updateVisibleCities);
 
 	map.on('zoomend', function() {
-		if (map.getZoom() < circlesMinZoom) {
+		if (map.getZoom() < labelsMinZoom) {
 			document.getElementById("showGuessedLabels").disabled = true;
 			map.removeLayer(cityGuessedLabelsLayerGroup);
 			document.getElementById("showRevealedLabels").disabled = true;
@@ -150,26 +154,21 @@ function initMap() {
 		}
 		else {
 			document.getElementById("showGuessedLabels").disabled = false;
-			showHideGuessedLabels();
+			showGuessedLabels();
 			document.getElementById("showRevealedLabels").disabled = false;
-			showHideRevealedLabels();
+			showRevealedLabels();
 			document.getElementById("showCountryLabels").disabled = false;
-			showHideCountryLabels();
+			showCountryLabels();
 			document.getElementById("showCountryBoundaries").disabled = false;
-			showHideCountryBoundaries();
+			showCountryBoundaries();
 		}
 	});
 }
 
 // Renderiza apenas as cidades visíveis na viewport, e somente a partir do zoom
-// em que os círculos têm tamanho significativo. Evita manter ~70 mil camadas
-// Leaflet (e seus elementos no DOM) na memória ao mesmo tempo.
+// em que os círculos têm tamanho significativo.
 function updateVisibleCities() {
 	if (!cities || !map || !renderedCities) {
-		return;
-	}
-	if (map.getZoom() < circlesMinZoom) {
-		clearRenderedCities();
 		return;
 	}
 	let bounds = map.getBounds().pad(0.2);
@@ -209,17 +208,6 @@ function updateVisibleCities() {
 		renderedCities.add(city);
 		citiesLayerGroup.addLayer(circle);
 	}
-}
-
-function clearRenderedCities() {
-	if (renderedCities.size == 0) {
-		return;
-	}
-	citiesLayerGroup.clearLayers();
-	renderedCities.forEach(city => {
-		city.circleLayer = null;
-	});
-	renderedCities.clear();
 }
 
 function cityInBounds(city, bounds) {
@@ -266,8 +254,6 @@ function startGame() {
 	pointsPop = 0;
 	state = { guessed : [], revealed : [] };
 
-	// Reaproveita a base única (sem clonar ~70 mil objetos) e apenas reinicia
-	// o estado do jogo.
 	cities.forEach(city => {
 		if (city.radiusLayer) {
 			map.removeLayer(city.radiusLayer);
@@ -277,8 +263,7 @@ function startGame() {
 		city.revealed = false;
 		city.marked = false;
 	});
-	clearRenderedCities();
-	map.fitBounds(initBounds);
+	map.setView(initCenter, initZoom);
 	
 	let previousState = localStorage.getItem("state");
 	if (previousState) {
@@ -406,7 +391,7 @@ function markCity(city, guessedNow, revealedNow) {
 		city.revealed = true;
 		if (!document.getElementById("showRevealedLabels").checked) {
 			document.getElementById("showRevealedLabels").checked = true;
-			showHideRevealedLabels();
+			showRevealedLabels();
 		}
 		let tooltip = L.tooltip([city.geometry.coordinates[1], city.geometry.coordinates[0]], {content: city.properties.displayName, permanent: true, direction: "right", className: "cityToolTipRevealed" });
 		tooltip.addTo(cityRevealedLabelsLayerGroup);
@@ -487,7 +472,7 @@ function hideMessage() {
 	document.getElementById("message").style.display = "none";
 }
 
-function showHideGuessedLabels() {
+function showGuessedLabels() {
 	if (document.getElementById("showGuessedLabels").checked) {
 		map.addLayer(cityGuessedLabelsLayerGroup);
 	}
@@ -496,7 +481,7 @@ function showHideGuessedLabels() {
 	}
 }
 
-function showHideRevealedLabels() {
+function showRevealedLabels() {
 	if (document.getElementById("showRevealedLabels").checked) {
 		map.addLayer(cityRevealedLabelsLayerGroup);
 	}
@@ -505,7 +490,7 @@ function showHideRevealedLabels() {
 	}
 }
 
-function showHideCountryLabels() {
+function showCountryLabels() {
 	if (document.getElementById("showCountryLabels").checked) {
 		map.addLayer(countryLabelsLayerGroup);
 	}
@@ -514,7 +499,7 @@ function showHideCountryLabels() {
 	}
 }
 
-function showHideCountryBoundaries() {
+function showCountryBoundaries() {
 	if (document.getElementById("showCountryBoundaries").checked) {
 		map.addLayer(countryBoundariesLayerGroup);
 	}

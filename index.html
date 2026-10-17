@@ -8,7 +8,6 @@
 	<link rel="stylesheet" href="leaflet-1.9.4.css"/>
 	<script src="leaflet-1.9.4-min.js"></script>
 	<script src="turf-7.4.0-min.js"></script>
-	<script src="countries.js"></script>
 	<script src="wherepeoplelive.js"></script>
 </head>
 <body class="fullscreen">
@@ -18,10 +17,10 @@
 			<div id="message"></div>
 			<div id="toolbar">
 				<input type="text" id="search" autocomplete="off" spellcheck="false" onkeydown="searchName()">
-				<input type="checkbox" checked id="showGuessedLabels" onchange="showHideGuessedLabels()">
-				<input type="checkbox" checked id="showRevealedLabels" onchange="showHideRevealedLabels()">
-				<input type="checkbox" checked id="showCountryLabels" onchange="showHideCountryLabels()">
-				<input type="checkbox" checked id="showCountryBoundaries" onchange="showHideCountryBoundaries()">
+				<input type="checkbox" checked id="showGuessedLabels" onchange="showGuessedLabels()">
+				<input type="checkbox" checked id="showRevealedLabels" onchange="showRevealedLabels()">
+				<input type="checkbox" checked id="showCountryLabels" onchange="showCountryLabels()">
+				<input type="checkbox" checked id="showCountryBoundaries" onchange="showCountryBoundaries()">
 				<div id="pointsPop" class="pointsPop"></div>
 				<input type="button" id="restartGame" value="X" onclick="restartGame()">
 			</div>
