@@ -115,6 +115,7 @@ body {
 	font-weight: bold;
 	font-size: 16px;
 	color: #3f3f3f;
+	z-index: 1;
 }
 
 .leaflet-tooltip.cityToolTipGuessed {
@@ -123,6 +124,7 @@ body {
 	font-weight: bold;
 	font-size: 14px;
 	color: #000;
+	z-index: 2;
 }
 
 .leaflet-tooltip.cityToolTipRevealed {
@@ -131,4 +133,5 @@ body {
 	font-weight: bold;
 	font-size: 14px;
 	color: #000;
+	z-index: 2;
 }
