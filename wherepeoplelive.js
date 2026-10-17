@@ -36,10 +36,6 @@ function searchFocus() {
 }
 
 async function processDB() {
-	countryLabels = countriesDB.map(countryDB => {
-		return { lat: countryDB.lat, lon: countryDB.lon, displayName: (countryDB.name_pt!="" ? countryDB.name_pt : (countryDB.name_en!="" ? countryDB.name_en : countryDB.name)) };
-	});
-
 	// Carrega as duas bases em paralelo; o conteúdo de boundaries.json é
 	// descartado após o JSON.parse (o script principal não retém mais ~250 KB).
 	let [boundariesResponse, response] = await Promise.all([
@@ -83,7 +79,6 @@ async function processDB() {
 	}
 	// Libera as linhas (dezenas de MB) usadas apenas para montar a base.
 	cityRows.length = 0;
-	countriesDB = null;
 }
 
 function copyString(str) {
@@ -135,7 +130,7 @@ function initMap() {
 	L.geoJSON(countryBoundaries, { style: {"color": "darkgray", "weight": 2, "dashArray": "6 6", "dashOffset": "6", "fillColor": "none", "opacity": 0.8} }).addTo(countryBoundariesLayerGroup);
 
 	countryLabelsLayerGroup = L.layerGroup();
-	countryLabels.forEach(country => L.tooltip([country.lat, country.lon], {content: country.displayName, permanent: true, direction: "center", className: "countryLabel"}).addTo(countryLabelsLayerGroup));
+	countries.forEach(country => L.tooltip([country.lat, country.lon], {content: country.name, permanent: true, direction: "center", className: "countryLabel"}).addTo(countryLabelsLayerGroup));
 
 	citiesRenderer = L.canvas({ padding: 0.5 });
 	renderedCities = new Set();
