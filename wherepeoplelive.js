@@ -37,8 +37,6 @@ function searchFocus() {
 }
 
 async function processDB() {
-	// Carrega as três bases em paralelo; o conteúdo de boundaries.json é
-	// descartado após o JSON.parse (o script principal não retém mais ~250 KB).
 	let [boundariesResponse, countriesResponse, response] = await Promise.all([
 		fetch("boundaries.json"),
 		fetch("countries.json"),
@@ -68,7 +66,7 @@ async function processDB() {
 		city.properties.id = copyString(cityRow[0]);
 		city.properties.pop = parseInt(cityRow[14], 10);
 		city.properties.displayName = displayName;
-		city.capital = cityRow[7] == "PPLC"; // coluna 8: feature code (PPLC = capital)
+		city.capital = cityRow[7] == "PPLC" && cityRow[9] == "";
 		city.guessed = false;
 		city.revealed = false;
 		city.marked = false;
@@ -81,7 +79,6 @@ async function processDB() {
 			addNameIndex(convertSearchName(names[n]), c);
 		}
 	}
-	// Libera as linhas (dezenas de MB) usadas apenas para montar a base.
 	cityRows.length = 0;
 }
 
@@ -191,12 +188,21 @@ function updateVisibleCities() {
 			renderedCities.delete(city);
 		}
 	});
-	// Adiciona das menores para as maiores, para manter as maiores por cima.
-	for (let i = toAdd.length - 1; i >= 0; i--) {
+
+	// Ordenação em dois níveis: primeiro as não capitais (menor população
+	// primeiro) e, por cima, as capitais (também menor população primeiro).
+	toAdd.sort((a, b) => {
+		if (a.capital !== b.capital) {
+			return a.capital ? 1 : -1;
+		}
+		return a.properties.pop - b.properties.pop;
+	});
+	for (let i = 0; i < toAdd.length; i++) {
 		let city = toAdd[i];
 		let circle = L.circle([city.geometry.coordinates[1], city.geometry.coordinates[0]], {
 			renderer: citiesRenderer,
-			weight: 0,
+			weight: city.capital ? 2 : 0,
+			color: "#5555FF",
 			fillColor: cityColor(city),
 			fillOpacity: 1,
 			radius: Math.sqrt(city.properties.pop / 3.14159) * 15
@@ -232,9 +238,6 @@ function cityColor(city) {
 	}
 	if (city.guessed || city.marked) {
 		return "#2d7d2d";
-	}
-	if (city.capital) {
-		return "#5555FF";
 	}
 	return "#ff2222";
 }
