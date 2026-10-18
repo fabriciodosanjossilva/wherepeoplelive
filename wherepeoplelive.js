@@ -18,6 +18,8 @@ let labelsMinZoom = 5;
 let firstGuess;
 let pointsPop;
 let state;
+let roundNumber;
+let roundStart;
 
 let messageCount = 0;
 let countryBoundaries;
@@ -301,6 +303,15 @@ function refreshCityColor(city) {
 	}
 }
 
+// Rastreamento de uso via Umami Cloud (analytics sem cookies, IP anonimizado).
+// Se o script não carregar (bloqueador de anúncios, offline), o jogo segue
+// normalmente — analytics nunca deve quebrar o jogo.
+function track(name, data) {
+	if (window.umami) {
+		umami.track(name, data);
+	}
+}
+
 function startGame() {
 	// A splash é ocultada aqui (após o tempo mínimo de exibição / download).
 	// A partir daí ela passa a ficar reduzida: título 40% + descrição, visível
@@ -314,6 +325,19 @@ function startGame() {
 	document.getElementById("pointsPop").innerHTML = "0";
 	pointsPop = 0;
 	state = { guessed : [], revealed : [] };
+
+	// Uma "rodada" vai do primeiro carregamento (ou do reinício) até o próximo
+	// reinício. Guardada em localStorage para sobreviver a reloads no meio da
+	// partida — startGame() também roda ao recarregar a página.
+	roundNumber = parseInt(localStorage.getItem("roundNumber") || "0", 10);
+	roundStart = parseInt(localStorage.getItem("roundStart") || "0", 10);
+	if (!roundStart) {
+		roundNumber++;
+		roundStart = Date.now();
+		localStorage.setItem("roundNumber", roundNumber);
+		localStorage.setItem("roundStart", roundStart);
+	}
+	track("game_start", { round: roundNumber });
 
 	cities.forEach(city => {
 		if (city.radiusLayer) {
@@ -366,6 +390,7 @@ function searchName() {
 	name = convertSearchName(name);
 	let cityIndexes = nameIndex.get(name);
 	if (cityIndexes === undefined) {
+		track("guess_not_found", { term: name.slice(0, 40) });
 		showMessage(i18n("I8N_CITY_NOT_FOUND"), 3000);
 		return;
 	}
@@ -381,6 +406,7 @@ function searchName() {
 
 	if (citiesGuessed.length == 0) {
 		let revealed = indexes.some(cityIndex => cities[cityIndex].revealed);
+		track("guess_repeated", { revealed: revealed });
 		showMessage(i18n(revealed ? "I8N_CITY_ALREADY_REVEALED" : "I8N_CITY_ALREADY_GUESSED"), 3000);
 		return;
 	}
@@ -395,6 +421,7 @@ function searchName() {
 
 function cityGuessed(citiesGuessed) {
 	let city = citiesGuessed[0];
+	track("guess", { city: city.properties.displayName, pop: city.properties.pop, capital: city.capital });
 	map.flyTo([city.geometry.coordinates[1], city.geometry.coordinates[0]], (firstGuess ? 6 : map.getZoom()));
 	if (firstGuess) {
 		firstGuess = false;
@@ -516,11 +543,21 @@ function saveState() {
 
 function restartGame() {
 	if(confirm(i18n("I8N_RESTART_CONFIRM"))) {
+		// O reinício é o fim natural de uma rodada (o jogo não tem tela de
+		// game over): registra o resumo antes de zerar o estado.
+		track("round_end", {
+			round: roundNumber,
+			guessed: state.guessed.length,
+			revealed: state.revealed.length,
+			points: pointsPop,
+			seconds: Math.round((Date.now() - roundStart) / 1000)
+		});
 		if (saveStateTimer) {
 			clearTimeout(saveStateTimer);
 			saveStateTimer = null;
 		}
 		localStorage.removeItem("state");
+		localStorage.removeItem("roundStart");
 		startGame();
 	}
 }
