@@ -23,11 +23,17 @@
 				<input type="checkbox" checked id="showCountryBoundaries" onchange="showCountryBoundaries()">
 				<div id="pointsPop" class="pointsPop"></div>
 				<input type="button" id="restartGame" value="X" onclick="restartGame()">
+				<input type="button" id="showSplash" value="?" onclick="showSplash()">
 			</div>
 		</div>
 	</div>
 	<div id="splash" class="fullscreen">
-		<div>Where People Live</div>
+		<div id="closeSplash" onclick="closeSplash()">&#x2715;</div>
+		<img id="titleImage" src="title.webp" alt="Where People Live">
+		<div id="progressBar">
+			<div id="progressBarFill"></div>
+			<span id="progressBarLabel">Carregando...</span>
+		</div>
 	</div>
 	<script>
 	window.onload = function() { init() };

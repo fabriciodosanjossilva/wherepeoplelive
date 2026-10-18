@@ -19,8 +19,72 @@ body {
 	color: red;
 	font-size: 30px;
 	display: flex;
+	flex-direction: column;
     align-items: center;
-	justify-content: space-around;
+	justify-content: center;
+}
+
+#progressBar {
+	position: relative;
+	width: 25vw;
+	height: 26px;
+	margin-top: 24px;
+	overflow: hidden;
+	border-radius: 13px;
+	background-color: #ffcccc;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#progressBarFill {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 40%;
+	height: 100%;
+	background-color: rgba(255, 0, 0, 0.6);
+	animation: progressBarIndeterminate 1.2s linear infinite;
+}
+
+@keyframes progressBarIndeterminate {
+	0% { transform: translateX(-100%); }
+	100% { transform: translateX(250%); }
+}
+
+#progressBarLabel {
+	position: relative;
+	font-size: 14px;
+	font-weight: bold;
+	color: #7b0000;
+}
+
+#closeSplash {
+	position: absolute;
+	top: 10px;
+	right: 15px;
+	font-family: sans-serif;
+	font-size: 30px;
+	color: black;
+	cursor: pointer;
+}
+
+#closeSplash:hover {
+	color: gray;
+}
+
+#titleImage {
+	max-width: 80vw;
+	max-height: 80vh;
+	/* Esmaecimento gradativo e leve nas bordas da imagem */
+	-webkit-mask-image:
+		linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%),
+		linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
+	-webkit-mask-composite: source-in;
+	mask-image:
+		linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%),
+		linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
+	mask-composite: intersect;
 }
 
 #map {

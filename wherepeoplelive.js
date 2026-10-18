@@ -22,12 +22,28 @@ let state;
 let messageCount = 0;
 let countryBoundaries;
 
+// Inicia o download dos arquivos imediatamente, em segundo plano, enquanto a
+// splash screen é exibida. Registra o momento em que a barra de progresso
+// passa a ser exibida, para garantir o tempo mínimo de exibição.
+let splashStartTime = Date.now();
+let dbFilesPromise = Promise.all([
+	fetch("boundaries.json"),
+	fetch("countries.json"),
+	fetch("cities5000.txt")
+]);
+
 async function init() {
 	await processDB();
 	initMap();
 	document.addEventListener("keydown", event => {	searchFocus(); });
 	document.addEventListener("visibilitychange", event => { searchFocus(); });
-	setTimeout(startGame, 2000);
+	// Mantém a barra de progresso exibida por pelo menos 2 segundos, mesmo que
+	// os arquivos já tenham sido baixados.
+	let remainingTime = Math.max(0, 4000 - (Date.now() - splashStartTime));
+	setTimeout(function() {
+		document.getElementById("progressBar").style.display = "none";
+		startGame();
+	}, remainingTime);
 }
 
 function searchFocus() {
@@ -37,11 +53,7 @@ function searchFocus() {
 }
 
 async function processDB() {
-	let [boundariesResponse, countriesResponse, response] = await Promise.all([
-		fetch("boundaries.json"),
-		fetch("countries.json"),
-		fetch("cities5000.txt")
-	]);
+	let [boundariesResponse, countriesResponse, response] = await dbFilesPromise;
 	countryBoundaries = await boundariesResponse.json();
 	countries = await countriesResponse.json();
 	let citiesText = new TextDecoder("utf-8").decode(await response.arrayBuffer());
@@ -286,6 +298,15 @@ function startGame() {
 	firstGuess = true;
 	searchFocus();
 	showMessage("Digite um nome de cidade.");
+}
+
+function showSplash() {
+	document.getElementById("splash").style.display = "flex";
+}
+
+function closeSplash() {
+	document.getElementById("splash").style.display = "none";
+	searchFocus();
 }
 
 function searchName() {
