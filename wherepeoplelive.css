@@ -26,15 +26,20 @@ body {
 
 #progressBar {
 	position: relative;
-	width: 25vw;
-	height: 26px;
+	min-width: 25vw;
+	width: fit-content;
+	max-width: 90vw;
+	min-height: 26px;
 	margin-top: 24px;
 	overflow: hidden;
-	border-radius: 13px;
+	border-radius: 999px;
 	background-color: #ffcccc;
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	padding: 6px 14px;
+	box-sizing: border-box;
+	text-align: center;
 }
 
 #progressBarFill {
@@ -57,6 +62,10 @@ body {
 	font-size: 14px;
 	font-weight: bold;
 	color: #7b0000;
+	white-space: normal;
+	word-break: break-word;
+	text-align: center;
+	line-height: 1.2;
 }
 
 #closeSplash {

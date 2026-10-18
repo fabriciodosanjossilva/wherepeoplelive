@@ -22,21 +22,22 @@ let state;
 let messageCount = 0;
 let countryBoundaries;
 
-// Inicia o download dos arquivos imediatamente, em segundo plano, enquanto a
-// splash screen é exibida. Registra o momento em que a barra de progresso
-// passa a ser exibida, para garantir o tempo mínimo de exibição.
-let splashStartTime = Date.now();
-let dbFilesPromise = Promise.all([
-	fetch("boundaries.json"),
-	fetch("countries.json"),
-	fetch("cities5000.txt")
-]);
-
-// Inicia o download do repositório de traduções em segundo plano, junto com os
-// demais arquivos. Os textos traduzíveis começam vazios no HTML (via
+// Inicia o download do repositório de traduções em segundo plano, enquanto a
+// splash screen é exibida. Os textos traduzíveis começam vazios no HTML (via
 // data-i18n) e só são preenchidos em applyI18n(), após definir o idioma.
 let i18nStrings = {};
 let i18nPromise = loadI18n();
+
+// Inicia o download dos arquivos de dados em segundo plano, mas somente após o
+// repositório de traduções já ter sido carregado. Registra o momento em que a
+// barra de progresso passa a ser exibida, para garantir o tempo mínimo de
+// exibição.
+let splashStartTime = Date.now();
+let dbFilesPromise = i18nPromise.then(() => Promise.all([
+	fetch("boundaries.json"),
+	fetch("countries.json"),
+	fetch("cities5000.txt")
+]));
 
 async function loadI18n() {
 	try {
