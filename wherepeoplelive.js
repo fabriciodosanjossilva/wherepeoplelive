@@ -316,6 +316,71 @@ function track(name, data) {
 	}
 }
 
+// --- Efeito de conquista ao descobrir uma capital --------------------------
+// O som é gerado via Web Audio (nada de arquivo de áudio no repositório) e a
+// política de autoplay do browser só liberta o áudio após um gesto do
+// utilizador: cria/desbloqueia o contexto no primeiro keydown/pointerdown.
+let audioContext;
+
+function unlockAudio() {
+	ensureAudioContext();
+	document.removeEventListener("keydown", unlockAudio);
+	document.removeEventListener("pointerdown", unlockAudio);
+}
+
+function ensureAudioContext() {
+	let AudioContextClass = window.AudioContext || window.webkitAudioContext;
+	if (!AudioContextClass) {
+		return null;
+	}
+	if (!audioContext) {
+		audioContext = new AudioContextClass();
+	}
+	if (audioContext.state == "suspended") {
+		audioContext.resume();
+	}
+	return audioContext;
+}
+
+document.addEventListener("keydown", unlockAudio);
+document.addEventListener("pointerdown", unlockAudio);
+
+function playCapitalSound() {
+	let context = ensureAudioContext();
+	if (!context) {
+		return;
+	}
+	// Dois tons crescentes: quinta justa ascendente (C5 → G5), sensação
+	// positiva de conquista. Cada tom sobe rápido e decai devagar; a segunda
+	// nota termina ~2s após o início.
+	let notes = [523.25, 783.99];
+	let startTime = context.currentTime;
+	notes.forEach((frequency, i) => {
+		let noteStart = startTime + i * 0.35;
+		let oscillator = context.createOscillator();
+		let gain = context.createGain();
+		oscillator.type = "triangle";
+		oscillator.frequency.setValueAtTime(frequency, noteStart);
+		gain.gain.setValueAtTime(0.0001, noteStart);
+		gain.gain.exponentialRampToValueAtTime(0.2, noteStart + 0.02);
+		gain.gain.exponentialRampToValueAtTime(0.0001, noteStart + 1.6);
+		oscillator.connect(gain);
+		gain.connect(context.destination);
+		oscillator.start(noteStart);
+		oscillator.stop(noteStart + 1.65);
+	});
+}
+
+function celebrateCapital() {
+	playCapitalSound();
+	// Remove e recoloca a classe forçando um reflow para reiniciar a
+	// animação — assim disparos seguidos (várias capitais) reacendem o brilho.
+	let glow = document.getElementById("capitalGlow");
+	glow.classList.remove("active");
+	void glow.offsetWidth;
+	glow.classList.add("active");
+}
+
 function startGame() {
 	// A splash é ocultada aqui (após o tempo mínimo de exibição / download).
 	// A partir daí ela passa a ficar reduzida: título 40% + descrição, visível
@@ -420,10 +485,10 @@ function searchName() {
 	let centerPoint = turf.point([center.lng, center.lat]);
 	citiesGuessed.sort((b, a) => turf.distance(centerPoint, a) - turf.distance(centerPoint, b));
 	hideMessage();
-	cityGuessed(citiesGuessed);
+	cityGuessed(citiesGuessed, true);
 }
 
-function cityGuessed(citiesGuessed) {
+function cityGuessed(citiesGuessed, fromUserInput) {
 	let city = citiesGuessed[0];
 	track("guess", { city: city.properties.displayName, pop: city.properties.pop, capital: city.capital });
 	map.flyTo([city.geometry.coordinates[1], city.geometry.coordinates[0]], (firstGuess ? 6 : map.getZoom()));
@@ -433,11 +498,20 @@ function cityGuessed(citiesGuessed) {
 
 	map.once('moveend', function() {
 		let nearbyCities = nearCities(city);
-		nearbyCities.forEach(nearbyCity => markCity(nearbyCity, nearbyCity.properties.id==city.properties.id, false));
+		nearbyCities.forEach(nearbyCity => {
+			let guessedNow = nearbyCity.properties.id == city.properties.id;
+			markCity(nearbyCity, guessedNow, false);
+			// Conquista só quando o jogador digitou o nome (fromUserInput);
+			// a restauração do estado anterior também entra por aqui e não
+			// deve tocar som nem acender a borda.
+			if (guessedNow && fromUserInput && nearbyCity.capital) {
+				celebrateCapital();
+			}
+		});
 
 		citiesGuessed.shift();
 		if (citiesGuessed.length>0) {
-			cityGuessed(citiesGuessed);
+			cityGuessed(citiesGuessed, fromUserInput);
 		}
 		document.getElementById("pointsPop").innerHTML = pointsPop.toLocaleString();
 	});
