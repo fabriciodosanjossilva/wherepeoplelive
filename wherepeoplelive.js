@@ -301,6 +301,10 @@ function refreshCityColor(city) {
 }
 
 function startGame() {
+	// A splash é ocultada aqui (após o tempo mínimo de exibição / download).
+	// A partir daí ela passa a ficar reduzida: título 40% + descrição, visível
+	// apenas quando o usuário clicar em "?" para reexibi-la.
+	document.getElementById("splash").classList.add("reduced");
 	document.getElementById("splash").style.display = "none";
 	cityGuessedLabelsLayerGroup.clearLayers();
 	cityRevealedLabelsLayerGroup.clearLayers();

@@ -109,6 +109,30 @@ body {
 	mask-composite: intersect;
 }
 
+/* Descrição do jogo: fica oculta na primeira exibição da splash (enquanto
+   carrega) e só aparece quando a splash é reexibida, já reduzida. */
+#splashDescription {
+	display: none;
+	max-width: 70vw;
+	margin-top: 18px;
+	font-size: 16px;
+	color: #333;
+	text-align: center;
+	line-height: 1.5;
+	white-space: pre-line;
+}
+
+/* Estado da splash aplicado após o primeiro ocultamento: título encolhido de
+   80% para 40% da tela e descrição logo abaixo. */
+#splash.reduced #titleImage {
+	max-width: 40vw;
+	max-height: 40vh;
+}
+
+#splash.reduced #splashDescription {
+	display: block;
+}
+
 #map {
 	position: absolute;
 	top: 0;
