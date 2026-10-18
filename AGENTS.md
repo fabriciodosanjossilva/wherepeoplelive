@@ -4,7 +4,8 @@
 
 Buildless static site — a browser game ("Where People Live") on a Leaflet map.
 There is **no package.json, no build, no lint, no tests, no CI**. All app code is
-three files: `index.html`, `wherepeoplelive.js`, `wherepeoplelive.css`.
+four files: `index.html`, `wherepeoplelive.js`, `wherepeoplelive.css`,
+`i8n.json`.
 
 ## Run / verify
 
@@ -30,11 +31,17 @@ and map tiles come from Esri's online service (network required).
   convert to ES modules without also rewriting those handlers.
 - Startup fetches (begin at script parse, while splash shows): `cities5000.txt`
   (15 MB GeoNames TSV), `countries.json` (PT-BR country labels + centroid),
-  `boundaries.json` (pre-simplified GeoJSON `GeometryCollection`).
+  `boundaries.json` (pre-simplified GeoJSON `GeometryCollection`), and
+  `i8n.json` (translations keyed by base language code).
+- i18n: translatable UI text is empty in HTML, tagged `data-i18n="I8N_KEY"`;
+  JS messages go through `i18n("I8N_KEY")`. `loadI18n()` runs at parse time,
+  `init()` awaits it and `applyI18n()` swaps the HTML texts. Browser language
+  is matched on the base code only (e.g. `pt-BR` → `pt`); fallback is `en`,
+  and missing keys render as empty string. Add new strings to every language
+  in `i8n.json`.
 - `cities5000.txt` is parsed by **hardcoded column indexes** in `processDB()`:
   0=id, 1=name, 3=alternatenames, 4=lat, 5=lon, 7=feature code, 9=admin1,
-  14=population. Capital detection is `row[7]=="PPLC" && row[9]==""`. If you
-  regenerate this file, keep the standard GeoNames column order.
+  14=population. Capital detection is `row[7]=="PPLC" && row[9]==""`. Never alter this file.
 - Search matching: input normalized by `convertSearchName()` (strip `' "-.`,
   drop diacritics, lowercase) → `nameIndex` Map whose value is a number for
   unique names or an array on collision. Indexing and lookup must use the exact
@@ -43,8 +50,6 @@ and map tiles come from Esri's online service (network required).
   (`{guessed:[], revealed:[]}` of geonameids). A stale state from your testing
   carries over between loads — use the `X` button (`restartGame()`) for a clean
   run.
-- UI strings, code comments, and country names are **Brazilian Portuguese**.
-  Keep new ones consistent with the surrounding language.
 
 ## Performance patterns are intentional — don't "simplify" them away
 
@@ -64,5 +69,4 @@ Comments above these explain the "why" — preserve them when touching the code.
 - No deploy automation in the repo. Production is served from S3:
   `temp/index.html` (gitignored scratch dir) just redirects to
   `https://wherepeoplelive.s3.amazonaws.com/index.html`.
-- `index.html` references `title.webp` (~400 KB). `title.png` (2.5 MB) exists
-  but is untracked — keep the page on the webp.
+- `index.html` references `title.webp` (~400 KB).

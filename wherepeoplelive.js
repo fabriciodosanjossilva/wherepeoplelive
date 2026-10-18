@@ -32,12 +32,52 @@ let dbFilesPromise = Promise.all([
 	fetch("cities5000.txt")
 ]);
 
+// Inicia o download do repositório de traduções em segundo plano, junto com os
+// demais arquivos. Os textos traduzíveis começam vazios no HTML (via
+// data-i18n) e só são preenchidos em applyI18n(), após definir o idioma.
+let i18nStrings = {};
+let i18nPromise = loadI18n();
+
+async function loadI18n() {
+	try {
+		let response = await fetch("i8n.json");
+		let translations = await response.json();
+		// navigator.language devolve algo como "pt-BR"; usa apenas o código
+		// base ("pt"), já que o repositório não varia por região.
+		let browserLanguages = navigator.languages || [navigator.language || "en"];
+		for (let browserLanguage of browserLanguages) {
+			let base = browserLanguage.split("-")[0].toLowerCase();
+			if (translations[base]) {
+				i18nStrings = translations[base];
+				return;
+			}
+		}
+		i18nStrings = translations["en"];
+	}
+	catch (error) {
+		// Sem traduções disponíveis: os textos permanecem vazios.
+		i18nStrings = {};
+	}
+}
+
+function i18n(key) {
+	return i18nStrings[key] || "";
+}
+
+function applyI18n() {
+	document.querySelectorAll("[data-i18n]").forEach(element => {
+		element.textContent = i18n(element.getAttribute("data-i18n"));
+	});
+}
+
 async function init() {
+	await i18nPromise;
+	applyI18n();
 	await processDB();
 	initMap();
 	document.addEventListener("keydown", event => {	searchFocus(); });
 	document.addEventListener("visibilitychange", event => { searchFocus(); });
-	// Mantém a barra de progresso exibida por pelo menos 2 segundos, mesmo que
+	// Mantém a barra de progresso exibida por alguns segundos, mesmo que
 	// os arquivos já tenham sido baixados.
 	let remainingTime = Math.max(0, 4000 - (Date.now() - splashStartTime));
 	setTimeout(function() {
@@ -297,7 +337,7 @@ function startGame() {
 	
 	firstGuess = true;
 	searchFocus();
-	showMessage("Digite um nome de cidade.");
+	showMessage(i18n("I8N_ENTER_CITY_NAME"));
 }
 
 function showSplash() {
@@ -321,7 +361,7 @@ function searchName() {
 	name = convertSearchName(name);
 	let cityIndexes = nameIndex.get(name);
 	if (cityIndexes === undefined) {
-		showMessage("Nome não encontrado.", 3000);
+		showMessage(i18n("I8N_CITY_NOT_FOUND"), 3000);
 		return;
 	}
 	let indexes = typeof cityIndexes === "number" ? [cityIndexes] : cityIndexes;
@@ -336,7 +376,7 @@ function searchName() {
 
 	if (citiesGuessed.length == 0) {
 		let revealed = indexes.some(cityIndex => cities[cityIndex].revealed);
-		showMessage(revealed ? "Cidade já revelada." : "Cidade já adivinhada.", 3000);
+		showMessage(i18n(revealed ? "I8N_CITY_ALREADY_REVEALED" : "I8N_CITY_ALREADY_GUESSED"), 3000);
 		return;
 	}
 
@@ -470,7 +510,7 @@ function saveState() {
 }
 
 function restartGame() {
-	if(confirm("O jogo será reiniciado. Todos os nomes serão descartados. Deseja continuar?")) {
+	if(confirm(i18n("I8N_RESTART_CONFIRM"))) {
 		if (saveStateTimer) {
 			clearTimeout(saveStateTimer);
 			saveStateTimer = null;
@@ -537,4 +577,3 @@ function showCountryBoundaries() {
 function convertSearchName(name) {
 	return name.replace(/[ '"-.]/g, '').normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
 }
-
