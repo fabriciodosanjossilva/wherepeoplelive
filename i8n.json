@@ -5,7 +5,8 @@
 		"I8N_CITY_NOT_FOUND": "Name not found.",
 		"I8N_CITY_ALREADY_REVEALED": "City already revealed.",
 		"I8N_CITY_ALREADY_GUESSED": "City already guessed.",
-		"I8N_RESTART_CONFIRM": "The game will be restarted. All names will be discarded. Do you want to continue?"
+		"I8N_RESTART_CONFIRM": "The game will be restarted. All names will be discarded. Do you want to continue?",
+		"I8N_SPLASH_BY": "By:"
 	},
 	"zh": {
 		"I8N_LOADING": "正在加载...",
@@ -13,7 +14,8 @@
 		"I8N_CITY_NOT_FOUND": "未找到名称。",
 		"I8N_CITY_ALREADY_REVEALED": "该城市已显示。",
 		"I8N_CITY_ALREADY_GUESSED": "该城市已猜过。",
-		"I8N_RESTART_CONFIRM": "游戏将重新开始，所有名称都将被清除。要继续吗？"
+		"I8N_RESTART_CONFIRM": "游戏将重新开始，所有名称都将被清除。要继续吗？",
+		"I8N_SPLASH_BY": "作者："
 	},
 	"hi": {
 		"I8N_LOADING": "लोड हो रहा है...",
@@ -21,7 +23,8 @@
 		"I8N_CITY_NOT_FOUND": "नाम नहीं मिला।",
 		"I8N_CITY_ALREADY_REVEALED": "शहर पहले ही प्रकट हो चुका है।",
 		"I8N_CITY_ALREADY_GUESSED": "शहर पहले ही अनुमानित हो चुका है।",
-		"I8N_RESTART_CONFIRM": "खेल पुनः आरंभ होगा। सभी नाम हटा दिए जाएंगे। क्या आप जारी रखना चाहते हैं?"
+		"I8N_RESTART_CONFIRM": "खेल पुनः आरंभ होगा। सभी नाम हटा दिए जाएंगे। क्या आप जारी रखना चाहते हैं?",
+		"I8N_SPLASH_BY": "द्वारा:"
 	},
 	"es": {
 		"I8N_LOADING": "Cargando...",
@@ -29,7 +32,8 @@
 		"I8N_CITY_NOT_FOUND": "Nombre no encontrado.",
 		"I8N_CITY_ALREADY_REVEALED": "Ciudad ya revelada.",
 		"I8N_CITY_ALREADY_GUESSED": "Ciudad ya adivinada.",
-		"I8N_RESTART_CONFIRM": "El juego se reiniciará. Todos los nombres se descartarán. ¿Desea continuar?"
+		"I8N_RESTART_CONFIRM": "El juego se reiniciará. Todos los nombres se descartarán. ¿Desea continuar?",
+		"I8N_SPLASH_BY": "Por:"
 	},
 	"fr": {
 		"I8N_LOADING": "Chargement...",
@@ -37,7 +41,8 @@
 		"I8N_CITY_NOT_FOUND": "Nom introuvable.",
 		"I8N_CITY_ALREADY_REVEALED": "Ville déjà révélée.",
 		"I8N_CITY_ALREADY_GUESSED": "Ville déjà devinée.",
-		"I8N_RESTART_CONFIRM": "La partie sera relancée. Tous les noms seront effacés. Voulez-vous continuer ?"
+		"I8N_RESTART_CONFIRM": "La partie sera relancée. Tous les noms seront effacés. Voulez-vous continuer ?",
+		"I8N_SPLASH_BY": "Par :"
 	},
 	"ar": {
 		"I8N_LOADING": "جارٍ التحميل...",
@@ -45,7 +50,8 @@
 		"I8N_CITY_NOT_FOUND": "الاسم غير موجود.",
 		"I8N_CITY_ALREADY_REVEALED": "المدينة مكشوفة بالفعل.",
 		"I8N_CITY_ALREADY_GUESSED": "تم تخمين المدينة بالفعل.",
-		"I8N_RESTART_CONFIRM": "سيتم إعادة بدء اللعبة. سيتم تجاهل جميع الأسماء. هل تريد المتابعة؟"
+		"I8N_RESTART_CONFIRM": "سيتم إعادة بدء اللعبة. سيتم تجاهل جميع الأسماء. هل تريد المتابعة؟",
+		"I8N_SPLASH_BY": "بواسطة:"
 	},
 	"bn": {
 		"I8N_LOADING": "লোড হচ্ছে...",
@@ -53,7 +59,8 @@
 		"I8N_CITY_NOT_FOUND": "নাম পাওয়া যায়নি।",
 		"I8N_CITY_ALREADY_REVEALED": "শহর ইতিমধ্যে প্রকাশিত হয়েছে।",
 		"I8N_CITY_ALREADY_GUESSED": "শহর ইতিমধ্যে অনুমান করা হয়েছে।",
-		"I8N_RESTART_CONFIRM": "খেলটি পুনরায় শুরু হবে। সব নাম মুছে ফেলা হবে। আপনি কি চালিয়ে যেতে চান?"
+		"I8N_RESTART_CONFIRM": "খেলটি পুনরায় শুরু হবে। সব নাম মুছে ফেলা হবে। আপনি কি চালিয়ে যেতে চান?",
+		"I8N_SPLASH_BY": "দ্বারা:"
 	},
 	"pt": {
 		"I8N_LOADING": "Carregando...",
@@ -61,7 +68,8 @@
 		"I8N_CITY_NOT_FOUND": "Nome não encontrado.",
 		"I8N_CITY_ALREADY_REVEALED": "Cidade já revelada.",
 		"I8N_CITY_ALREADY_GUESSED": "Cidade já adivinhada.",
-		"I8N_RESTART_CONFIRM": "O jogo será reiniciado. Todos os nomes serão descartados. Deseja continuar?"
+		"I8N_RESTART_CONFIRM": "O jogo será reiniciado. Todos os nomes serão descartados. Deseja continuar?",
+		"I8N_SPLASH_BY": "Por:"
 	},
 	"ru": {
 		"I8N_LOADING": "Загрузка...",
@@ -69,7 +77,8 @@
 		"I8N_CITY_NOT_FOUND": "Название не найдено.",
 		"I8N_CITY_ALREADY_REVEALED": "Город уже открыт.",
 		"I8N_CITY_ALREADY_GUESSED": "Город уже угадан.",
-		"I8N_RESTART_CONFIRM": "Игра будет перезапущена. Все названия будут удалены. Продолжить?"
+		"I8N_RESTART_CONFIRM": "Игра будет перезапущена. Все названия будут удалены. Продолжить?",
+		"I8N_SPLASH_BY": "Автор:"
 	},
 	"ur": {
 		"I8N_LOADING": "لوڈ ہو رہا ہے...",
@@ -77,7 +86,8 @@
 		"I8N_CITY_NOT_FOUND": "نام نہیں ملا۔",
 		"I8N_CITY_ALREADY_REVEALED": "شہر پہلے ہی ظاہر ہو چکا ہے۔",
 		"I8N_CITY_ALREADY_GUESSED": "شہر پہلے ہی اندازہ لگایا جا چکا ہے۔",
-		"I8N_RESTART_CONFIRM": "کھیل دوبارہ شروع ہوگا۔ تمام نامات مٹا دیے جائیں گے۔ کیا آپ جاری رکھنا چاہتے ہیں؟"
+		"I8N_RESTART_CONFIRM": "کھیل دوبارہ شروع ہوگا۔ تمام نامات مٹا دیے جائیں گے۔ کیا آپ جاری رکھنا چاہتے ہیں؟",
+		"I8N_SPLASH_BY": "By:"
 	},
 	"id": {
 		"I8N_LOADING": "Memuat...",
@@ -85,7 +95,8 @@
 		"I8N_CITY_NOT_FOUND": "Nama tidak ditemukan.",
 		"I8N_CITY_ALREADY_REVEALED": "Kota sudah diungkap.",
 		"I8N_CITY_ALREADY_GUESSED": "Kota sudah ditebak.",
-		"I8N_RESTART_CONFIRM": "Permainan akan dimulai ulang. Semua nama akan dihapus. Lanjutkan?"
+		"I8N_RESTART_CONFIRM": "Permainan akan dimulai ulang. Semua nama akan dihapus. Lanjutkan?",
+		"I8N_SPLASH_BY": "By:"
 	},
 	"de": {
 		"I8N_LOADING": "Wird geladen...",
@@ -93,7 +104,8 @@
 		"I8N_CITY_NOT_FOUND": "Name nicht gefunden.",
 		"I8N_CITY_ALREADY_REVEALED": "Stadt bereits enthüllt.",
 		"I8N_CITY_ALREADY_GUESSED": "Stadt bereits erraten.",
-		"I8N_RESTART_CONFIRM": "Das Spiel wird neu gestartet. Alle Namen werden verworfen. Möchtest du fortfahren?"
+		"I8N_RESTART_CONFIRM": "Das Spiel wird neu gestartet. Alle Namen werden verworfen. Möchtest du fortfahren?",
+		"I8N_SPLASH_BY": "Von:"
 	},
 	"ja": {
 		"I8N_LOADING": "読み込み中...",
@@ -101,7 +113,8 @@
 		"I8N_CITY_NOT_FOUND": "名前が見つかりません。",
 		"I8N_CITY_ALREADY_REVEALED": "その都市はすでに明らかにされています。",
 		"I8N_CITY_ALREADY_GUESSED": "その都市はすでに答えられています。",
-		"I8N_RESTART_CONFIRM": "ゲームを再開始します。入力した名前はすべて消去されます。続行しますか？"
+		"I8N_RESTART_CONFIRM": "ゲームを再開始します。入力した名前はすべて消去されます。続行しますか？",
+		"I8N_SPLASH_BY": "作成者:"
 	},
 	"mr": {
 		"I8N_LOADING": "लोड होत आहे...",
@@ -109,7 +122,8 @@
 		"I8N_CITY_NOT_FOUND": "नाम आढळले नाही.",
 		"I8N_CITY_ALREADY_REVEALED": "शहर आधीच उघडले आहे.",
 		"I8N_CITY_ALREADY_GUESSED": "शहर आधीच अंदाजले आहे.",
-		"I8N_RESTART_CONFIRM": "खेळ पुन्हा सुरू होईल. सर्व नावे हटवली जातील. तुम्हाला सुरू ठेवायचे आहे का?"
+		"I8N_RESTART_CONFIRM": "खेळ पुन्हा सुरू होईल. सर्व नावे हटवली जातील. तुम्हाला सुरू ठेवायचे आहे का?",
+		"I8N_SPLASH_BY": "By:"
 	},
 	"te": {
 		"I8N_LOADING": "లోడ్ అవుతోంది...",
@@ -117,7 +131,8 @@
 		"I8N_CITY_NOT_FOUND": "పేరు కనుగొనబడలేదు.",
 		"I8N_CITY_ALREADY_REVEALED": "నగరం ఇప్పటికే బహిర్గతమైంది.",
 		"I8N_CITY_ALREADY_GUESSED": "నగరం ఇప్పటికే ఊహించబడింది.",
-		"I8N_RESTART_CONFIRM": "ఆట మళ్లీ ప్రారంభమవుతుంది. అన్ని పేర్లు తొలగించబడతాయి. కొనసాగాలా?"
+		"I8N_RESTART_CONFIRM": "ఆట మళ్లీ ప్రారంభమవుతుంది. అన్ని పేర్లు తొలగించబడతాయి. కొనసాగాలా?",
+		"I8N_SPLASH_BY": "By:"
 	},
 	"tr": {
 		"I8N_LOADING": "Yükleniyor...",
@@ -125,7 +140,8 @@
 		"I8N_CITY_NOT_FOUND": "İsim bulunamadı.",
 		"I8N_CITY_ALREADY_REVEALED": "Şehir zaten açıldı.",
 		"I8N_CITY_ALREADY_GUESSED": "Şehir zaten tahmin edildi.",
-		"I8N_RESTART_CONFIRM": "Oyun yeniden başlayacak. Tüm isimler silinecek. Devam etmek istiyor musunuz?"
+		"I8N_RESTART_CONFIRM": "Oyun yeniden başlayacak. Tüm isimler silinecek. Devam etmek istiyor musunuz?",
+		"I8N_SPLASH_BY": "By:"
 	},
 	"ta": {
 		"I8N_LOADING": "ஏற்றுகிறது...",
@@ -133,7 +149,8 @@
 		"I8N_CITY_NOT_FOUND": "பெயர் காணப்படவில்லை.",
 		"I8N_CITY_ALREADY_REVEALED": "நகரம் ஏற்கனவே வெளியிடப்பட்டுள்ளது.",
 		"I8N_CITY_ALREADY_GUESSED": "நகரம் ஏற்கனவே யூகிக்கப்பட்டுள்ளது.",
-		"I8N_RESTART_CONFIRM": "விளையாட்டு மீண்டும் தொடங்கும். அனைத்து பெயர்களும் நீக்கப்படும். தொடரவா?"
+		"I8N_RESTART_CONFIRM": "விளையாட்டு மீண்டும் தொடங்கும். அனைத்து பெயர்களும் நீக்கப்படும். தொடரவா?",
+		"I8N_SPLASH_BY": "By:"
 	},
 	"vi": {
 		"I8N_LOADING": "Đang tải...",
@@ -141,7 +158,8 @@
 		"I8N_CITY_NOT_FOUND": "Không tìm thấy tên này.",
 		"I8N_CITY_ALREADY_REVEALED": "Thành phố đã được tiết lộ.",
 		"I8N_CITY_ALREADY_GUESSED": "Thành phố đã được đoán.",
-		"I8N_RESTART_CONFIRM": "Trò chơi sẽ được khởi động lại. Tất cả các tên sẽ bị xóa. Bạn có muốn tiếp tục?"
+		"I8N_RESTART_CONFIRM": "Trò chơi sẽ được khởi động lại. Tất cả các tên sẽ bị xóa. Bạn có muốn tiếp tục?",
+		"I8N_SPLASH_BY": "By:"
 	},
 	"ko": {
 		"I8N_LOADING": "불러오는 중...",
@@ -149,7 +167,8 @@
 		"I8N_CITY_NOT_FOUND": "이름을 찾을 수 없습니다.",
 		"I8N_CITY_ALREADY_REVEALED": "이미 공개된 도시입니다.",
 		"I8N_CITY_ALREADY_GUESSED": "이미 추측한 도시입니다.",
-		"I8N_RESTART_CONFIRM": "게임이 다시 시작됩니다. 모든 이름이 삭제됩니다. 계속할까요?"
+		"I8N_RESTART_CONFIRM": "게임이 다시 시작됩니다. 모든 이름이 삭제됩니다. 계속할까요?",
+		"I8N_SPLASH_BY": "제작:"
 	},
 	"fa": {
 		"I8N_LOADING": "در حال بارگذاری...",
@@ -157,7 +176,8 @@
 		"I8N_CITY_NOT_FOUND": "نام یافت نشد.",
 		"I8N_CITY_ALREADY_REVEALED": "شهر قبلاً فاش شده است.",
 		"I8N_CITY_ALREADY_GUESSED": "شهر قبلاً حدس زده شده است.",
-		"I8N_RESTART_CONFIRM": "بازی دوباره شروع می‌شود. همه نام‌ها حذف می‌شوند. ادامه می‌دهید؟"
+		"I8N_RESTART_CONFIRM": "بازی دوباره شروع می‌شود. همه نام‌ها حذف می‌شوند. ادامه می‌دهید؟",
+		"I8N_SPLASH_BY": "By:"
 	},
 	"it": {
 		"I8N_LOADING": "Caricamento...",
@@ -165,7 +185,8 @@
 		"I8N_CITY_NOT_FOUND": "Nome non trovato.",
 		"I8N_CITY_ALREADY_REVEALED": "Città già rivelata.",
 		"I8N_CITY_ALREADY_GUESSED": "Città già indovinata.",
-		"I8N_RESTART_CONFIRM": "La partita verrà riavviata. Tutti i nomi verranno eliminati. Vuoi continuare?"
+		"I8N_RESTART_CONFIRM": "La partita verrà riavviata. Tutti i nomi verranno eliminati. Vuoi continuare?",
+		"I8N_SPLASH_BY": "Di:"
 	},
 	"jv": {
 		"I8N_LOADING": "Muat...",
@@ -173,7 +194,8 @@
 		"I8N_CITY_NOT_FOUND": "Jeneng ora kapanggih.",
 		"I8N_CITY_ALREADY_REVEALED": "Kutha wis katon.",
 		"I8N_CITY_ALREADY_GUESSED": "Kutha wis katembung.",
-		"I8N_RESTART_CONFIRM": "Dolanan bakal wiwiti maneh. Kabeh jeneng bakal dibusak. Apa arep nyambung?"
+		"I8N_RESTART_CONFIRM": "Dolanan bakal wiwiti maneh. Kabeh jeneng bakal dibusak. Apa arep nyambung?",
+		"I8N_SPLASH_BY": "By:"
 	},
 	"pa": {
 		"I8N_LOADING": "ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...",
@@ -181,7 +203,8 @@
 		"I8N_CITY_NOT_FOUND": "ਨਾਮ ਨਹੀਂ ਮਿਲਿਆ।",
 		"I8N_CITY_ALREADY_REVEALED": "ਸ਼ਹਿਰ ਪਹਿਲਾਂ ਹੀ ਵੇਖਾਇਆ ਜਾ ਚੁੱਕਾ ਹੈ।",
 		"I8N_CITY_ALREADY_GUESSED": "ਸ਼ਹਿਰ ਪਹਿਲਾਂ ਹੀ ਅੰਦਾਜ਼ਾ ਲਗਾਇਆ ਜਾ ਚੁੱਕਾ ਹੈ।",
-		"I8N_RESTART_CONFIRM": "ਖੇਡ ਮੁੜ ਸ਼ੁਰੂ ਹੋਵੇਗੀ। ਸਾਰੇ ਨਾਮ ਹਟਾ ਦਿੱਤੇ ਜਾਣਗੇ। ਕੀ ਤੁਸੀਂ ਜਾਰੀ ਰੱਖਣਾ ਚਾਹੁੰਦੇ ਹੋ?"
+		"I8N_RESTART_CONFIRM": "ਖੇਡ ਮੁੜ ਸ਼ੁਰੂ ਹੋਵੇਗੀ। ਸਾਰੇ ਨਾਮ ਹਟਾ ਦਿੱਤੇ ਜਾਣਗੇ। ਕੀ ਤੁਸੀਂ ਜਾਰੀ ਰੱਖਣਾ ਚਾਹੁੰਦੇ ਹੋ?",
+		"I8N_SPLASH_BY": "By:"
 	},
 	"ha": {
 		"I8N_LOADING": "Ana lodi...",
@@ -189,7 +212,8 @@
 		"I8N_CITY_NOT_FOUND": "Ba a sami suna.",
 		"I8N_CITY_ALREADY_REVEALED": "An riga an nuna birnin.",
 		"I8N_CITY_ALREADY_GUESSED": "An riga an kiyasi birnin.",
-		"I8N_RESTART_CONFIRM": "Wasan zan fara daga farko. Duk suna za a share su. Ka so ka ci gaba?"
+		"I8N_RESTART_CONFIRM": "Wasan zan fara daga farko. Duk suna za a share su. Ka so ka ci gaba?",
+		"I8N_SPLASH_BY": "By:"
 	},
 	"kn": {
 		"I8N_LOADING": "ಲೋಡ್ ಆಗುತ್ತಿದೆ...",
@@ -197,7 +221,8 @@
 		"I8N_CITY_NOT_FOUND": "ಹೆಸರು ಸಿಗಲಿಲ್ಲ.",
 		"I8N_CITY_ALREADY_REVEALED": "ನಗರವನ್ನು ಈಗಾಗಲೇ ಬಹಿರಂಗಪಡಿಸಲಾಗಿದೆ.",
 		"I8N_CITY_ALREADY_GUESSED": "ನಗರವನ್ನು ಈಗಾಗಲೇ ಊಹಿಸಲಾಗಿದೆ.",
-		"I8N_RESTART_CONFIRM": "ಆಟ ಮತ್ತೆ ಪ್ರಾರಂಭವಾಗುತ್ತದೆ. ಎಲ್ಲಾ ಹೆಸರುಗಳನ್ನು ತೆಗೆದುಹಾಕಲಾಗುತ್ತದೆ. ಮುಂದುವರಿಯಲಾ?"
+		"I8N_RESTART_CONFIRM": "ಆಟ ಮತ್ತೆ ಪ್ರಾರಂಭವಾಗುತ್ತದೆ. ಎಲ್ಲಾ ಹೆಸರುಗಳನ್ನು ತೆಗೆದುಹಾಕಲಾಗುತ್ತದೆ. ಮುಂದುವರಿಯಲಾ?",
+		"I8N_SPLASH_BY": "By:"
 	},
 	"gu": {
 		"I8N_LOADING": "લોડ થઈ રહ્યું છે...",
@@ -205,7 +230,8 @@
 		"I8N_CITY_NOT_FOUND": "નામ મળ્યું નથી.",
 		"I8N_CITY_ALREADY_REVEALED": "શહર પહેલેથી જ બતાવવામાં આવ્યું છે.",
 		"I8N_CITY_ALREADY_GUESSED": "શહર પહેલેથી જ અનુમાનિત કરવામાં આવ્યું છે.",
-		"I8N_RESTART_CONFIRM": "રમત ફરી શરૂ થશે. બધા નામો કાઢી નાખવામાં આવશે. શું તમે ચાલુ રાખવા માંગો છો?"
+		"I8N_RESTART_CONFIRM": "રમત ફરી શરૂ થશે. બધા નામો કાઢી નાખવામાં આવશે. શું તમે ચાલુ રાખવા માંગો છો?",
+		"I8N_SPLASH_BY": "By:"
 	},
 	"bho": {
 		"I8N_LOADING": "लोड होत बा...",
@@ -213,7 +239,8 @@
 		"I8N_CITY_NOT_FOUND": "नाम ना मिलल।",
 		"I8N_CITY_ALREADY_REVEALED": "शहर पहिले से खुजल बा।",
 		"I8N_CITY_ALREADY_GUESSED": "शहर पहिले से अंदाजा लगावल गइल बा।",
-		"I8N_RESTART_CONFIRM": "खेल पड़ती शुरू होई। सब नाम मेटा देल जाई। की अहीं जारी रखब?"
+		"I8N_RESTART_CONFIRM": "खेल पड़ती शुरू होई। सब नाम मेटा देल जाई। की अहीं जारी रखब?",
+		"I8N_SPLASH_BY": "By:"
 	},
 	"or": {
 		"I8N_LOADING": "ଲୋଡ୍ ହେଉଛି...",
@@ -221,7 +248,8 @@
 		"I8N_CITY_NOT_FOUND": "ନାମ ମିଳିଲା ନାହିଁ ।",
 		"I8N_CITY_ALREADY_REVEALED": "ସହର ପୂର୍ବରୁ ପ୍ରକାଶିତ ହୋଇସାରିଛି ।",
 		"I8N_CITY_ALREADY_GUESSED": "ସହର ପୂର୍ବରୁ ଅନୁମାନ କରାଯାଇସାରିଛି ।",
-		"I8N_RESTART_CONFIRM": "ଖେଳ ପୁଣି ଆରମ୍ଭ ହେବ । ସମସ୍ତ ନାମ ଲିଭାଯିବ । ଆପଣ ଜାରି ରଖିବାକୁ ଚାହାନ୍ତିକି?"
+		"I8N_RESTART_CONFIRM": "ଖେଳ ପୁଣି ଆରମ୍ଭ ହେବ । ସମସ୍ତ ନାମ ଲିଭାଯିବ । ଆପଣ ଜାରି ରଖିବାକୁ ଚାହାନ୍ତିକି?",
+		"I8N_SPLASH_BY": "By:"
 	},
 	"uk": {
 		"I8N_LOADING": "Завантаження...",
@@ -229,7 +257,8 @@
 		"I8N_CITY_NOT_FOUND": "Назву не знайдено.",
 		"I8N_CITY_ALREADY_REVEALED": "Місто вже відкрито.",
 		"I8N_CITY_ALREADY_GUESSED": "Місто вже вгадано.",
-		"I8N_RESTART_CONFIRM": "Гру буде перезапущено. Усі назви буде видалено. Продовжити?"
+		"I8N_RESTART_CONFIRM": "Гру буде перезапущено. Усі назви буде видалено. Продовжити?",
+		"I8N_SPLASH_BY": "Від:"
 	},
 	"pl": {
 		"I8N_LOADING": "Ładowanie...",
@@ -237,6 +266,7 @@
 		"I8N_CITY_NOT_FOUND": "Nie znaleziono nazwy.",
 		"I8N_CITY_ALREADY_REVEALED": "Miasto już odkryte.",
 		"I8N_CITY_ALREADY_GUESSED": "Miasto już odgadnięte.",
-		"I8N_RESTART_CONFIRM": "Gra zostanie uruchomiona ponownie. Wszystkie nazwy zostaną usunięte. Czy chcesz kontynuować?"
+		"I8N_RESTART_CONFIRM": "Gra zostanie uruchomiona ponownie. Wszystkie nazwy zostaną usunięte. Czy chcesz kontynuować?",
+		"I8N_SPLASH_BY": "Autor:"
 	}
 }
