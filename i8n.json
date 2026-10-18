@@ -7,7 +7,7 @@
 		"I8N_CITY_ALREADY_GUESSED": "City already guessed.",
 		"I8N_RESTART_CONFIRM": "The game will be restarted. All names will be discarded. Do you want to continue?",
 		"I8N_SPLASH_BY": "By:",
-		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" is a game that challenges players to name as many real cities around the world as they can. The more cities you know, the more points you earn.\n\nBeyond testing geographical knowledge, the game encourages curiosity about the world and reminds us that people live in countless places, from villages to sprawling megacities. Its goal is to inspire a more global perspective and a greater awareness of the diverse places people call home."
+		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" is a game that challenges players to name as many real cities around the world as they can. The more cities you know, the more points you earn.\n\nBeyond testing geographical knowledge, the game encourages curiosity about the world and reminds us that people live in countless places, from villages to megacities. Its goal is to inspire a more global perspective and a greater awareness of the diverse places people call home."
 	},
 	"zh": {
 		"I8N_LOADING": "正在加载...",
@@ -17,7 +17,7 @@
 		"I8N_CITY_ALREADY_GUESSED": "该城市已猜过。",
 		"I8N_RESTART_CONFIRM": "游戏将重新开始，所有名称都将被清除。要继续吗？",
 		"I8N_SPLASH_BY": "作者：",
-		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" 是一款游戏，挑战玩家尽可能多地说出世界各地的真实城市。你知道的城市越多，得分就越高。\n\n除了检验地理知识外，这款游戏还能激发对世界的好奇心，并提醒我们：人们生活在无数的地方，从村庄到巨大的超级城市不一而足。它的目标是唤起更全球化的视角，以及对人们称之为家的各种地方的更多关注。"
+		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" 是一款游戏，挑战玩家尽可能多地说出世界各地的真实城市。你知道的城市越多，得分就越高。\n\n除了检验地理知识外，这款游戏还能激发对世界的好奇心，并提醒我们：人们生活在无数的地方，从村庄到超级城市不一而足。它的目标是唤起更全球化的视角，以及对人们称之为家的各种地方的更多关注。"
 	},
 	"hi": {
 		"I8N_LOADING": "लोड हो रहा है...",
@@ -27,7 +27,7 @@
 		"I8N_CITY_ALREADY_GUESSED": "शहर पहले ही अनुमानित हो चुका है।",
 		"I8N_RESTART_CONFIRM": "खेल पुनः आरंभ होगा। सभी नाम हटा दिए जाएंगे। क्या आप जारी रखना चाहते हैं?",
 		"I8N_SPLASH_BY": "द्वारा:",
-		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" एक खेल है जो खिलाड़ियों से दुनिया भर के यथासंभव वास्तविक शहरों के नाम बताने की चुनौती देता है। आप जितने अधिक शहर जानते हैं, उतने अधिक अंक पाते हैं।\n\nभूगोल ज्ञान की परीक्षा के अलावा, यह खेल दुनिया के बारे में जिज्ञासा जगाता है और हमें याद दिलाता है कि लोग अनगिनत जगहों पर रहते हैं, गाँवों से लेकर विशाल महानगरों तक। इसका लक्ष्य अधिक वैश्विक दृष्टिकोण और उन विविध स्थानों के प्रति अधिक जागरूकता पैदा करना है जिन्हें लोग अपना घर कहते हैं।"
+		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" एक खेल है जो खिलाड़ियों से दुनिया भर के यथासंभव वास्तविक शहरों के नाम बताने की चुनौती देता है। आप जितने अधिक शहर जानते हैं, उतने अधिक अंक पाते हैं।\n\nभूगोल ज्ञान की परीक्षा के अलावा, यह खेल दुनिया के बारे में जिज्ञासा जगाता है और हमें याद दिलाता है कि लोग अनगिनत जगहों पर रहते हैं, गाँवों से लेकर महानगरों तक। इसका लक्ष्य अधिक वैश्विक दृष्टिकोण और उन विविध स्थानों के प्रति अधिक जागरूकता पैदा करना है जिन्हें लोग अपना घर कहते हैं।"
 	},
 	"es": {
 		"I8N_LOADING": "Cargando...",
@@ -37,7 +37,7 @@
 		"I8N_CITY_ALREADY_GUESSED": "Ciudad ya adivinada.",
 		"I8N_RESTART_CONFIRM": "El juego se reiniciará. Todos los nombres se descartarán. ¿Desea continuar?",
 		"I8N_SPLASH_BY": "Por:",
-		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" es un juego que desafía a los jugadores a nombrar tantas ciudades reales del mundo como puedan. Cuanto más ciudades conozcas, más puntos obtendrás.\n\nAdemás de poner a prueba los conocimientos geográficos, el juego fomenta la curiosidad por el mundo y nos recuerda que las personas viven en innumerables lugares, desde aldeas hasta megaciudades extensas. Su objetivo es inspirar una perspectiva más global y una mayor conciencia de los diversos lugares que las personas llaman hogar."
+		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" es un juego que desafía a los jugadores a nombrar tantas ciudades reales del mundo como puedan. Cuanto más ciudades conozcas, más puntos obtendrás.\n\nAdemás de poner a prueba los conocimientos geográficos, el juego fomenta la curiosidad por el mundo y nos recuerda que las personas viven en innumerables lugares, desde aldeas hasta megaciudades. Su objetivo es inspirar una perspectiva más global y una mayor conciencia de los diversos lugares que las personas llaman hogar."
 	},
 	"fr": {
 		"I8N_LOADING": "Chargement...",
@@ -47,7 +47,7 @@
 		"I8N_CITY_ALREADY_GUESSED": "Ville déjà devinée.",
 		"I8N_RESTART_CONFIRM": "La partie sera relancée. Tous les noms seront effacés. Voulez-vous continuer ?",
 		"I8N_SPLASH_BY": "Par :",
-		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" est un jeu qui met les joueurs au défi de nommer autant de villes réelles du monde qu'ils le peuvent. Plus vous connaissez de villes, plus vous gagnez de points.\n\nAu-delà du test des connaissances géographiques, le jeu encourage la curiosité pour le monde et nous rappelle que les gens vivent dans d'innombrables endroits, des villages aux mégapoles démesurées. Son but est d'inspirer une perspective plus mondiale et une meilleure conscience des divers lieux que les gens appellent chez eux."
+		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" est un jeu qui met les joueurs au défi de nommer autant de villes réelles du monde qu'ils le peuvent. Plus vous connaissez de villes, plus vous gagnez de points.\n\nAu-delà du test des connaissances géographiques, le jeu encourage la curiosité pour le monde et nous rappelle que les gens vivent dans d'innombrables endroits, des villages aux mégapoles. Son but est d'inspirer une perspective plus mondiale et une meilleure conscience des divers lieux que les gens appellent chez eux."
 	},
 	"ar": {
 		"I8N_LOADING": "جارٍ التحميل...",
@@ -67,7 +67,7 @@
 		"I8N_CITY_ALREADY_GUESSED": "শহর ইতিমধ্যে অনুমান করা হয়েছে।",
 		"I8N_RESTART_CONFIRM": "খেলটি পুনরায় শুরু হবে। সব নাম মুছে ফেলা হবে। আপনি কি চালিয়ে যেতে চান?",
 		"I8N_SPLASH_BY": "দ্বারা:",
-		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" একটি খেলা, যেখানে খেলোয়াড়দের পৃথিবীর যত বাস্তব শহর পারে ততটি নাম বলতে হয়। আপনি যত বেশি শহর চিনবেন, তত বেশি পয়েন্ট পাবেন।\n\nভূগোলজ্ঞান পরীক্ষার পাশাপাশি, এই খেলাটি বিশ্ব সম্পর্কে কৌতূহল জাগায় এবং মনে করিয়ে দেয় যে মানুষ অগণিত জায়গায় বাস করে — গ্রাম থেকে বিশাল মেগাসিটি পর্যন্ত। এর লক্ষ্য আরও বিশ্বদৃষ্টিকোণ এবং মানুষের বাড়ি বলে যে বিভিন্ন স্থান সম্পর্কে সচেতনতা বৃদ্ধি করা।"
+		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" একটি খেলা, যেখানে খেলোয়াড়দের পৃথিবীর যত বাস্তব শহর পারে ততটি নাম বলতে হয়। আপনি যত বেশি শহর চিনবেন, তত বেশি পয়েন্ট পাবেন।\n\nভূগোলজ্ঞান পরীক্ষার পাশাপাশি, এই খেলাটি বিশ্ব সম্পর্কে কৌতূহল জাগায় এবং মনে করিয়ে দেয় যে মানুষ অগণিত জায়গায় বাস করে — গ্রাম থেকে মেగাসিটি পর্যন্ত। এর লক্ষ্য আরও বিশ্বদৃষ্টিকোণ এবং মানুষের বাড়ি বলে যে বিভিন্ন স্থান সম্পর্কে সচেতনতা বৃদ্ধি করা।"
 	},
 	"pt": {
 		"I8N_LOADING": "Carregando...",
@@ -77,7 +77,7 @@
 		"I8N_CITY_ALREADY_GUESSED": "Cidade já adivinhada.",
 		"I8N_RESTART_CONFIRM": "O jogo será reiniciado. Todos os nomes serão descartados. Deseja continuar?",
 		"I8N_SPLASH_BY": "Por:",
-		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" é um jogo que desafia os jogadores a nomear o máximo de cidades reais pelo mundo quanto conseguirem. Quanto mais cidades você conhece, mais pontos ganha.\n\nAlém de testar conhecimentos geográficos, o jogo estimula a curiosidade sobre o mundo e nos lembra que as pessoas vivem em incontáveis lugares, de vilas a megacidades extensas. Seu objetivo é inspirar uma perspectiva mais global e uma maior consciência dos diversos lugares que as pessoas chamam de lar."
+		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" é um jogo que desafia os jogadores a nomear o máximo de cidades reais pelo mundo quanto conseguirem. Quanto mais cidades você conhece, mais pontos ganha.\n\nAlém de testar conhecimentos geográficos, o jogo estimula a curiosidade sobre o mundo e nos lembra que as pessoas vivem em incontáveis lugares, de vilas a megacidades. Seu objetivo é inspirar uma perspectiva mais global e uma maior consciência dos diversos lugares que as pessoas chamam de lar."
 	},
 	"ru": {
 		"I8N_LOADING": "Загрузка...",
@@ -87,7 +87,7 @@
 		"I8N_CITY_ALREADY_GUESSED": "Город уже угадан.",
 		"I8N_RESTART_CONFIRM": "Игра будет перезапущена. Все названия будут удалены. Продолжить?",
 		"I8N_SPLASH_BY": "Автор:",
-		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" — это игра, в которой игрокам нужно назвать как можно больше реальных городов мира. Чем больше городов вы знаете, тем больше очков получаете.\n\nПомимо проверки географических знаний, игра пробуждает интерес к миру и напоминает, что люди живут в бесчисленных местах — от деревень до огромных мегаполисов. Её цель — воспитать более глобальный взгляд и большее осознание самых разных мест, которые люди называют домом."
+		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" — это игра, в которой игрокам нужно назвать как можно больше реальных городов мира. Чем больше городов вы знаете, тем больше очков получаете.\n\nПомимо проверки географических знаний, игра пробуждает интерес к миру и напоминает, что люди живут в бесчисленных местах — от деревень до мегаполисов. Её цель — воспитать более глобальный взгляд и большее осознание самых разных мест, которые люди называют домом."
 	},
 	"ur": {
 		"I8N_LOADING": "لوڈ ہو رہا ہے...",
@@ -97,7 +97,7 @@
 		"I8N_CITY_ALREADY_GUESSED": "شہر پہلے ہی اندازہ لگایا جا چکا ہے۔",
 		"I8N_RESTART_CONFIRM": "کھیل دوبارہ شروع ہوگا۔ تمام نامات مٹا دیے جائیں گے۔ کیا آپ جاری رکھنا چاہتے ہیں؟",
 		"I8N_SPLASH_BY": "By:",
-		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" ایک کھیل ہے جو کھلاڑیوں کو دنیا بھر کے جتنے بھی حقیقی شہر ہو سکیں ان کے نام بتانے کی چیلنج دیتا ہے۔ جتنے زیادہ شہر آپ جانتے ہیں، اتنے ہی زیادہ پوائنٹس ملتے ہیں۔\n\nجغرافیہ کے علم کا امتحان لینے کے علاوہ، یہ کھیل دنیا کے بارے میں مسلگی کو فروغ دیتا ہے اور ہمیں یاد دلاتا ہے کہ لوگ بے شمار جگہوں پر رہتے ہیں، گاؤں سے لے کر وسیع میگا سٹی تک۔ اس کا مقصد زیادہ عالمی نظریہ اور لوگوں کے گھر کہنے والی مختلف جگہوں کے بارے میں زیادہ آگاہی پیدا کرنا ہے۔"
+		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" ایک کھیل ہے جو کھلاڑیوں کو دنیا بھر کے جتنے بھی حقیقی شہر ہو سکیں ان کے نام بتانے کی چیلنج دیتا ہے۔ جتنے زیادہ شہر آپ جانتے ہیں، اتنے ہی زیادہ پوائنٹس ملتے ہیں۔\n\nجغرافیہ کے علم کا امتحان لینے کے علاوہ، یہ کھیل دنیا کے بارے میں مسلگی کو فروغ دیتا ہے اور ہمیں یاد دلاتا ہے کہ لوگ بے شمار جگہوں پر رہتے ہیں، گاؤں سے لے کر میگا سٹی تک۔ اس کا مقصد زیادہ عالمی نظریہ اور لوگوں کے گھر کہنے والی مختلف جگہوں کے بارے میں زیادہ آگاہی پیدا کرنا ہے۔"
 	},
 	"id": {
 		"I8N_LOADING": "Memuat...",
@@ -107,7 +107,7 @@
 		"I8N_CITY_ALREADY_GUESSED": "Kota sudah ditebak.",
 		"I8N_RESTART_CONFIRM": "Permainan akan dimulai ulang. Semua nama akan dihapus. Lanjutkan?",
 		"I8N_SPLASH_BY": "By:",
-		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" adalah permainan yang menantang pemain untuk menyebut sebanyak mungkin kota nyata di seluruh dunia. Semakin banyak kota yang kamu ketahui, semakin banyak poin yang kamu dapatkan.\n\nSelain menguji pengetahuan geografi, permainan ini mendorong rasa ingin tahu tentang dunia dan mengingatkan kita bahwa orang tinggal di tempat yang tak terhitung jumlahnya, dari desa-desa hingga megakota yang membentang. Tujuannya adalah memberi inspirasi perspektif yang lebih global dan kesadaran yang lebih besar tentang berbagai tempat yang orang sebut sebagai rumah."
+		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" adalah permainan yang menantang pemain untuk menyebut sebanyak mungkin kota nyata di seluruh dunia. Semakin banyak kota yang kamu ketahui, semakin banyak poin yang kamu dapatkan.\n\nSelain menguji pengetahuan geografi, permainan ini mendorong rasa ingin tahu tentang dunia dan mengingatkan kita bahwa orang tinggal di tempat yang tak terhitung jumlahnya, dari desa-desa hingga megakota. Tujuannya adalah memberi inspirasi perspektif yang lebih global dan kesadaran yang lebih besar tentang berbagai tempat yang orang sebut sebagai rumah."
 	},
 	"de": {
 		"I8N_LOADING": "Wird geladen...",
@@ -117,7 +117,7 @@
 		"I8N_CITY_ALREADY_GUESSED": "Stadt bereits erraten.",
 		"I8N_RESTART_CONFIRM": "Das Spiel wird neu gestartet. Alle Namen werden verworfen. Möchtest du fortfahren?",
 		"I8N_SPLASH_BY": "Von:",
-		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" ist ein Spiel, das die Spieler herausfordert, so viele echte Städte der Welt wie möglich zu nennen. Je mehr Städte du kennst, desto mehr Punkte verdienst du.\n\nNeben dem Test des geografischen Wissens weckt das Spiel Neugier auf die Welt und erinnert uns daran, dass Menschen in unzähligen Orten leben, von Dörfern bis hin zu riesigen Megastädten. Sein Ziel ist es, eine globalere Perspektive und ein größeres Bewusstsein für die vielfältigen Orte zu wecken, die Menschen ihr Zuhause nennen."
+		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" ist ein Spiel, das die Spieler herausfordert, so viele echte Städte der Welt wie möglich zu nennen. Je mehr Städte du kennst, desto mehr Punkte verdienst du.\n\nNeben dem Test des geografischen Wissens weckt das Spiel Neugier auf die Welt und erinnert uns daran, dass Menschen in unzähligen Orten leben, von Dörfern bis hin zu Megastädten. Sein Ziel ist es, eine globalere Perspektive und ein größeres Bewusstsein für die vielfältigen Orte zu wecken, die Menschen ihr Zuhause nennen."
 	},
 	"ja": {
 		"I8N_LOADING": "読み込み中...",
@@ -127,7 +127,7 @@
 		"I8N_CITY_ALREADY_GUESSED": "その都市はすでに答えられています。",
 		"I8N_RESTART_CONFIRM": "ゲームを再開始します。入力した名前はすべて消去されます。続行しますか？",
 		"I8N_SPLASH_BY": "作成者:",
-		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" は、世界中の実在の都市をできるだけ多く言い当てるゲームです。知っている都市が多いほど、得点も増えます。\n\n地理知識を試すだけでなく、このゲームは世界への好奇心を育て、人々が村から巨大なメガシティまで、数え切れない場所に住んでいることを思い出させてくれます。その目標は、よりグローバルな視点と、人々が故郷と呼ぶさまざまな場所へのより大きな理解を育むことです。"
+		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" は、世界中の実在の都市をできるだけ多く言い当てるゲームです。知っている都市が多いほど、得点も増えます。\n\n地理知識を試すだけでなく、このゲームは世界への好奇心を育て、人々が村からメガシティまで、数え切れない場所に住んでいることを思い出させてくれます。その目標は、よりグローバルな視点と、人々が故郷と呼ぶさまざまな場所へのより大きな理解を育むことです。"
 	},
 	"mr": {
 		"I8N_LOADING": "लोड होत आहे...",
@@ -137,7 +137,7 @@
 		"I8N_CITY_ALREADY_GUESSED": "शहर आधीच अंदाजले आहे.",
 		"I8N_RESTART_CONFIRM": "खेळ पुन्हा सुरू होईल. सर्व नावे हटवली जातील. तुम्हाला सुरू ठेवायचे आहे का?",
 		"I8N_SPLASH_BY": "By:",
-		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" हा खेळ आहे, ज्यात खेळाडूंना जगभरातील शक्यतोतमेवास्तविक शहरांची नावे सांगायची आहेत. तुम्ही जितकी अधिक शहरे ओळखता, तितके अधिक गुण मिळतात.\n\nभूगोलज्ञानाची चाचणी करण्याबरोबर, हा खेळ जगाबद्दल जिज्ञासा निर्माण करतो आणि आपल्याला आठवून देतो की लोक असंख्य ठिकाणी राहतात — गावांपासून विशाल महानगरांपर्यंत. त्याचे उद्दिष्ट अधिक जागतिक दृष्टिकोण आणि लोक आपले घर म्हणतात त्या विविध ठिकाणांबद्दल अधिक जागरूकता निर्माण करणे आहे."
+		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" हा खेळ आहे, ज्यात खेळाडूंना जगभरातील शक्यतोतमेवास्तविक शहरांची नावे सांगायची आहेत. तुम्ही जितकी अधिक शहरे ओळखता, तितके अधिक गुण मिळतात.\n\nभूगोलज्ञानाची चाचणी करण्याबरोबर, हा खेळ जगाबद्दल जिज्ञासा निर्माण करतो आणि आपल्याला आठवून देतो की लोक असंख्य ठिकाणी राहतात — गावांपासून महानगरांपर्यंत. त्याचे उद्दिष्ट अधिक जागतिक दृष्टिकोण आणि लोक आपले घर म्हणतात त्या विविध ठिकाणांबद्दल अधिक जागरूकता निर्माण करणे आहे."
 	},
 	"te": {
 		"I8N_LOADING": "లోడ్ అవుతోంది...",
@@ -147,7 +147,7 @@
 		"I8N_CITY_ALREADY_GUESSED": "నగరం ఇప్పటికే ఊహించబడింది.",
 		"I8N_RESTART_CONFIRM": "ఆట మళ్లీ ప్రారంభమవుతుంది. అన్ని పేర్లు తొలగించబడతాయి. కొనసాగాలా?",
 		"I8N_SPLASH_BY": "By:",
-		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" అనేది ప్రపంచంలోని యథార్థమైన నగరాల పేర్లు చెప్పేలా ఆటగాళ్లకు సవాలు విసిరే ఆట. మీకు తెలిసిన నగరాలు ఎక్కువగా ఉంటే, మీకు ఎక్కువ పాయింట్లు లభిస్తాయి.\n\nభూగోళ జ్ఞానాన్ని పరీక్షించడమే కాకుండా, ఈ ఆట ప్రపంచంపై ఆసక్తిని పెంచుతుంది మరియు ప్రజలు గ్రామాల నుండి భారీ మెగాసిటీల వరకు అనేక చోట్లలో నివసిస్తారని మనకు గుర్తుచేస్తుంది. ప్రజలు ఇల్లు అని పిలిచే వైవిధ్యమైన ప్రదేశాలపై మరింత అవగాహన మరియు మరింత విశ్వవ్యాప్త దృక్పథాన్ని ప్రేరేపించడమే దీని లక్ష్యం."
+		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" అనేది ప్రపంచంలోని యథార్థమైన నగరాల పేర్లు చెప్పేలా ఆటగాళ్లకు సవాలు విసిరే ఆట. మీకు తెలిసిన నగరాలు ఎక్కువగా ఉంటే, మీకు ఎక్కువ పాయింట్లు లభిస్తాయి.\n\nభూగోళ జ్ఞానాన్ని పరీక్షించడమే కాకుండా, ఈ ఆట ప్రపంచంపై ఆసక్తిని పెంచుతుంది మరియు ప్రజలు గ్రామాల నుండి మెగాసిటీల వరకు అనేక చోట్లలో నివసిస్తారని మనకు గుర్తుచేస్తుంది. ప్రజలు ఇల్లు అని పిలిచే వైవిధ్యమైన ప్రదేశాలపై మరింత అవగాహన మరియు మరింత విశ్వవ్యాప్త దృక్పథాన్ని ప్రేరేపించడమే దీని లక్ష్యం."
 	},
 	"tr": {
 		"I8N_LOADING": "Yükleniyor...",
@@ -157,7 +157,7 @@
 		"I8N_CITY_ALREADY_GUESSED": "Şehir zaten tahmin edildi.",
 		"I8N_RESTART_CONFIRM": "Oyun yeniden başlayacak. Tüm isimler silinecek. Devam etmek istiyor musunuz?",
 		"I8N_SPLASH_BY": "By:",
-		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\", oyunculara dünyadaki mümkün olduğunca çok gerçek şehri isimlendirme fırsatı veren bir oyunudur. Ne kadar çok şehir bilirsen o kadar çok puan kazanırsın.\n\nCoğrafya bilgisini sınamanın ötesinde, oyun dünyaya karşı merakı teşvik eder ve insanların köylerden kocaman metropollere kadar sayısız yerde yaşadığını bize hatırlatır. Amacı, daha küresel bir bakış açısı ve insanların ev dediği çeşitli yerler konusunda daha fazla farkındalık oluşturmaktır."
+		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\", oyunculara dünyadaki mümkün olduğunca çok gerçek şehri isimlendirme fırsatı veren bir oyunudur. Ne kadar çok şehir bilirsen o kadar çok puan kazanırsın.\n\nCoğrafya bilgisini sınamanın ötesinde, oyun dünyaya karşı merakı teşvik eder ve insanların köylerden metropollere kadar sayısız yerde yaşadığını bize hatırlatır. Amacı, daha küresel bir bakış açısı ve insanların ev dediği çeşitli yerler konusunda daha fazla farkındalık oluşturmaktır."
 	},
 	"ta": {
 		"I8N_LOADING": "ஏற்றுகிறது...",
@@ -177,7 +177,7 @@
 		"I8N_CITY_ALREADY_GUESSED": "Thành phố đã được đoán.",
 		"I8N_RESTART_CONFIRM": "Trò chơi sẽ được khởi động lại. Tất cả các tên sẽ bị xóa. Bạn có muốn tiếp tục?",
 		"I8N_SPLASH_BY": "By:",
-		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" là một trò chơi thử thách người chơi gọi tên càng nhiều thành phố có thật trên thế giới càng tốt. Bạn biết càng nhiều thành phố, càng được nhiều điểm.\n\nNgoài việc kiểm tra kiến thức địa lý, trò chơi còn khuyến khích sự tò mò về thế giới và nhắc chúng ta rằng con người sống ở vô số nơi, từ những ngôi làng đến những siêu đô thị khổng lồ. Mục tiêu của nó là truyền cảm hứng cho một góc nhìn toàn cầu hơn và nhận thức sâu sắc hơn về những nơi đa dạng mà con người gọi là nhà."
+		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" là một trò chơi thử thách người chơi gọi tên càng nhiều thành phố có thật trên thế giới càng tốt. Bạn biết càng nhiều thành phố, càng được nhiều điểm.\n\nNgoài việc kiểm tra kiến thức địa lý, trò chơi còn khuyến khích sự tò mò về thế giới và nhắc chúng ta rằng con người sống ở vô số nơi, từ những ngôi làng đến những siêu đô thị. Mục tiêu của nó là truyền cảm hứng cho một góc nhìn toàn cầu hơn và nhận thức sâu sắc hơn về những nơi đa dạng mà con người gọi là nhà."
 	},
 	"ko": {
 		"I8N_LOADING": "불러오는 중...",
@@ -187,7 +187,7 @@
 		"I8N_CITY_ALREADY_GUESSED": "이미 추측한 도시입니다.",
 		"I8N_RESTART_CONFIRM": "게임이 다시 시작됩니다. 모든 이름이 삭제됩니다. 계속할까요?",
 		"I8N_SPLASH_BY": "제작:",
-		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\"는 플레이어가 전 세계의 실제 도시를 최대한 많이 말하게 하는 게임입니다. 아는 도시가 많을수록 점수도 많아집니다.\n\n지리 지식을 시험하는 것 외에도, 이 게임은 세계에 대한 호기심을 키우고, 사람들이 마을부터 거대한 대도시까지 수많은 곳에 살고 있다는 것을 상기시켜 줍니다. 이 게임의 목표는 더 세계적인 시각과, 사람들이 집이라고 부르는 다양한 장소에 대한 더 큰 이해를 일깨우는 것입니다."
+		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\"는 플레이어가 전 세계의 실제 도시를 최대한 많이 말하게 하는 게임입니다. 아는 도시가 많을수록 점수도 많아집니다.\n\n지리 지식을 시험하는 것 외에도, 이 게임은 세계에 대한 호기심을 키우고, 사람들이 마을부터 대도시까지 수많은 곳에 살고 있다는 것을 상기시켜 줍니다. 이 게임의 목표는 더 세계적인 시각과, 사람들이 집이라고 부르는 다양한 장소에 대한 더 큰 이해를 일깨우는 것입니다."
 	},
 	"fa": {
 		"I8N_LOADING": "در حال بارگذاری...",
@@ -197,7 +197,7 @@
 		"I8N_CITY_ALREADY_GUESSED": "شهر قبلاً حدس زده شده است.",
 		"I8N_RESTART_CONFIRM": "بازی دوباره شروع می‌شود. همه نام‌ها حذف می‌شوند. ادامه می‌دهید؟",
 		"I8N_SPLASH_BY": "By:",
-		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" یک بازی است که بازیکنان را به چالش می‌کشد تا هرچه شهر واقعی بیشتری در جهان می‌شناسند نام ببرند. هرچه شهرهای بیشتری بشناسید، امتیاز بیشتری می‌گیرید.\n\nفراتر از آزمودن دانش جغرافیایی، این بازی کنجکاوی نسبت به جهان را تشویق می‌کند و به ما یادآوری می‌کند که مردم در مکان‌های بی‌شماری زندگی می‌کنند، از روستاها تا کلان‌شهرهای عظیم. هدف آن الهام بخشیدن به دیدگاهی جهانی‌تر و آگاهی بیشتر نسبت به مکان‌های گوناگونی است که مردم خانه‌شان می‌نامند."
+		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" یک بازی است که بازیکنان را به چالش می‌کشد تا هرچه شهر واقعی بیشتری در جهان می‌شناسند نام ببرند. هرچه شهرهای بیشتری بشناسید، امتیاز بیشتری می‌گیرید.\n\nفراتر از آزمودن دانش جغرافیایی، این بازی کنجکاوی نسبت به جهان را تشویق می‌کند و به ما یادآوری می‌کند که مردم در مکان‌های بی‌شماری زندگی می‌کنند، از روستاها تا کلان‌شهرها. هدف آن الهام بخشیدن به دیدگاهی جهانی‌تر و آگاهی بیشتر نسبت به مکان‌های گوناگونی است که مردم خانه‌شان می‌نامند."
 	},
 	"it": {
 		"I8N_LOADING": "Caricamento...",
@@ -207,7 +207,7 @@
 		"I8N_CITY_ALREADY_GUESSED": "Città già indovinata.",
 		"I8N_RESTART_CONFIRM": "La partita verrà riavviata. Tutti i nomi verranno eliminati. Vuoi continuare?",
 		"I8N_SPLASH_BY": "Di:",
-		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" è un gioco che sfida i giocatori a nominare tutte le città reali del mondo che possono. Più città conosci, più punti ottieni.\n\nOltre a mettere alla prova le conoscenze geografiche, il gioco stimola la curiosità verso il mondo e ci ricorda che le persone vivono in innumerevoli luoghi, da villaggi a megacittà smisurate. Il suo obiettivo è ispirare una prospettiva più globale e una maggiore consapevolezza dei diversi luoghi che le persone chiamano casa."
+		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" è un gioco che sfida i giocatori a nominare tutte le città reali del mondo che possono. Più città conosci, più punti ottieni.\n\nOltre a mettere alla prova le conoscenze geografiche, il gioco stimola la curiosità verso il mondo e ci ricorda che le persone vivono in innumerevoli luoghi, da villaggi a megacittà. Il suo obiettivo è ispirare una prospettiva più globale e una maggiore consapevolezza dei diversi luoghi che le persone chiamano casa."
 	},
 	"jv": {
 		"I8N_LOADING": "Muat...",
@@ -217,7 +217,7 @@
 		"I8N_CITY_ALREADY_GUESSED": "Kutha wis katembung.",
 		"I8N_RESTART_CONFIRM": "Dolanan bakal wiwiti maneh. Kabeh jeneng bakal dibusak. Apa arep nyambung?",
 		"I8N_SPLASH_BY": "By:",
-		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" iku dolanan jangka sing tantang pemain kanggo nyebut kutha-kutha nyata ing donya meh kabeh sing bisa. Kutha sing luwih akeh sing sampeyan weruh, luwih akeh poin sing dipikolehi.\n\nSalah sawijining pangerten jangka, dolanan iku nurukake kepengin babagan donya lan ngelingake manawa wong urip ing papan-papan tanpa wates, saka desa nganti megakota gedhe. Maksude yaiku nggawa perspektif luwih global lan kesadaran luwih ake babagan papan-papan warna-warni sing diarani omah."
+		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" iku dolanan jangka sing tantang pemain kanggo nyebut kutha-kutha nyata ing donya meh kabeh sing bisa. Kutha sing luwih akeh sing sampeyan weruh, luwih akeh poin sing dipikolehi.\n\nSalah sawijining pangerten jangka, dolanan iku nurukake kepengin babagan donya lan ngelingake manawa wong urip ing papan-papan tanpa wates, saka desa nganti megakota. Maksude yaiku nggawa perspektif luwih global lan kesadaran luwih ake babagan papan-papan warna-warni sing diarani omah."
 	},
 	"pa": {
 		"I8N_LOADING": "ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...",
@@ -227,7 +227,7 @@
 		"I8N_CITY_ALREADY_GUESSED": "ਸ਼ਹਿਰ ਪਹਿਲਾਂ ਹੀ ਅੰਦਾਜ਼ਾ ਲਗਾਇਆ ਜਾ ਚੁੱਕਾ ਹੈ।",
 		"I8N_RESTART_CONFIRM": "ਖੇਡ ਮੁੜ ਸ਼ੁਰੂ ਹੋਵੇਗੀ। ਸਾਰੇ ਨਾਮ ਹਟਾ ਦਿੱਤੇ ਜਾਣਗੇ। ਕੀ ਤੁਸੀਂ ਜਾਰੀ ਰੱਖਣਾ ਚਾਹੁੰਦੇ ਹੋ?",
 		"I8N_SPLASH_BY": "By:",
-		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" ਇੱਕ ਖੇਡ ਹੈ ਜੋ ਖਿਡਾਰੀਆਂ ਨੂੰ ਸੰਸਾਰ ਦੇ ਜਿੰਨੇ ਸੱਚੇ ਸ਼ਹਿਰ ਹੋ ਸਕਦੇ ਹਨ ਉਹਨਾਂ ਦੇ ਨਾਮ ਦੱਸਣ ਦੀ ਚੁਣੌਤੀ ਦਿੰਦੀ ਹੈ। ਤੁਸੀਂ ਜਿੰਨੇ ਜ਼ਿਆਦਾ ਸ਼ਹਿਰ ਜਾਣਦੇ ਹੋ, ਉਹਨੇ ਜਿੰਨੇ ਜ਼ਿਆਦਾ ਪੁਆਇੰਟ ਮਿਲਦੇ ਹਨ।\n\nਭੂਗੋਲ ਦੇ ਗਿਆਨ ਨੂੰ ਪਰਖਣ ਦੇ ਨਾਲ ਨਾਲ, ਇਹ ਖੇਡ ਦੁਨੀਆ ਬਾਰੇ ਜਿਜ਼ਿਆਸਾ ਪੈਦਾ ਕਰਦੀ ਹੈ ਅਤੇ ਸਾਨੂੰ ਯਾਦ ਦਿਵਾਉਂਦੀ ਹੈ ਕਿ ਲੋਕ ਗਿਣਤੀ ਤੋਂ ਬਾਹਰ ਥਾਵਾਂ 'ਤੇ ਰਹਿੰਦੇ ਹਨ, ਪਿੰਡਾਂ ਤੋਂ ਲੈ ਕੇ ਵੱਡੇ ਮੈਗਾਸਿਟੀਆਂ ਤੱਕ। ਇਸਦਾ ਟੀਚਾ ਵਧੇਰੇ ਵਿਸ਼ਵਵਿਆਪੀ ਨਜ਼ਰੀਆ ਅਤੇ ਲੋਕਾਂ ਵੱਲੋਂ ਘਰ ਕਹਿੰਦੀਆਂ ਜਗ੍ਹਾਵਾਂ ਬਾਰੇ ਵਧੇਰੇ ਜਾਗਰੂਕਤਾ ਪੈਦਾ ਕਰਨਾ ਹੈ।"
+		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" ਇੱਕ ਖੇਡ ਹੈ ਜੋ ਖਿਡਾਰੀਆਂ ਨੂੰ ਸੰਸਾਰ ਦੇ ਜਿੰਨੇ ਸੱਚੇ ਸ਼ਹਿਰ ਹੋ ਸਕਦੇ ਹਨ ਉਹਨਾਂ ਦੇ ਨਾਮ ਦੱਸਣ ਦੀ ਚੁਣੌਤੀ ਦਿੰਦੀ ਹੈ। ਤੁਸੀਂ ਜਿੰਨੇ ਜ਼ਿਆਦਾ ਸ਼ਹਿਰ ਜਾਣਦੇ ਹੋ, ਉਹਨੇ ਜਿੰਨੇ ਜ਼ਿਆਦਾ ਪੁਆਇੰਟ ਮਿਲਦੇ ਹਨ।\n\nਭੂਗੋਲ ਦੇ ਗਿਆਨ ਨੂੰ ਪਰਖਣ ਦੇ ਨਾਲ ਨਾਲ, ਇਹ ਖੇਡ ਦੁਨੀਆ ਬਾਰੇ ਜਿਜ਼ਿਆਸਾ ਪੈਦਾ ਕਰਦੀ ਹੈ ਅਤੇ ਸਾਨੂੰ ਯਾਦ ਦਿਵਾਉਂਦੀ ਹੈ ਕਿ ਲੋਕ ਗਿਣਤੀ ਤੋਂ ਬਾਹਰ ਥਾਵਾਂ 'ਤੇ ਰਹਿੰਦੇ ਹਨ, ਪਿੰਡਾਂ ਤੋਂ ਲੈ ਕੇ ਮੈਗਾਸਿਟੀਆਂ ਤੱਕ। ਇਸਦਾ ਟੀਚਾ ਵਧੇਰੇ ਵਿਸ਼ਵਵਿਆਪੀ ਨਜ਼ਰੀਆ ਅਤੇ ਲੋਕਾਂ ਵੱਲੋਂ ਘਰ ਕਹਿੰਦੀਆਂ ਜਗ੍ਹਾਵਾਂ ਬਾਰੇ ਵਧੇਰੇ ਜਾਗਰੂਕਤਾ ਪੈਦਾ ਕਰਨਾ ਹੈ।"
 	},
 	"ha": {
 		"I8N_LOADING": "Ana lodi...",
@@ -247,7 +247,7 @@
 		"I8N_CITY_ALREADY_GUESSED": "ನಗರವನ್ನು ಈಗಾಗಲೇ ಊಹಿಸಲಾಗಿದೆ.",
 		"I8N_RESTART_CONFIRM": "ಆಟ ಮತ್ತೆ ಪ್ರಾರಂಭವಾಗುತ್ತದೆ. ಎಲ್ಲಾ ಹೆಸರುಗಳನ್ನು ತೆಗೆದುಹಾಕಲಾಗುತ್ತದೆ. ಮುಂದುವರಿಯಲಾ?",
 		"I8N_SPLASH_BY": "By:",
-		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" ಆಟವಾಗಿದ್ದು, ಆಟಗಾರರು ಪ್ರಪಂಚದ ಸಾಧ್ಯವಾದಷ್ಟು ನೈಜ ನಗರಗಳ ಹೆಸರುಗಳನ್ನು ಹೇಳುವ ಸವಾಲನ್ನು ನೀಡುತ್ತದೆ. ನಿಮಗೆ ತಿಳಿದ ನಗರಗಳು ಹೆಚ್ಚಿದ್ದಷ್ಟು, ಹೆಚ್ಚಿನ ಅಂಕಗಳು ಸಿಗುತ್ತವೆ.\n\nಭೂಗೋಲ ಜ್ಞಾನವನ್ನು ಪರೀಕ್ಷಿಸುವುದರ ಜೊತೆಗೆ, ಈ ಆಟವು ವಿಶ್ವದ ಬಗ್ಗೆ ಕುತೂಹಲವನ್ನು ಬೆಳೆಸುತ್ತದೆ ಮತ್ತು ಜನರು ಗ್ರಾಮಗಳಿಂದ ಹಿಡಿದು ಬೃಹತ್ ಮಹಾನಗರಗಳವರೆಗೆ ಅಗಣ್ಯ ಸ್ಥಳಗಳಲ್ಲಿ ವಾಸಿಸುತ್ತಾರೆ ಎಂದು ನಮಗೆ ನೆನಪಿಸುತ್ತದೆ. ಜನರು ಮನೆ ಎಂದು ಕರೆಯುವ ವಿವಿಧ ಸ್ಥಳಗಳ ಬಗ್ಗೆ ಹೆಚ್ಚಿನ ಅರಿವು ಮತ್ತು ಹೆಚ್ಚು ಜಾಗತಿಕ ದೃಷ್ಟಿಕೋನವನ್ನು ನೀಡುವುದು ಇದರ ಗುರಿಯಾಗಿದೆ."
+		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" ಆಟವಾಗಿದ್ದು, ಆಟಗಾರರು ಪ್ರಪಂಚದ ಸಾಧ್ಯವಾದಷ್ಟು ನೈಜ ನಗರಗಳ ಹೆಸರುಗಳನ್ನು ಹೇಳುವ ಸವಾಲನ್ನು ನೀಡುತ್ತದೆ. ನಿಮಗೆ ತಿಳಿದ ನಗರಗಳು ಹೆಚ್ಚಿದ್ದಷ್ಟು, ಹೆಚ್ಚಿನ ಅಂಕಗಳು ಸಿಗುತ್ತವೆ.\n\nಭೂಗೋಲ ಜ್ಞಾನವನ್ನು ಪರೀಕ್ಷಿಸುವುದರ ಜೊತೆಗೆ, ಈ ಆಟವು ವಿಶ್ವದ ಬಗ್ಗೆ ಕುತೂಹಲವನ್ನು ಬೆಳೆಸುತ್ತದೆ ಮತ್ತು ಜನರು ಗ್ರಾಮಗಳಿಂದ ಹಿಡಿದು ಮಹಾನಗರಗಳವರೆಗೆ ಅಗಣ್ಯ ಸ್ಥಳಗಳಲ್ಲಿ ವಾಸಿಸುತ್ತಾರೆ ಎಂದು ನಮಗೆ ನೆನಪಿಸುತ್ತದೆ. ಜನರು ಮನೆ ಎಂದು ಕರೆಯುವ ವಿವಿಧ ಸ್ಥಳಗಳ ಬಗ್ಗೆ ಹೆಚ್ಚಿನ ಅರಿವು ಮತ್ತು ಹೆಚ್ಚು ಜಾಗತಿಕ ದೃಷ್ಟಿಕೋನವನ್ನು ನೀಡುವುದು ಇದರ ಗುರಿಯಾಗಿದೆ."
 	},
 	"gu": {
 		"I8N_LOADING": "લોડ થઈ રહ્યું છે...",
@@ -257,7 +257,7 @@
 		"I8N_CITY_ALREADY_GUESSED": "શહર પહેલેથી જ અનુમાનિત કરવામાં આવ્યું છે.",
 		"I8N_RESTART_CONFIRM": "રમત ફરી શરૂ થશે. બધા નામો કાઢી નાખવામાં આવશે. શું તમે ચાલુ રાખવા માંગો છો?",
 		"I8N_SPLASH_BY": "By:",
-		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" એક રમત છે, જે રમનારાઓને દુનિયાના શક્ય તેટલા વાસ્તવિક શહેરોના નામ આપવાનું પડકારફેંકે છે. તમે જેટલા વધુ શહેરો ઓળખો છો, તેટલા વધુ પોઇન્ટ મેળવો છો.\n\nભૂગોળનું જ્ઞાન કસવા ઉપરાંત, આ રમત દુનિયા વિશે જિજ્ઞાસા વધારે છે અને અમને યાદ કરાવે છે કે લોકો અસંખ્ય જગ્યાઓ પર રહે છે, ગામડાંથી લઈને વિશાળ મેગાસિટી સુધી. લોકો ઘર કહે છે તે વિવિધ જગ્યાઓ વિશે વધુ જાગૃતિ અને વધુ વૈશ્વિક દૃષ્ટિકોણ પ્રેરિત કરવાનો તેનો હેતુ છે."
+		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" એક રમત છે, જે રમનારાઓને દુનિયાના શક્ય તેટલા વાસ્તવિક શહેરોના નામ આપવાનું પડકારફેંકે છે. તમે જેટલા વધુ શહેરો ઓળખો છો, તેટલા વધુ પોઇન્ટ મેળવો છો.\n\nભૂગોળનું જ્ઞાન કસવા ઉપરાંત, આ રમત દુનિયા વિશે જિજ્ઞાસા વધારે છે અને અમને યાદ કરાવે છે કે લોકો અસંખ્ય જગ્યાઓ પર રહે છે, ગામડાંથી લઈને મેગાસિટી સુધી. લોકો ઘર કહે છે તે વિવિધ જગ્યાઓ વિશે વધુ જાગૃતિ અને વધુ વૈશ્વિક દૃષ્ટિકોણ પ્રેરિત કરવાનો તેનો હેતુ છે."
 	},
 	"bho": {
 		"I8N_LOADING": "लोड होत बा...",
@@ -267,7 +267,7 @@
 		"I8N_CITY_ALREADY_GUESSED": "शहर पहिले से अंदाजा लगावल गइल बा।",
 		"I8N_RESTART_CONFIRM": "खेल पड़ती शुरू होई। सब नाम मेटा देल जाई। की अहीं जारी रखब?",
 		"I8N_SPLASH_BY": "By:",
-		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" एक्के खेल हौ, जओन खिलाड़ी लोकनि के दुनिया भर के जइभी सच्चे शहर बाओकरा के नाम बतावल के चुनौती देतबा। अहीं जेकरा बेसी शहर जानतबानी, ओकरा बेसी पॉइंट मिलेल।\n\nभूगोल के जानकारी परखल के अलावे, ई खेल दुनिया पर कौतूहल बढ़ावल बा आ हमनि के याद दिलावल बा कि लोग गिनती के बाहर जगहन पर रहल बा, गाँव से ले के विशाल महानगर तक। ओकर लक्ष्य बेसी वैश्विक नजरिया आ लोगनि के घर कहल जगहन के बारे में बेसी जागरूकता पैदा करल बा।"
+		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" एक्के खेल हौ, जओन खिलाड़ी लोकनि के दुनिया भर के जइभी सच्चे शहर बाओकरा के नाम बतावल के चुनौती देतबा। अहीं जेकरा बेसी शहर जानतबानी, ओकरा बेसी पॉइंट मिलेल।\n\nभूगोल के जानकारी परखल के अलावे, ई खेल दुनिया पर कौतूहल बढ़ावल बा आ हमनि के याद दिलावल बा कि लोग गिनती के बाहर जगहन पर रहल बा, गाँव से ले के महानगर तक। ओकर लक्ष्य बेसी वैश्विक नजरिया आ लोगनि के घर कहल जगहन के बारे में बेसी जागरूकता पैदा करल बा।"
 	},
 	"or": {
 		"I8N_LOADING": "ଲୋଡ୍ ହେଉଛି...",
@@ -277,7 +277,7 @@
 		"I8N_CITY_ALREADY_GUESSED": "ସହର ପୂର୍ବରୁ ଅନୁମାନ କରାଯାଇସାରିଛି ।",
 		"I8N_RESTART_CONFIRM": "ଖେଳ ପୁଣି ଆରମ୍ଭ ହେବ । ସମସ୍ତ ନାମ ଲିଭାଯିବ । ଆପଣ ଜାରି ରଖିବାକୁ ଚାହାନ୍ତିକି?",
 		"I8N_SPLASH_BY": "By:",
-		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" ଏକ ଖେଳ, ଯାହା ଖେଳାଳିମାନଙ୍କୁ ଦୁନିଆର ଯେତେ ସମ୍ଭବ ବାସ୍ତବ ସହରର ନାମ କହିବାକୁ ଚ୍ୟାଲେଞ୍ଜ କରେ। ଆପଣ ଯେତେ ଅଧିକ ସହର ଜାଣନ୍ତି, ସେତେ ଅଧିକ ପଏଣ୍ଟ ପାଆନ୍ତି।\n\nଭୂଗୋଳ ଜ୍ଞାନ ପରୀକ୍ଷା କରିବା ବ୍ୟତୀତ, ଏହି ଖେଳ ଦୁନିଆ ପ୍ରତି କୌତୂହଳ ବଢାଏ ଏବଂ ଆମକୁ ମନେ ପକାଏ ଯେ ଲୋକେ ଅଗଣିତ ସ୍ଥାନରେ ରହନ୍ତି, ଗାଁରୁ ବିଶାଳ ମହାନଗର ପର୍ଯ୍ୟନ୍ତ। ଲୋକେ ଘର ବୋଲି ଡାକନ୍ତି ସେହି ବିଭିନ୍ନ ସ୍ଥାନ ବିଷୟରେ ଅଧିକ ସଚେତନତା ଏବଂ ଅଧିକ ବିଶ୍ୱବ୍ୟାପୀ ଦୃଷ୍ଟିକୋଣ ଆଣିବା ଏହାର ଲକ୍ଷ୍ୟ।"
+		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" ଏକ ଖେଳ, ଯାହା ଖେଳାଳିମାନଙ୍କୁ ଦୁନିଆର ଯେତେ ସମ୍ଭବ ବାସ୍ତବ ସହରର ନାମ କହିବାକୁ ଚ୍ୟାଲେଞ୍ଜ କରେ। ଆପଣ ଯେତେ ଅଧିକ ସହର ଜାଣନ୍ତି, ସେତେ ଅଧିକ ପଏଣ୍ଟ ପାଆନ୍ତି।\n\nଭୂଗୋଳ ଜ୍ଞାନ ପରୀକ୍ଷା କରିବା ବ୍ୟତୀତ, ଏହି ଖେଳ ଦୁନିଆ ପ୍ରତି କୌତୂହଳ ବଢାଏ ଏବଂ ଆମକୁ ମନେ ପକାଏ ଯେ ଲୋକେ ଅଗଣିତ ସ୍ଥାନରେ ରହନ୍ତି, ଗାଁରୁ ମହାନଗର ପର୍ଯ୍ୟନ୍ତ। ଲୋକେ ଘର ବୋଲି ଡାକନ୍ତି ସେହି ବିଭିନ୍ନ ସ୍ଥାନ ବିଷୟରେ ଅଧିକ ସଚେତନତା ଏବଂ ଅଧିକ ବିଶ୍ୱବ୍ୟାପୀ ଦୃଷ୍ଟିକୋଣ ଆଣିବା ଏହାର ଲକ୍ଷ୍ୟ।"
 	},
 	"uk": {
 		"I8N_LOADING": "Завантаження...",
@@ -287,7 +287,7 @@
 		"I8N_CITY_ALREADY_GUESSED": "Місто вже вгадано.",
 		"I8N_RESTART_CONFIRM": "Гру буде перезапущено. Усі назви буде видалено. Продовжити?",
 		"I8N_SPLASH_BY": "Від:",
-		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" — це гра, яка кидає виклик гравцям назвати якомога більше реальних міст світу. Чим більше міст ви знаєте, тим більше очок отримуєте.\n\nОкрім перевірки географічних знань, гра заохочує цікавість до світу та нагадує, що люди живуть у незліченних місцях — від сіл до величезних мегаполісів. Її мета — надихнути на глобальніший погляд і більшу обізнаність про різні місця, які люди називають домом."
+		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" — це гра, яка кидає виклик гравцям назвати якомога більше реальних міст світу. Чим більше міст ви знаєте, тим більше очок отримуєте.\n\nОкрім перевірки географічних знань, гра заохочує цікавість до світу та нагадує, що люди живуть у незліченних місцях — від сіл до мегаполісів. Її мета — надихнути на глобальніший погляд і більшу обізнаність про різні місця, які люди називають домом."
 	},
 	"pl": {
 		"I8N_LOADING": "Ładowanie...",
@@ -297,6 +297,6 @@
 		"I8N_CITY_ALREADY_GUESSED": "Miasto już odgadnięte.",
 		"I8N_RESTART_CONFIRM": "Gra zostanie uruchomiona ponownie. Wszystkie nazwy zostaną usunięte. Czy chcesz kontynuować?",
 		"I8N_SPLASH_BY": "Autor:",
-		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" to gra, która zachęca graczy do podania jak największej liczby prawdziwych miast na świecie. Im więcej miast znasz, tym więcej punktów zdobywasz.\n\nOprócz testowania wiedzy geograficznej, gra pobudza ciekawość świata i przypomina, że ludzie mieszkają w niezliczonych miejscach, od wiosek po rozległe megamiasta. Jej celem jest inspirowanie bardziej globalnej perspektywy i większej świadomości różnych miejsc, które ludzie nazywają domem."
+		"I8N_SPLASH_DESCRIPTION": "\"Where People Live\" to gra, która zachęca graczy do podania jak największej liczby prawdziwych miast na świecie. Im więcej miast znasz, tym więcej punktów zdobywasz.\n\nOprócz testowania wiedzy geograficznej, gra pobudza ciekawość świata i przypomina, że ludzie mieszkają w niezliczonych miejscach, od wiosek po megamiasta. Jej celem jest inspirowanie bardziej globalnej perspektywy i większej świadomości różnych miejsc, które ludzie nazywają domem."
 	}
 }
