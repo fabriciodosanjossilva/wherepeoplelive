@@ -35,10 +35,14 @@ let i18nPromise = loadI18n();
 // barra de progresso passa a ser exibida, para garantir o tempo mínimo de
 // exibição.
 let splashStartTime = Date.now();
+// Em localhost nenhum servidor envia Content-Encoding: br, então baixa o
+// arquivo original; em produção (S3) baixa a versão brotli, que o browser
+// descompacta transparentemente.
+let citiesFile = location.hostname.includes("localhost") ? "cities5000.txt" : "cities5000.txt.br";
 let dbFilesPromise = i18nPromise.then(() => Promise.all([
 	fetch("boundaries.json"),
 	fetch("countries.json"),
-	fetch("cities5000.txt")
+	fetch(citiesFile)
 ]));
 
 async function loadI18n() {
