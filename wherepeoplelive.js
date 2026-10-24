@@ -15,6 +15,26 @@ let countryStats = new Map();
 let currentLanguage = "en";
 let countryDisplayNames = null;
 let countryBarsUpdatePending = false;
+let medalQueue = [];
+
+function getCountryMedalLevel(stats) {
+	if (!stats || !stats.totalPop || stats.totalPop <= 0) {
+		return 0;
+	}
+	let percent = stats.markedPop / stats.totalPop;
+	if (percent >= 0.9) return 3;
+	if (percent >= 0.8) return 2;
+	if (percent >= 0.7) return 1;
+	return 0;
+}
+
+function updateCountryMedalLevel(stats) {
+	if (!stats) {
+		return 0;
+	}
+	stats.medalLevel = getCountryMedalLevel(stats);
+	return stats.medalLevel;
+}
 
 let initCenter = [-13, -49];
 let initZoom = 3;
@@ -30,6 +50,9 @@ let loadingSavedState = false;
 let messageCount = 0;
 let countryBoundaries;
 let medalTriggerCountry = null;
+let guessToken = 0;
+let activeGuessToken = 0;
+let activeGuessList = [];
 
 // Inicia o download do repositório de traduções em segundo plano, enquanto a
 // splash screen é exibida. Os textos traduzíveis começam vazios no HTML (via
@@ -135,7 +158,11 @@ async function processDB() {
 		city.properties.pop = parseInt(cityRow[14], 10);
 		city.properties.displayName = displayName;
 		let countryCodeController = cityRow[9];
-		let countryCode = (countryCodeController == "" ? cityRow[8]: countryCodeController);
+		let countryCodeRaw = (countryCodeController == "" ? cityRow[8]: countryCodeController);
+		let countryCode = String(countryCodeRaw || "").trim().substring(0, 2).toUpperCase();
+		if (countryCode == "") {
+			countryCode = String(countryCodeRaw || "").trim();
+		}
 		let stats = countryStats.get(countryCode);
 		if (!stats) {
 			stats = {
@@ -143,6 +170,7 @@ async function processDB() {
 				count: 0,
 				totalPop: 0,
 				markedPop: 0,
+				medalLevel: 0,
 				refLon: 0,
 				minLat: 0,
 				maxLat: 0,
@@ -180,7 +208,7 @@ async function processDB() {
 			if (normLon > stats.maxLon) stats.maxLon = normLon;
 		}
 		stats.count++;
-
+		updateCountryMedalLevel(stats);
 		let names = [displayName].concat(copyString(cityRow[3]).split(","));
 		for (let n = 0; n < names.length; n++) {
 			addNameIndex(convertSearchName(names[n]), c);
@@ -435,8 +463,10 @@ function updateCountryBars() {
 	visible = visible.slice(0, 5);
 
 	container.innerHTML = "";
-	let triggerUsed = false;
+	let medalQueueCopy = medalQueue.slice();
+	let medalTriggerIndex = 0;
 	visible.forEach(stats => {
+		updateCountryMedalLevel(stats);
 		let percent = stats.markedPop / stats.totalPop;
 		let row = document.createElement("div");
 		row.className = "countryBar";
@@ -463,10 +493,8 @@ function updateCountryBars() {
 		fill.setAttribute("style", "width:" + Math.max(1, percent * 70).toFixed(2) + "px; background-image:none; background-color:" + color + ";");
 
 		// Medalha: bronze >=70%, prata >=80%, ouro >=90%.
-		let medalLevel = 0;
-		if (percent >= 0.9) medalLevel = 3;
-		else if (percent >= 0.8) medalLevel = 2;
-		else if (percent >= 0.7) medalLevel = 1;
+		let medalLevel = stats.medalLevel !== undefined ? stats.medalLevel : getCountryMedalLevel(stats);
+		stats.medalLevel = medalLevel;
 		if (medalLevel > 0) {
 			let medal = document.createElement("span");
 			medal.className = "countryMedal medal" + medalLevel;
@@ -474,12 +502,20 @@ function updateCountryBars() {
 			else if (medalLevel == 2) medal.textContent = "\ud83e\udd48";
 			else medal.textContent = "\ud83e\udd47";
 			row.appendChild(medal);
-			if (stats._lastMedalLevel !== medalLevel && !loadingSavedState && medalTriggerCountry == stats.code && !triggerUsed) {
+			let inQueue = false;
+			for (let q = 0; q < medalQueueCopy.length; q++) {
+				if (medalQueueCopy[q] == stats.code) {
+					inQueue = true;
+					break;
+				}
+			}
+			if (stats._lastMedalLevel !== medalLevel && !loadingSavedState && inQueue) {
+				let delay = medalTriggerIndex * 1000;
+				medalTriggerIndex++;
 				setTimeout(function() {
 					triggerMedalAnimation(row, medalLevel);
 					playMedalSound(medalLevel);
-				}, 1000);
-				triggerUsed = true;
+				}, delay);
 				stats._lastMedalLevel = medalLevel;
 			} else if (stats._lastMedalLevel !== medalLevel) {
 				stats._lastMedalLevel = medalLevel;
@@ -507,9 +543,10 @@ function updateCountryBars() {
 
 		container.appendChild(row);
 	});
-	if (triggerUsed) {
-		medalTriggerCountry = null;
+	if (medalTriggerIndex > 0) {
+		medalQueue = [];
 	}
+	medalTriggerCountry = null;
 }
 // Som triplo crescente para novas medalhas.
 function playMedalSound(level) {
@@ -677,6 +714,7 @@ function startGame() {
 
 	countryStats.forEach(stats => {
 		stats.markedPop = 0;
+		updateCountryMedalLevel(stats);
 		if (!loadingSavedState) {
 			stats._lastMedalLevel = undefined;
 		}
@@ -728,6 +766,25 @@ function searchName() {
     }
 	let name = document.getElementById("search").value;
 	if(name.trim() == "") {
+		if (activeGuessList.length > 0) {
+			let tokenEmpty = ++guessToken;
+			activeGuessToken = tokenEmpty;
+			for (let i = 0; i < activeGuessList.length; i++) {
+				let prevCity = activeGuessList[i];
+				let nearbyCities = nearCities(prevCity);
+				for (let n = 0; n < nearbyCities.length; n++) {
+					let nearbyCity = nearbyCities[n];
+					let guessedNowPrev = nearbyCity.properties.id == prevCity.properties.id;
+					markCity(nearbyCity, guessedNowPrev, false, true);
+				}
+			}
+			if (activeGuessList.length > 0) {
+				let lastCity = activeGuessList[activeGuessList.length - 1];
+				map.setView([lastCity.geometry.coordinates[1], lastCity.geometry.coordinates[0]], Math.max(6, map.getZoom()), {animate: false});
+			}
+			activeGuessList = [];
+			document.getElementById("pointsPop").innerHTML = pointsPop.toLocaleString();
+		}
         return;
     }
 
@@ -755,23 +812,58 @@ function searchName() {
 		return;
 	}
 
+	let token = ++guessToken;
+	if (activeGuessList.length > 0 && activeGuessToken != token) {
+		for (let i = 0; i < activeGuessList.length; i++) {
+			let prevCity = activeGuessList[i];
+			let nearbyCities = nearCities(prevCity);
+			for (let n = 0; n < nearbyCities.length; n++) {
+				let nearbyCity = nearbyCities[n];
+				let guessedNowPrev = nearbyCity.properties.id == prevCity.properties.id;
+				markCity(nearbyCity, guessedNowPrev, false, true);
+			}
+		}
+		activeGuessList = [];
+	}
+	if (citiesGuessed.length > 0) {
+		let lastCity = citiesGuessed[citiesGuessed.length - 1];
+		map.setView([lastCity.geometry.coordinates[1], lastCity.geometry.coordinates[0]], Math.max(6, map.getZoom()), {animate: false});
+	}
+
 	document.getElementById("search").value = "";
 	let center = map.getCenter();
 	let centerPoint = turf.point([center.lng, center.lat]);
 	citiesGuessed.sort((b, a) => turf.distance(centerPoint, a) - turf.distance(centerPoint, b));
 	hideMessage();
-	cityGuessed(citiesGuessed, true);
+	activeGuessToken = token;
+	activeGuessList = citiesGuessed.slice();
+	cityGuessed(citiesGuessed.slice(), true, token);
 }
 
-function cityGuessed(citiesGuessed, fromUserInput) {
+function cityGuessed(citiesGuessed, fromUserInput, token) {
+	if (fromUserInput && token !== undefined && token !== activeGuessToken) {
+		activeGuessList = [];
+		return;
+	}
 	let city = citiesGuessed[0];
+	if (fromUserInput) {
+		medalQueue = [];
+	}
 	track("guess", { city: city.properties.displayName, pop: city.properties.pop, capital: city.capital });
+	if (fromUserInput && token !== undefined && token !== activeGuessToken) {
+		activeGuessList = [];
+		return;
+	}
 	map.flyTo([city.geometry.coordinates[1], city.geometry.coordinates[0]], Math.max(6, map.getZoom()));
 	if (firstGuess) {
 		firstGuess = false;
 	}
 
 	map.once('moveend', function() {
+		if (fromUserInput && token !== undefined && token !== activeGuessToken) {
+			activeGuessList = [];
+			return;
+		}
 		let nearbyCities = nearCities(city);
 		nearbyCities.forEach(nearbyCity => {
 			let guessedNow = nearbyCity.properties.id == city.properties.id;
@@ -785,8 +877,24 @@ function cityGuessed(citiesGuessed, fromUserInput) {
 		});
 
 		citiesGuessed.shift();
+		if (activeGuessList.length > 0) {
+			for (let a = 0; a < activeGuessList.length; a++) {
+				if (activeGuessList[a] === city) {
+					activeGuessList.splice(a, 1);
+					break;
+				}
+			}
+		}
 		if (citiesGuessed.length>0) {
-			cityGuessed(citiesGuessed, fromUserInput);
+			if (fromUserInput && token !== undefined && token !== activeGuessToken) {
+				activeGuessList = [];
+				return;
+			}
+			cityGuessed(citiesGuessed, fromUserInput, token);
+		} else {
+			if (fromUserInput && token !== undefined && token === activeGuessToken) {
+				activeGuessList = [];
+			}
 		}
 		document.getElementById("pointsPop").innerHTML = pointsPop.toLocaleString();
 	});
@@ -855,9 +963,22 @@ function markCity(city, guessedNow, revealedNow, fromUserInput) {
 		let stats = countryStats.get(city.properties.countryCode);
 		if (stats && !revealedNow) {
 			stats.markedPop += city.properties.pop;
+			updateCountryMedalLevel(stats);
 		}
 		if (!revealedNow) {
 			pointsPop += city.properties.pop;
+		}
+		if (fromUserInput && !revealedNow && stats) {
+			let alreadyInQueue = false;
+			for (let q = 0; q < medalQueue.length; q++) {
+				if (medalQueue[q] == stats.code) {
+					alreadyInQueue = true;
+					break;
+				}
+			}
+			if (!alreadyInQueue) {
+				medalQueue.push(stats.code);
+			}
 		}
 		if (guessedNow && fromUserInput && stats) {
 			medalTriggerCountry = stats.code;
