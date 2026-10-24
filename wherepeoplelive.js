@@ -29,7 +29,7 @@ let loadingSavedState = false;
 
 let messageCount = 0;
 let countryBoundaries;
-let trophyTriggerCountry = null;
+let medalTriggerCountry = null;
 
 // Inicia o download do repositório de traduções em segundo plano, enquanto a
 // splash screen é exibida. Os textos traduzíveis começam vazios no HTML (via
@@ -462,34 +462,34 @@ function updateCountryBars() {
 		let color = "rgb(" + r + ", " + g + ", " + b + ")";
 		fill.setAttribute("style", "width:" + Math.max(1, percent * 70).toFixed(2) + "px; background-image:none; background-color:" + color + ";");
 
-		// Troféu: bronze >=70%, prata >=80%, ouro >=90%.
-		let trophyLevel = 0;
-		if (percent >= 0.9) trophyLevel = 3;
-		else if (percent >= 0.8) trophyLevel = 2;
-		else if (percent >= 0.7) trophyLevel = 1;
-		if (trophyLevel > 0) {
-			let trophy = document.createElement("span");
-			trophy.className = "countryTrophy trophy" + trophyLevel;
-			if (trophyLevel == 1) trophy.textContent = "\ud83e\udd49";
-			else if (trophyLevel == 2) trophy.textContent = "\ud83e\udd48";
-			else trophy.textContent = "\ud83e\udd47";
-			row.appendChild(trophy);
-			if (stats._lastTrophyLevel !== trophyLevel && !loadingSavedState && trophyTriggerCountry == stats.code && !triggerUsed) {
+		// Medalha: bronze >=70%, prata >=80%, ouro >=90%.
+		let medalLevel = 0;
+		if (percent >= 0.9) medalLevel = 3;
+		else if (percent >= 0.8) medalLevel = 2;
+		else if (percent >= 0.7) medalLevel = 1;
+		if (medalLevel > 0) {
+			let medal = document.createElement("span");
+			medal.className = "countryMedal medal" + medalLevel;
+			if (medalLevel == 1) medal.textContent = "\ud83e\udd49";
+			else if (medalLevel == 2) medal.textContent = "\ud83e\udd48";
+			else medal.textContent = "\ud83e\udd47";
+			row.appendChild(medal);
+			if (stats._lastMedalLevel !== medalLevel && !loadingSavedState && medalTriggerCountry == stats.code && !triggerUsed) {
 				setTimeout(function() {
-					triggerTrophyAnimation(row, trophyLevel);
-					playTrophySound(trophyLevel);
+					triggerMedalAnimation(row, medalLevel);
+					playMedalSound(medalLevel);
 				}, 1000);
 				triggerUsed = true;
-				stats._lastTrophyLevel = trophyLevel;
-			} else if (stats._lastTrophyLevel !== trophyLevel) {
-				stats._lastTrophyLevel = trophyLevel;
+				stats._lastMedalLevel = medalLevel;
+			} else if (stats._lastMedalLevel !== medalLevel) {
+				stats._lastMedalLevel = medalLevel;
 			}
 		}
 		else {
 			if (!loadingSavedState) {
-				stats._lastTrophyLevel = 0;
-			} else if (stats._lastTrophyLevel === undefined) {
-				stats._lastTrophyLevel = 0;
+				stats._lastMedalLevel = 0;
+			} else if (stats._lastMedalLevel === undefined) {
+				stats._lastMedalLevel = 0;
 			}
 		}
 
@@ -508,11 +508,11 @@ function updateCountryBars() {
 		container.appendChild(row);
 	});
 	if (triggerUsed) {
-		trophyTriggerCountry = null;
+		medalTriggerCountry = null;
 	}
 }
-// Som triplo crescente para novos troféus.
-function playTrophySound(level) {
+// Som triplo crescente para novas medalhas.
+function playMedalSound(level) {
 	try {
 		let AudioCtx = window.AudioContext || window.webkitAudioContext;
 		if (!AudioCtx) return;
@@ -532,8 +532,8 @@ function playTrophySound(level) {
 		});
 	} catch (e) {}
 }
-// Animação de troféu: aparece grande no centro e vai para a barra.
-function triggerTrophyAnimation(targetRow, level) {
+// Animação de medalha: aparece grande no centro e vai para a barra.
+function triggerMedalAnimation(targetRow, level) {
 	let center = document.createElement("div");
 	if (level == 1) center.textContent = "\ud83e\udd49";
 	else if (level == 2) center.textContent = "\ud83e\udd48";
@@ -678,7 +678,7 @@ function startGame() {
 	countryStats.forEach(stats => {
 		stats.markedPop = 0;
 		if (!loadingSavedState) {
-			stats._lastTrophyLevel = undefined;
+			stats._lastMedalLevel = undefined;
 		}
 	});
 	cities.forEach(city => {
@@ -860,7 +860,7 @@ function markCity(city, guessedNow, revealedNow, fromUserInput) {
 			pointsPop += city.properties.pop;
 		}
 		if (guessedNow && fromUserInput && stats) {
-			trophyTriggerCountry = stats.code;
+			medalTriggerCountry = stats.code;
 		}
 		if (!loadingSavedState) {
 			scheduleCountryBarsUpdate();
