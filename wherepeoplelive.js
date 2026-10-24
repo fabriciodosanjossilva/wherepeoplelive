@@ -134,8 +134,8 @@ async function processDB() {
 		city.properties.id = copyString(cityRow[0]);
 		city.properties.pop = parseInt(cityRow[14], 10);
 		city.properties.displayName = displayName;
-		// Código de duas letras do país (coluna 9 do cities5000.txt).
-		let countryCode = cityRow[8];
+		let countryCodeController = cityRow[9];
+		let countryCode = (countryCodeController == "" ? cityRow[8]: countryCodeController);
 		let stats = countryStats.get(countryCode);
 		if (!stats) {
 			stats = {
@@ -152,7 +152,7 @@ async function processDB() {
 			countryStats.set(countryCode, stats);
 		}
 		city.properties.countryCode = stats.code;
-		city.capital = cityRow[7] == "PPLC" && cityRow[9] == "";
+		city.capital = cityRow[7] == "PPLC" && countryCodeController == "";
 		city.guessed = false;
 		city.revealed = false;
 		city.marked = false;
@@ -357,6 +357,10 @@ function normalizeLongitude(delta) {
 
 // Nome do país a partir do código de duas letras, no idioma da interface.
 function countryDisplayName(code) {
+	let translated = i18n("I8N_COUNTRY_" + code);
+	if (translated) {
+		return translated;
+	}
 	if (!countryDisplayNames) {
 		try {
 			countryDisplayNames = new Intl.DisplayNames([currentLanguage], {type: "region"});
