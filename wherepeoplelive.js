@@ -11,6 +11,11 @@ let nameIndex;
 let citiesRenderer;
 let renderedCities;
 
+let countryStats = new Map();
+let currentLanguage = "en";
+let countryDisplayNames = null;
+let countryBarsUpdatePending = false;
+
 let initCenter = [-13, -49];
 let initZoom = 3;
 let radiusKm = 60;
@@ -20,9 +25,11 @@ let pointsPop;
 let state;
 let roundNumber;
 let roundStart;
+let loadingSavedState = false;
 
 let messageCount = 0;
 let countryBoundaries;
+let trophyTriggerCountry = null;
 
 // Inicia o download do repositório de traduções em segundo plano, enquanto a
 // splash screen é exibida. Os textos traduzíveis começam vazios no HTML (via
@@ -56,6 +63,7 @@ async function loadI18n() {
 			let base = browserLanguage.split("-")[0].toLowerCase();
 			if (translations[base]) {
 				i18nStrings = translations[base];
+				currentLanguage = base;
 				return;
 			}
 		}
@@ -118,6 +126,7 @@ async function processDB() {
 
 	nameIndex = new Map();
 	cities = new Array(cityRows.length);
+	countryStats = new Map();
 	for (let c = 0; c < order.length; c++) {
 		let cityRow = cityRows[order[c]];
 		let displayName = copyString(cityRow[1]);
@@ -125,6 +134,24 @@ async function processDB() {
 		city.properties.id = copyString(cityRow[0]);
 		city.properties.pop = parseInt(cityRow[14], 10);
 		city.properties.displayName = displayName;
+		// Código de duas letras do país (coluna 9 do cities5000.txt).
+		let countryCode = cityRow[8];
+		let stats = countryStats.get(countryCode);
+		if (!stats) {
+			stats = {
+				code: countryCode,
+				count: 0,
+				totalPop: 0,
+				markedPop: 0,
+				refLon: 0,
+				minLat: 0,
+				maxLat: 0,
+				minLon: 0,
+				maxLon: 0
+			};
+			countryStats.set(countryCode, stats);
+		}
+		city.properties.countryCode = stats.code;
 		city.capital = cityRow[7] == "PPLC" && cityRow[9] == "";
 		city.guessed = false;
 		city.revealed = false;
@@ -132,6 +159,27 @@ async function processDB() {
 		city.circleLayer = null;
 		city.radiusLayer = null;
 		cities[c] = city;
+
+		// Total de população do país e bounding box de todas as suas cidades
+		// (usado depois para saber se o país está visível no mapa).
+		let lat = city.geometry.coordinates[1];
+		let lon = city.geometry.coordinates[0];
+		stats.totalPop += city.properties.pop;
+		if (stats.count == 0) {
+			stats.refLon = lon;
+			stats.minLat = lat;
+			stats.maxLat = lat;
+			stats.minLon = lon;
+			stats.maxLon = lon;
+		}
+		else {
+			if (lat < stats.minLat) stats.minLat = lat;
+			if (lat > stats.maxLat) stats.maxLat = lat;
+			let normLon = stats.refLon + normalizeLongitude(lon - stats.refLon);
+			if (normLon < stats.minLon) stats.minLon = normLon;
+			if (normLon > stats.maxLon) stats.maxLon = normLon;
+		}
+		stats.count++;
 
 		let names = [displayName].concat(copyString(cityRow[3]).split(","));
 		for (let n = 0; n < names.length; n++) {
@@ -196,7 +244,10 @@ function initMap() {
 	renderedCities = new Set();
 	citiesLayerGroup = L.layerGroup().addTo(map);
 
-	map.on('moveend zoomend', updateVisibleCities);
+	map.on('moveend zoomend', function() {
+		updateVisibleCities();
+		scheduleCountryBarsUpdate();
+	});
 
 	map.on('zoomend', function() {
 		if (map.getZoom() < labelsMinZoom) {
@@ -268,7 +319,7 @@ function updateVisibleCities() {
 		});
 		circle.city = city;
 		circle.on("click", function (e) {
-			markCity(e.target.city, false, true);
+			markCity(e.target.city, false, true, false);
 		});
 		city.circleLayer = circle;
 		renderedCities.add(city);
@@ -289,6 +340,218 @@ function cityInBounds(city, bounds) {
 	// Normaliza para lidar com a viewport virando o mundo (worldCopyJump).
 	let lon = west + (((city.geometry.coordinates[0] - west) % 360) + 360) % 360;
 	return lon <= east;
+}
+
+
+// Normaliza um deslocamento de longitude para o intervalo [-180, 180).
+function normalizeLongitude(delta) {
+	let d = delta % 360;
+	if (d < -180) {
+		d += 360;
+	}
+	else if (d > 180) {
+		d -= 360;
+	}
+	return d;
+}
+
+// Nome do país a partir do código de duas letras, no idioma da interface.
+function countryDisplayName(code) {
+	if (!countryDisplayNames) {
+		try {
+			countryDisplayNames = new Intl.DisplayNames([currentLanguage], {type: "region"});
+		}
+		catch (error) {
+			countryDisplayNames = false;
+		}
+	}
+	if (countryDisplayNames) {
+		try {
+			let name = countryDisplayNames.of(code);
+			if (name && name != code) {
+				return name;
+			}
+		}
+		catch (error) {
+		}
+	}
+	return code;
+}
+
+// Um país está visível se o seu bounding box (de todas as suas cidades)
+// intersecta a viewport atual.
+function countryVisible(stats, bounds) {
+	let south = bounds.getSouth();
+	let north = bounds.getNorth();
+	if (stats.maxLat < south || stats.minLat > north) {
+		return false;
+	}
+	let west = bounds.getWest();
+	let east = bounds.getEast();
+	if (east - west >= 360) {
+		return true;
+	}
+	let center = (stats.minLon + stats.maxLon) / 2;
+	let shift = Math.round(((west + east) / 2 - center) / 360) * 360;
+	let minLon = stats.minLon + shift;
+	let maxLon = stats.maxLon + shift;
+	return maxLon >= west && minLon <= east;
+}
+
+function scheduleCountryBarsUpdate() {
+	if (countryBarsUpdatePending) {
+		return;
+	}
+	countryBarsUpdatePending = true;
+	requestAnimationFrame(function() {
+		countryBarsUpdatePending = false;
+		updateCountryBars();
+	});
+}
+
+// Barras de conquista por país: mostra os 5 países visíveis no mapa com a
+// maior porcentagem da população já descoberta.
+function updateCountryBars() {
+	let container = document.getElementById("countryBars");
+	if (!container || !cities || !map || countryStats.size == 0) {
+		return;
+	}
+	let bounds = map.getBounds();
+	let visible = [];
+	countryStats.forEach(stats => {
+		if (stats.markedPop <= 0 || stats.totalPop <= 0) {
+			return;
+		}
+		if (!countryVisible(stats, bounds)) {
+			return;
+		}
+		visible.push(stats);
+	});
+	visible.sort((a, b) => (b.markedPop / b.totalPop) - (a.markedPop / a.totalPop));
+	visible = visible.slice(0, 5);
+
+	container.innerHTML = "";
+	let triggerUsed = false;
+	visible.forEach(stats => {
+		let percent = stats.markedPop / stats.totalPop;
+		let row = document.createElement("div");
+		row.className = "countryBar";
+		row.title = countryDisplayName(stats.code) + ": " + (percent * 100).toFixed(2) + "% (" +
+			stats.markedPop.toLocaleString() + " / " + stats.totalPop.toLocaleString() + ")";
+
+		let fill = document.createElement("span");
+		fill.className = "countryBarFill";
+		// Cor: vermelho em 0%, amarelo em 50%, verde em 100%.
+		let p = Math.max(0, Math.min(1, percent));
+		let r, g, b;
+		if (p <= 0.5) {
+			let t = p / 0.5;
+			r = Math.round(220 * (1 - t) + 255 * t);
+			g = Math.round(50 * (1 - t) + 215 * t);
+			b = Math.round(50 * (1 - t) + 0 * t);
+		} else {
+			let t = (p - 0.5) / 0.5;
+			r = Math.round(255 * (1 - t) + 40 * t);
+			g = Math.round(215 * (1 - t) + 170 * t);
+			b = Math.round(0 * (1 - t) + 40 * t);
+		}
+		let color = "rgb(" + r + ", " + g + ", " + b + ")";
+		fill.setAttribute("style", "width:" + Math.max(1, percent * 70).toFixed(2) + "px; background-image:none; background-color:" + color + ";");
+
+		// Troféu: bronze >=70%, prata >=80%, ouro >=90%.
+		let trophyLevel = 0;
+		if (percent >= 0.9) trophyLevel = 3;
+		else if (percent >= 0.8) trophyLevel = 2;
+		else if (percent >= 0.7) trophyLevel = 1;
+		if (trophyLevel > 0) {
+			let trophy = document.createElement("span");
+			trophy.className = "countryTrophy trophy" + trophyLevel;
+			if (trophyLevel == 1) trophy.textContent = "\ud83e\udd49";
+			else if (trophyLevel == 2) trophy.textContent = "\ud83e\udd48";
+			else trophy.textContent = "\ud83e\udd47";
+			row.appendChild(trophy);
+			if (stats._lastTrophyLevel !== trophyLevel && !loadingSavedState && trophyTriggerCountry == stats.code && !triggerUsed) {
+				setTimeout(function() {
+					triggerTrophyAnimation(row, trophyLevel);
+					playTrophySound(trophyLevel);
+				}, 1000);
+				triggerUsed = true;
+				stats._lastTrophyLevel = trophyLevel;
+			} else if (stats._lastTrophyLevel !== trophyLevel) {
+				stats._lastTrophyLevel = trophyLevel;
+			}
+		}
+		else {
+			if (!loadingSavedState) {
+				stats._lastTrophyLevel = 0;
+			} else if (stats._lastTrophyLevel === undefined) {
+				stats._lastTrophyLevel = 0;
+			}
+		}
+
+		row.appendChild(fill);
+
+		let value = document.createElement("span");
+		value.className = "countryBarPercent";
+		value.textContent = (percent * 100).toFixed(1) + "%";
+		row.appendChild(value);
+
+		let label = document.createElement("span");
+		label.className = "countryBarName";
+		label.textContent = countryDisplayName(stats.code);
+		row.appendChild(label);
+
+		container.appendChild(row);
+	});
+	if (triggerUsed) {
+		trophyTriggerCountry = null;
+	}
+}
+// Som triplo crescente para novos troféus.
+function playTrophySound(level) {
+	try {
+		let AudioCtx = window.AudioContext || window.webkitAudioContext;
+		if (!AudioCtx) return;
+		let ctx = new AudioCtx();
+		let base = level == 1 ? 520 : (level == 2 ? 660 : 880);
+		[0, 0.12, 0.24].forEach((d, i) => {
+			let o = ctx.createOscillator();
+			let g = ctx.createGain();
+			o.frequency.value = base * (1 + i * 0.25);
+			o.type = "triangle";
+			o.connect(g); g.connect(ctx.destination);
+			g.gain.setValueAtTime(0, ctx.currentTime + d);
+			g.gain.linearRampToValueAtTime(0.12, ctx.currentTime + d + 0.01);
+			g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + d + 0.18);
+			o.start(ctx.currentTime + d);
+			o.stop(ctx.currentTime + d + 0.2);
+		});
+	} catch (e) {}
+}
+// Animação de troféu: aparece grande no centro e vai para a barra.
+function triggerTrophyAnimation(targetRow, level) {
+	let center = document.createElement("div");
+	if (level == 1) center.textContent = "\ud83e\udd49";
+	else if (level == 2) center.textContent = "\ud83e\udd48";
+	else center.textContent = "\ud83e\udd47";
+	center.style.position = "fixed";
+	center.style.left = "50%";
+	center.style.top = "50%";
+	center.style.transform = "translate(-50%, -50%) scale(3)";
+	center.style.fontSize = "80px";
+	center.style.zIndex = "1000";
+	center.style.transition = "all 0.6s ease-in";
+	center.style.pointerEvents = "none";
+	document.body.appendChild(center);
+	setTimeout(function() {
+		let rect = targetRow.getBoundingClientRect();
+		center.style.left = rect.left + 8 + "px";
+		center.style.top = rect.top + rect.height / 2 + "px";
+		center.style.transform = "translate(-50%, -50%) scale(0.7)";
+	}, 20);
+	setTimeout(function() {
+		center.remove();
+	}, 700);
 }
 
 function cityColor(city) {
@@ -408,6 +671,12 @@ function startGame() {
 	}
 	track("game_start", { round: roundNumber });
 
+	countryStats.forEach(stats => {
+		stats.markedPop = 0;
+		if (!loadingSavedState) {
+			stats._lastTrophyLevel = undefined;
+		}
+	});
 	cities.forEach(city => {
 		if (city.radiusLayer) {
 			map.removeLayer(city.radiusLayer);
@@ -422,15 +691,17 @@ function startGame() {
 	
 	let previousState = localStorage.getItem("state");
 	if (previousState) {
+		loadingSavedState = true;
 		previousState = JSON.parse(previousState);
 		previousState.guessed.forEach(previousCityId => {
 			let citiesFound = cities.filter(city => city.properties.id == previousCityId);
-			cityGuessed(citiesFound);
+			cityGuessed(citiesFound, false);
 		});
 		previousState.revealed.forEach(previousCityId => {
 			let citiesFound = cities.filter(city => city.properties.id == previousCityId);
-			citiesFound.forEach(city => markCity(city, false, true));
+			citiesFound.forEach(city => markCity(city, false, true, false));
 		});
+		loadingSavedState = false;
 	}
 	
 	firstGuess = true;
@@ -491,7 +762,7 @@ function searchName() {
 function cityGuessed(citiesGuessed, fromUserInput) {
 	let city = citiesGuessed[0];
 	track("guess", { city: city.properties.displayName, pop: city.properties.pop, capital: city.capital });
-	map.flyTo([city.geometry.coordinates[1], city.geometry.coordinates[0]], (firstGuess ? 6 : map.getZoom()));
+	map.flyTo([city.geometry.coordinates[1], city.geometry.coordinates[0]], Math.max(6, map.getZoom()));
 	if (firstGuess) {
 		firstGuess = false;
 	}
@@ -500,7 +771,7 @@ function cityGuessed(citiesGuessed, fromUserInput) {
 		let nearbyCities = nearCities(city);
 		nearbyCities.forEach(nearbyCity => {
 			let guessedNow = nearbyCity.properties.id == city.properties.id;
-			markCity(nearbyCity, guessedNow, false);
+			markCity(nearbyCity, guessedNow, false, fromUserInput);
 			// Conquista só quando o jogador digitou o nome (fromUserInput);
 			// a restauração do estado anterior também entra por aqui e não
 			// deve tocar som nem acender a borda.
@@ -554,7 +825,7 @@ function nearCities(city) {
 	return result;
 }
 
-function markCity(city, guessedNow, revealedNow) {
+function markCity(city, guessedNow, revealedNow, fromUserInput) {
 	if (guessedNow) {
 		city.guessed = true;
 		let tooltip = L.tooltip([city.geometry.coordinates[1], city.geometry.coordinates[0]], {content: city.properties.displayName, permanent: true, direction: "right", className: "cityToolTipGuessed" });
@@ -577,8 +848,20 @@ function markCity(city, guessedNow, revealedNow) {
 
 	if (!city.marked) {
 		city.marked = true;
+		let stats = countryStats.get(city.properties.countryCode);
+		if (stats && !revealedNow) {
+			stats.markedPop += city.properties.pop;
+		}
 		if (!revealedNow) {
 			pointsPop += city.properties.pop;
+		}
+		if (guessedNow && fromUserInput && stats) {
+			trophyTriggerCountry = stats.code;
+		}
+		if (!loadingSavedState) {
+			scheduleCountryBarsUpdate();
+		} else {
+			updateCountryBars();
 		}
 	}
 	refreshCityColor(city);
