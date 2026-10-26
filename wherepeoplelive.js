@@ -301,6 +301,16 @@ function initMap() {
 	});
 }
 
+// Ordem de marcação: não capitais antes das capitais e, dentro de cada grupo,
+// menor população primeiro. A renderização usa a mesma ordem para que as
+// capitais fiquem por cima.
+function compareMarkOrder(a, b) {
+	if (a.capital !== b.capital) {
+		return a.capital ? 1 : -1;
+	}
+	return a.properties.pop - b.properties.pop;
+}
+
 // Renderiza apenas as cidades visíveis na viewport, e somente a partir do zoom
 // em que os círculos têm tamanho significativo.
 function updateVisibleCities() {
@@ -329,12 +339,7 @@ function updateVisibleCities() {
 
 	// Ordenação em dois níveis: primeiro as não capitais (menor população
 	// primeiro) e, por cima, as capitais (também menor população primeiro).
-	toAdd.sort((a, b) => {
-		if (a.capital !== b.capital) {
-			return a.capital ? 1 : -1;
-		}
-		return a.properties.pop - b.properties.pop;
-	});
+	toAdd.sort(compareMarkOrder);
 	for (let i = 0; i < toAdd.length; i++) {
 		let city = toAdd[i];
 		let circle = L.circle([city.geometry.coordinates[1], city.geometry.coordinates[0]], {
@@ -825,15 +830,15 @@ function searchName() {
 		}
 		activeGuessList = [];
 	}
+	// Ordem de marcação (não de renderização): não capitais antes das capitais
+	// e, dentro de cada grupo, menor população primeiro.
+	citiesGuessed.sort(compareMarkOrder);
 	if (citiesGuessed.length > 0) {
 		let lastCity = citiesGuessed[citiesGuessed.length - 1];
 		map.setView([lastCity.geometry.coordinates[1], lastCity.geometry.coordinates[0]], Math.max(6, map.getZoom()), {animate: false});
 	}
 
 	document.getElementById("search").value = "";
-	let center = map.getCenter();
-	let centerPoint = turf.point([center.lng, center.lat]);
-	citiesGuessed.sort((b, a) => turf.distance(centerPoint, a) - turf.distance(centerPoint, b));
 	hideMessage();
 	activeGuessToken = token;
 	activeGuessList = citiesGuessed.slice();
@@ -934,6 +939,9 @@ function nearCities(city) {
 			result.push(city2);
 		}
 	}
+	// A marcação dos arredores segue a mesma ordem usada para as cidades
+	// digitadas: não capitais antes das capitais e menor população primeiro.
+	result.sort(compareMarkOrder);
 	return result;
 }
 
