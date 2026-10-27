@@ -159,7 +159,7 @@ body {
 	pointer-events: none;
 }
 
-#rightPanel {
+#summaryPanel {
 	position: fixed;
 	bottom: 0;
 	right: 0;
@@ -167,7 +167,7 @@ body {
 	pointer-events: none;
 }
 
-#rightBars {
+#summaryBars {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-end;
@@ -177,7 +177,7 @@ body {
 	pointer-events: none;
 }
 
-.rightBar {
+.summaryBar {
 	display: flex;
 	align-items: center;
 	gap: 4px;
@@ -190,12 +190,12 @@ body {
 	white-space: nowrap;
 }
 
-.rightBarIcon {
+.summaryBarIcon {
 	font-size: 14px;
 	line-height: 1;
 }
 
-.rightBarIcon.globe {
+.summaryBarIcon.globe {
 	font-size: 13px;
 }
 

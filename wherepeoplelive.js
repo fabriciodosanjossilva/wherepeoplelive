@@ -15,7 +15,7 @@ let countryStats = new Map();
 let currentLanguage = "en";
 let countryDisplayNames = null;
 let countryBarsUpdatePending = false;
-let rightBarsUpdatePending = false;
+let summaryBarsUpdatePending = false;
 let medalQueue = [];
 let totalWorldPopulation = 0;
 
@@ -292,7 +292,7 @@ function initMap() {
 	map.on('moveend zoomend', function() {
 		updateVisibleCities();
 		scheduleCountryBarsUpdate();
-		scheduleRightBarsUpdate();
+		scheduleSummaryBarsUpdate();
 	});
 
 	map.on('zoomend', function() {
@@ -572,21 +572,21 @@ function updateCountryBars() {
 	medalTriggerCountry = null;
 }
 
-function scheduleRightBarsUpdate() {
-	if (rightBarsUpdatePending) {
+function scheduleSummaryBarsUpdate() {
+	if (summaryBarsUpdatePending) {
 		return;
 	}
-	rightBarsUpdatePending = true;
+	summaryBarsUpdatePending = true;
 	requestAnimationFrame(function() {
-		rightBarsUpdatePending = false;
-		updateRightBars();
+		summaryBarsUpdatePending = false;
+		updateSummaryBars();
 	});
 }
 
 let totalCapitalsCount = 0;
 
-function updateRightBars() {
-	let container = document.getElementById("rightBars");
+function updateSummaryBars() {
+	let container = document.getElementById("summaryBars");
 	if (!container) {
 		return;
 	}
@@ -622,9 +622,9 @@ function updateRightBars() {
 
 	// Ouro
 	let goldRow = document.createElement("div");
-	goldRow.className = "rightBar";
+	goldRow.className = "summaryBar";
 	let goldIcon = document.createElement("span");
-	goldIcon.className = "rightBarIcon";
+	goldIcon.className = "summaryBarIcon";
 	goldIcon.textContent = "\ud83e\udd47";
 	goldRow.appendChild(goldIcon);
 	let goldVal = document.createElement("span");
@@ -634,9 +634,9 @@ function updateRightBars() {
 
 	// Prata
 	let silverRow = document.createElement("div");
-	silverRow.className = "rightBar";
+	silverRow.className = "summaryBar";
 	let silverIcon = document.createElement("span");
-	silverIcon.className = "rightBarIcon";
+	silverIcon.className = "summaryBarIcon";
 	silverIcon.textContent = "\ud83e\udd48";
 	silverRow.appendChild(silverIcon);
 	let silverVal = document.createElement("span");
@@ -646,9 +646,9 @@ function updateRightBars() {
 
 	// Bronze
 	let bronzeRow = document.createElement("div");
-	bronzeRow.className = "rightBar";
+	bronzeRow.className = "summaryBar";
 	let bronzeIcon = document.createElement("span");
-	bronzeIcon.className = "rightBarIcon";
+	bronzeIcon.className = "summaryBarIcon";
 	bronzeIcon.textContent = "\ud83e\udd49";
 	bronzeRow.appendChild(bronzeIcon);
 	let bronzeVal = document.createElement("span");
@@ -658,7 +658,7 @@ function updateRightBars() {
 
 	// Capitais (porcentagem)
 	let capRow = document.createElement("div");
-	capRow.className = "rightBar";
+	capRow.className = "summaryBar";
 	let capIcon = document.createElement("span");
 	capIcon.className = "capitalIcon";
 	capRow.appendChild(capIcon);
@@ -673,9 +673,9 @@ function updateRightBars() {
 
 	// Porcentagem da população mundial
 	let worldPctRow = document.createElement("div");
-	worldPctRow.className = "rightBar";
+	worldPctRow.className = "summaryBar";
 	let globeIcon = document.createElement("span");
-	globeIcon.className = "rightBarIcon globe";
+	globeIcon.className = "summaryBarIcon globe";
 	globeIcon.textContent = "\ud83c\udf0d";
 	worldPctRow.appendChild(globeIcon);
 	let pct = 0;
@@ -837,7 +837,7 @@ function startGame() {
 	document.getElementById("pointsPop").innerHTML = "0";
 	pointsPop = 0;
 	state = { guessed : [], revealed : [] };
-	scheduleRightBarsUpdate();
+	scheduleSummaryBarsUpdate();
 
 	// Uma "rodada" vai do primeiro carregamento (ou do reinício) até o próximo
 	// reinício. Guardada em localStorage para sobreviver a reloads no meio da
@@ -889,7 +889,7 @@ function startGame() {
 	firstGuess = true;
 	searchFocus();
 	showMessage(i18n("I8N_ENTER_CITY_NAME"));
-	scheduleRightBarsUpdate();
+	scheduleSummaryBarsUpdate();
 }
 
 function showSplash() {
@@ -1038,7 +1038,7 @@ function cityGuessed(citiesGuessed, fromUserInput, token) {
 			}
 		}
 		document.getElementById("pointsPop").innerHTML = pointsPop.toLocaleString();
-		scheduleRightBarsUpdate();
+		scheduleSummaryBarsUpdate();
 	});
 }
 
@@ -1133,7 +1133,7 @@ function markCity(city, guessedNow, revealedNow, fromUserInput) {
 		} else {
 			updateCountryBars();
 		}
-		scheduleRightBarsUpdate();
+		scheduleSummaryBarsUpdate();
 	}
 	refreshCityColor(city);
 }
