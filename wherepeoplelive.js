@@ -15,7 +15,9 @@ let countryStats = new Map();
 let currentLanguage = "en";
 let countryDisplayNames = null;
 let countryBarsUpdatePending = false;
+let rightBarsUpdatePending = false;
 let medalQueue = [];
+let totalWorldPopulation = 0;
 
 function getCountryMedalLevel(stats) {
 	if (!stats || !stats.totalPop || stats.totalPop <= 0) {
@@ -214,6 +216,21 @@ async function processDB() {
 			addNameIndex(convertSearchName(names[n]), c);
 		}
 	}
+	// Soma de toda a população mundial e total de capitais
+	totalWorldPopulation = 0;
+	totalCapitalsCount = 0;
+	countryStats.forEach(stats => {
+		if (stats.totalPop) {
+			totalWorldPopulation += stats.totalPop;
+		}
+	});
+	if (cities) {
+		for (let i = 0; i < cities.length; i++) {
+			if (cities[i].capital) {
+				totalCapitalsCount++;
+			}
+		}
+	}
 	cityRows.length = 0;
 }
 
@@ -275,6 +292,7 @@ function initMap() {
 	map.on('moveend zoomend', function() {
 		updateVisibleCities();
 		scheduleCountryBarsUpdate();
+		scheduleRightBarsUpdate();
 	});
 
 	map.on('zoomend', function() {
@@ -553,6 +571,122 @@ function updateCountryBars() {
 	}
 	medalTriggerCountry = null;
 }
+
+function scheduleRightBarsUpdate() {
+	if (rightBarsUpdatePending) {
+		return;
+	}
+	rightBarsUpdatePending = true;
+	requestAnimationFrame(function() {
+		rightBarsUpdatePending = false;
+		updateRightBars();
+	});
+}
+
+let totalCapitalsCount = 0;
+
+function updateRightBars() {
+	let container = document.getElementById("rightBars");
+	if (!container) {
+		return;
+	}
+	container.innerHTML = "";
+
+	if (!countryStats) {
+		return;
+	}
+
+	let gold = 0;
+	let silver = 0;
+	let bronze = 0;
+	let capitalsGuessedCount = 0;
+	countryStats.forEach(stats => {
+		let level = stats.medalLevel !== undefined ? stats.medalLevel : getCountryMedalLevel(stats);
+		stats.medalLevel = level;
+		if (level == 1) {
+			bronze++;
+		} else if (level == 2) {
+			silver++;
+		} else if (level == 3) {
+			gold++;
+		}
+	});
+
+	if (cities) {
+		for (let i = 0; i < cities.length; i++) {
+			if (cities[i].capital && cities[i].guessed) {
+				capitalsGuessedCount++;
+			}
+		}
+	}
+
+	// Ouro
+	let goldRow = document.createElement("div");
+	goldRow.className = "rightBar";
+	let goldIcon = document.createElement("span");
+	goldIcon.className = "rightBarIcon";
+	goldIcon.textContent = "\ud83e\udd47";
+	goldRow.appendChild(goldIcon);
+	let goldVal = document.createElement("span");
+	goldVal.textContent = gold.toString();
+	goldRow.appendChild(goldVal);
+	container.appendChild(goldRow);
+
+	// Prata
+	let silverRow = document.createElement("div");
+	silverRow.className = "rightBar";
+	let silverIcon = document.createElement("span");
+	silverIcon.className = "rightBarIcon";
+	silverIcon.textContent = "\ud83e\udd48";
+	silverRow.appendChild(silverIcon);
+	let silverVal = document.createElement("span");
+	silverVal.textContent = silver.toString();
+	silverRow.appendChild(silverVal);
+	container.appendChild(silverRow);
+
+	// Bronze
+	let bronzeRow = document.createElement("div");
+	bronzeRow.className = "rightBar";
+	let bronzeIcon = document.createElement("span");
+	bronzeIcon.className = "rightBarIcon";
+	bronzeIcon.textContent = "\ud83e\udd49";
+	bronzeRow.appendChild(bronzeIcon);
+	let bronzeVal = document.createElement("span");
+	bronzeVal.textContent = bronze.toString();
+	bronzeRow.appendChild(bronzeVal);
+	container.appendChild(bronzeRow);
+
+	// Capitais (porcentagem)
+	let capRow = document.createElement("div");
+	capRow.className = "rightBar";
+	let capIcon = document.createElement("span");
+	capIcon.className = "capitalIcon";
+	capRow.appendChild(capIcon);
+	let capPct = 0;
+	if (totalCapitalsCount > 0) {
+		capPct = (capitalsGuessedCount / totalCapitalsCount) * 100;
+	}
+	let capVal = document.createElement("span");
+	capVal.textContent = capPct.toFixed(2) + "%";
+	capRow.appendChild(capVal);
+	container.appendChild(capRow);
+
+	// Porcentagem da população mundial
+	let worldPctRow = document.createElement("div");
+	worldPctRow.className = "rightBar";
+	let globeIcon = document.createElement("span");
+	globeIcon.className = "rightBarIcon globe";
+	globeIcon.textContent = "\ud83c\udf0d";
+	worldPctRow.appendChild(globeIcon);
+	let pct = 0;
+	if (totalWorldPopulation > 0) {
+		pct = (pointsPop / totalWorldPopulation) * 100;
+	}
+	let pctVal = document.createElement("span");
+	pctVal.textContent = pct.toFixed(2) + "%";
+	worldPctRow.appendChild(pctVal);
+	container.appendChild(worldPctRow);
+}
 // Som triplo crescente para novas medalhas.
 function playMedalSound(level) {
 	try {
@@ -703,6 +837,7 @@ function startGame() {
 	document.getElementById("pointsPop").innerHTML = "0";
 	pointsPop = 0;
 	state = { guessed : [], revealed : [] };
+	scheduleRightBarsUpdate();
 
 	// Uma "rodada" vai do primeiro carregamento (ou do reinício) até o próximo
 	// reinício. Guardada em localStorage para sobreviver a reloads no meio da
@@ -754,6 +889,7 @@ function startGame() {
 	firstGuess = true;
 	searchFocus();
 	showMessage(i18n("I8N_ENTER_CITY_NAME"));
+	scheduleRightBarsUpdate();
 }
 
 function showSplash() {
@@ -902,6 +1038,7 @@ function cityGuessed(citiesGuessed, fromUserInput, token) {
 			}
 		}
 		document.getElementById("pointsPop").innerHTML = pointsPop.toLocaleString();
+		scheduleRightBarsUpdate();
 	});
 }
 
@@ -996,6 +1133,7 @@ function markCity(city, guessedNow, revealedNow, fromUserInput) {
 		} else {
 			updateCountryBars();
 		}
+		scheduleRightBarsUpdate();
 	}
 	refreshCityColor(city);
 }
