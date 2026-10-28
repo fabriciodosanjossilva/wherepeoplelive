@@ -16,20 +16,24 @@
 		<div id="map"></div>
 		<div id="panel">
 			<div id="countryBars"></div>
-			<div id="message"></div>
+			<div id="summaryBars"></div>
+			<div id="message" role="status" aria-live="polite"></div>
 			<div id="toolbar">
 				<input type="text" id="search" autocomplete="off" spellcheck="false" onkeydown="searchName()">
-				<input type="checkbox" checked id="showGuessedLabels" onchange="showGuessedLabels()">
-				<input type="checkbox" checked id="showRevealedLabels" onchange="showRevealedLabels()">
-				<input type="checkbox" checked id="showCountryLabels" onchange="showCountryLabels()">
-				<input type="checkbox" checked id="showCountryBoundaries" onchange="showCountryBoundaries()">
-				<div id="pointsPop" class="pointsPop"></div>
-				<input type="button" id="restartGame" value="X" onclick="restartGame()">
-				<input type="button" id="showSplash" value="?" onclick="showSplash()">
+				<button type="button" id="restartGame" class="toolbarButton" title="Restart game" aria-label="Restart game" onclick="restartGame()">
+					<svg viewBox="0 0 24 24" aria-hidden="true">
+						<polyline points="1 4 1 10 7 10"></polyline>
+						<path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+					</svg>
+				</button>
+				<button type="button" id="showSplash" class="toolbarButton" title="About the game" aria-label="About the game" onclick="showSplash()">
+					<svg viewBox="0 0 24 24" aria-hidden="true">
+						<circle cx="12" cy="12" r="10"></circle>
+						<line x1="12" y1="16" x2="12" y2="12"></line>
+						<line x1="12" y1="8" x2="12.01" y2="8"></line>
+					</svg>
+				</button>
 			</div>
-		</div>
-		<div id="summaryPanel">
-			<div id="summaryBars"></div>
 		</div>
 	</div>
 	<div id="capitalGlow"></div>

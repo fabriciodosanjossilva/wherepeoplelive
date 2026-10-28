@@ -295,27 +295,18 @@ function initMap() {
 		scheduleSummaryBarsUpdate();
 	});
 
+	// Rótulos e fronteiras só aparecem a partir do zoom definido em
+	// labelsMinZoom (não há controle do usuário sobre isso).
 	map.on('zoomend', function() {
-		if (map.getZoom() < labelsMinZoom) {
-			document.getElementById("showGuessedLabels").disabled = true;
-			map.removeLayer(cityGuessedLabelsLayerGroup);
-			document.getElementById("showRevealedLabels").disabled = true;
-			map.removeLayer(cityRevealedLabelsLayerGroup);
-			document.getElementById("showCountryLabels").disabled = true;
-			map.removeLayer(countryLabelsLayerGroup);
-			document.getElementById("showCountryBoundaries").disabled = true;
-			map.removeLayer(countryBoundariesLayerGroup);
-		}
-		else {
-			document.getElementById("showGuessedLabels").disabled = false;
-			showGuessedLabels();
-			document.getElementById("showRevealedLabels").disabled = false;
-			showRevealedLabels();
-			document.getElementById("showCountryLabels").disabled = false;
-			showCountryLabels();
-			document.getElementById("showCountryBoundaries").disabled = false;
-			showCountryBoundaries();
-		}
+		let showLabels = map.getZoom() >= labelsMinZoom;
+		[cityGuessedLabelsLayerGroup, cityRevealedLabelsLayerGroup, countryLabelsLayerGroup, countryBoundariesLayerGroup].forEach(layer => {
+			if (showLabels) {
+				map.addLayer(layer);
+			}
+			else {
+				map.removeLayer(layer);
+			}
+		});
 	});
 }
 
@@ -585,6 +576,50 @@ function scheduleSummaryBarsUpdate() {
 
 let totalCapitalsCount = 0;
 
+// Formata valores com até 3 dígitos significativos, usando K, M e G para
+// manter as linhas de resumo curtas.
+function formatSummaryValue(value) {
+	if (!isFinite(value)) {
+		return "0";
+	}
+	let abs = Math.abs(value);
+	let suffixes = ["", "K", "M", "G"];
+	let suffixIndex = 0;
+	while (abs >= 1000 && suffixIndex < suffixes.length - 1) {
+		abs /= 1000;
+		suffixIndex++;
+	}
+	let rounded = Number(abs.toPrecision(3));
+	if (suffixIndex > 0 && rounded >= 1000 && suffixIndex < suffixes.length - 1) {
+		abs /= 1000;
+		suffixIndex++;
+		rounded = Number(abs.toPrecision(3));
+	}
+	return (value < 0 ? "-" : "") + rounded.toString() + suffixes[suffixIndex];
+}
+
+function appendSummaryIcon(container, className, text) {
+	let icon = document.createElement("span");
+	icon.className = className;
+	if (text) {
+		icon.textContent = text;
+	}
+	container.appendChild(icon);
+}
+
+function appendSummaryText(container, text) {
+	let value = document.createElement("span");
+	value.textContent = text;
+	container.appendChild(value);
+}
+
+function appendSummarySeparator(container) {
+	let separator = document.createElement("span");
+	separator.className = "summarySeparator";
+	separator.textContent = "|";
+	container.appendChild(separator);
+}
+
 function updateSummaryBars() {
 	let container = document.getElementById("summaryBars");
 	if (!container) {
@@ -620,72 +655,30 @@ function updateSummaryBars() {
 		}
 	}
 
-	// Ouro
-	let goldRow = document.createElement("div");
-	goldRow.className = "summaryBar";
-	let goldIcon = document.createElement("span");
-	goldIcon.className = "summaryBarIcon";
-	goldIcon.textContent = "\ud83e\udd47";
-	goldRow.appendChild(goldIcon);
-	let goldVal = document.createElement("span");
-	goldVal.textContent = gold.toString();
-	goldRow.appendChild(goldVal);
-	container.appendChild(goldRow);
+	// As três quantidades de medalhas em uma única linha.
+	let medalsRow = document.createElement("div");
+	medalsRow.className = "summaryBar";
+	appendSummaryIcon(medalsRow, "summaryBarIcon", "\ud83e\udd47");
+	appendSummaryText(medalsRow, gold.toString());
+	appendSummarySeparator(medalsRow);
+	appendSummaryIcon(medalsRow, "summaryBarIcon", "\ud83e\udd48");
+	appendSummaryText(medalsRow, silver.toString());
+	appendSummarySeparator(medalsRow);
+	appendSummaryIcon(medalsRow, "summaryBarIcon", "\ud83e\udd49");
+	appendSummaryText(medalsRow, bronze.toString());
+	container.appendChild(medalsRow);
 
-	// Prata
-	let silverRow = document.createElement("div");
-	silverRow.className = "summaryBar";
-	let silverIcon = document.createElement("span");
-	silverIcon.className = "summaryBarIcon";
-	silverIcon.textContent = "\ud83e\udd48";
-	silverRow.appendChild(silverIcon);
-	let silverVal = document.createElement("span");
-	silverVal.textContent = silver.toString();
-	silverRow.appendChild(silverVal);
-	container.appendChild(silverRow);
-
-	// Bronze
-	let bronzeRow = document.createElement("div");
-	bronzeRow.className = "summaryBar";
-	let bronzeIcon = document.createElement("span");
-	bronzeIcon.className = "summaryBarIcon";
-	bronzeIcon.textContent = "\ud83e\udd49";
-	bronzeRow.appendChild(bronzeIcon);
-	let bronzeVal = document.createElement("span");
-	bronzeVal.textContent = bronze.toString();
-	bronzeRow.appendChild(bronzeVal);
-	container.appendChild(bronzeRow);
-
-	// Capitais (porcentagem)
-	let capRow = document.createElement("div");
-	capRow.className = "summaryBar";
-	let capIcon = document.createElement("span");
-	capIcon.className = "capitalIcon";
-	capRow.appendChild(capIcon);
-	let capPct = 0;
-	if (totalCapitalsCount > 0) {
-		capPct = (capitalsGuessedCount / totalCapitalsCount) * 100;
-	}
-	let capVal = document.createElement("span");
-	capVal.textContent = capPct.toFixed(2) + "%";
-	capRow.appendChild(capVal);
-	container.appendChild(capRow);
-
-	// Porcentagem da população mundial
-	let worldPctRow = document.createElement("div");
-	worldPctRow.className = "summaryBar";
-	let globeIcon = document.createElement("span");
-	globeIcon.className = "summaryBarIcon globe";
-	globeIcon.textContent = "\ud83c\udf0d";
-	worldPctRow.appendChild(globeIcon);
-	let pct = 0;
-	if (totalWorldPopulation > 0) {
-		pct = (pointsPop / totalWorldPopulation) * 100;
-	}
-	let pctVal = document.createElement("span");
-	pctVal.textContent = pct.toFixed(2) + "%";
-	worldPctRow.appendChild(pctVal);
-	container.appendChild(worldPctRow);
+	// Capitais e população na linha seguinte, com valor absoluto e percentual.
+	let totalsRow = document.createElement("div");
+	totalsRow.className = "summaryBar";
+	let capitalsPercent = totalCapitalsCount > 0 ? (capitalsGuessedCount / totalCapitalsCount) * 100 : 0;
+	appendSummaryIcon(totalsRow, "capitalIcon", "");
+	appendSummaryText(totalsRow, formatSummaryValue(capitalsGuessedCount) + " (" + formatSummaryValue(capitalsPercent) + "%)");
+	appendSummarySeparator(totalsRow);
+	let populationPercent = totalWorldPopulation > 0 ? (pointsPop / totalWorldPopulation) * 100 : 0;
+	appendSummaryIcon(totalsRow, "summaryBarIcon globe", "\ud83c\udf0d");
+	appendSummaryText(totalsRow, formatSummaryValue(pointsPop) + " (" + formatSummaryValue(populationPercent) + "%)");
+	container.appendChild(totalsRow);
 }
 // Som triplo crescente para novas medalhas.
 function playMedalSound(level) {
@@ -834,7 +827,6 @@ function startGame() {
 	cityRevealedLabelsLayerGroup.clearLayers();
 
 	document.getElementById("search").value = "";
-	document.getElementById("pointsPop").innerHTML = "0";
 	pointsPop = 0;
 	state = { guessed : [], revealed : [] };
 	scheduleSummaryBarsUpdate();
@@ -924,7 +916,6 @@ function searchName() {
 				map.setView([lastCity.geometry.coordinates[1], lastCity.geometry.coordinates[0]], Math.max(6, map.getZoom()), {animate: false});
 			}
 			activeGuessList = [];
-			document.getElementById("pointsPop").innerHTML = pointsPop.toLocaleString();
 		}
         return;
     }
@@ -1037,7 +1028,6 @@ function cityGuessed(citiesGuessed, fromUserInput, token) {
 				activeGuessList = [];
 			}
 		}
-		document.getElementById("pointsPop").innerHTML = pointsPop.toLocaleString();
 		scheduleSummaryBarsUpdate();
 	});
 }
@@ -1093,10 +1083,6 @@ function markCity(city, guessedNow, revealedNow, fromUserInput) {
 	}
 	if (revealedNow && !city.guessed && !city.revealed) {
 		city.revealed = true;
-		if (!document.getElementById("showRevealedLabels").checked) {
-			document.getElementById("showRevealedLabels").checked = true;
-			showRevealedLabels();
-		}
 		let tooltip = L.tooltip([city.geometry.coordinates[1], city.geometry.coordinates[0]], {content: city.properties.displayName, permanent: true, direction: "right", className: "cityToolTipRevealed" });
 		tooltip.addTo(cityRevealedLabelsLayerGroup);
 		state.revealed.push(city.properties.id);
@@ -1198,7 +1184,7 @@ function showMessage(text, delay) {
 	messageCount++;
 	let messageId = messageCount;
 	document.getElementById("message").innerHTML = text;
-	document.getElementById("message").style.display = "block";
+	document.getElementById("message").style.display = "flex";
 	if (delay) {
 		setTimeout(function() {
 			if (messageId == messageCount) {
@@ -1210,42 +1196,6 @@ function showMessage(text, delay) {
 
 function hideMessage() {
 	document.getElementById("message").style.display = "none";
-}
-
-function showGuessedLabels() {
-	if (document.getElementById("showGuessedLabels").checked) {
-		map.addLayer(cityGuessedLabelsLayerGroup);
-	}
-	else {
-		map.removeLayer(cityGuessedLabelsLayerGroup);
-	}
-}
-
-function showRevealedLabels() {
-	if (document.getElementById("showRevealedLabels").checked) {
-		map.addLayer(cityRevealedLabelsLayerGroup);
-	}
-	else {
-		map.removeLayer(cityRevealedLabelsLayerGroup);
-	}
-}
-
-function showCountryLabels() {
-	if (document.getElementById("showCountryLabels").checked) {
-		map.addLayer(countryLabelsLayerGroup);
-	}
-	else {
-		map.removeLayer(countryLabelsLayerGroup);
-	}
-}
-
-function showCountryBoundaries() {
-	if (document.getElementById("showCountryBoundaries").checked) {
-		map.addLayer(countryBoundariesLayerGroup);
-	}
-	else {
-		map.removeLayer(countryBoundariesLayerGroup);
-	}
 }
 
 function convertSearchName(name) {
