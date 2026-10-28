@@ -19,6 +19,25 @@ let summaryBarsUpdatePending = false;
 let medalQueue = [];
 let totalWorldPopulation = 0;
 
+// Star combo: cada estrela tem a sua janela de tempo, medida desde o último
+// acerto do jogador. Os círculos mostram quanto falta para cada janela fechar.
+let starLevels = [
+	{ key: "gold", limit: 5000, count: 0 },
+	{ key: "silver", limit: 10000, count: 0 },
+	{ key: "bronze", limit: 15000, count: 0 }
+];
+let starTimerStart = 0;
+let starAnimationFrame = null;
+let starGradientSeq = 0;
+let lastGuessTimestamp = 0;
+let consecutiveGuessCount = 0;
+// Tempos da animação da estrela ganha, em ms: espera pelo fim da marcação no
+// mapa, pausa grande na base da tela e voo até o contador.
+let starAnimationDelay = 1100;
+let starCenterHold = 300;
+let starFlightDuration = 700;
+let starAnimationBusyUntil = 0;
+
 function getCountryMedalLevel(stats) {
 	if (!stats || !stats.totalPop || stats.totalPop <= 0) {
 		return 0;
@@ -524,7 +543,10 @@ function updateCountryBars() {
 				}
 			}
 			if (stats._lastMedalLevel !== medalLevel && !loadingSavedState && inQueue) {
-				let delay = medalTriggerIndex * 1000;
+				// Se este acerto também rendeu uma estrela, a medalha espera a
+				// animação dela terminar antes de aparecer.
+				let waitForStar = Math.max(0, starAnimationBusyUntil - Date.now());
+				let delay = waitForStar + medalTriggerIndex * 1000;
 				medalTriggerIndex++;
 				setTimeout(function() {
 					triggerMedalAnimation(row, medalLevel);
@@ -625,7 +647,11 @@ function updateSummaryBars() {
 	if (!container) {
 		return;
 	}
-	container.innerHTML = "";
+	// A barra do combo de estrelas mora dentro deste contêiner: remove só as
+	// linhas de resumo antigas para não destruí-la a cada atualização.
+	container.querySelectorAll(".summaryBar").forEach(function (row) {
+		row.remove();
+	});
 
 	if (!countryStats) {
 		return;
@@ -679,6 +705,12 @@ function updateSummaryBars() {
 	appendSummaryIcon(totalsRow, "summaryBarIcon globe", "\ud83c\udf0d");
 	appendSummaryText(totalsRow, formatSummaryValue(pointsPop) + " (" + formatSummaryValue(populationPercent) + "%)");
 	container.appendChild(totalsRow);
+
+	// Mantém o combo de estrelas como a última linha do resumo.
+	let starComboBar = document.getElementById("starComboBar");
+	if (starComboBar && starComboBar.parentNode === container) {
+		container.appendChild(starComboBar);
+	}
 }
 // Som triplo crescente para novas medalhas.
 function playMedalSound(level) {
@@ -826,6 +858,24 @@ function startGame() {
 	cityGuessedLabelsLayerGroup.clearLayers();
 	cityRevealedLabelsLayerGroup.clearLayers();
 
+	// Reset star combo
+	lastGuessTimestamp = 0;
+	consecutiveGuessCount = 0;
+	starTimerStart = 0;
+	starAnimationBusyUntil = 0;
+	if (starAnimationFrame) {
+		cancelAnimationFrame(starAnimationFrame);
+		starAnimationFrame = null;
+	}
+	starLevels.forEach(function (level) {
+		level.count = 0;
+	});
+	document.querySelectorAll(".starFly").forEach(function (element) {
+		element.remove();
+	});
+	buildStarComboBar();
+	updateStarComboBar();
+
 	document.getElementById("search").value = "";
 	pointsPop = 0;
 	state = { guessed : [], revealed : [] };
@@ -969,6 +1019,10 @@ function searchName() {
 	hideMessage();
 	activeGuessToken = token;
 	activeGuessList = citiesGuessed.slice();
+	// Track star combo for user guess
+	if (typeof handleStarComboOnUserGuess === 'function') {
+		handleStarComboOnUserGuess();
+	}
 	cityGuessed(citiesGuessed.slice(), true, token);
 }
 
@@ -1200,4 +1254,235 @@ function hideMessage() {
 
 function convertSearchName(name) {
 	return name.replace(/[ '"-.]/g, '').normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
+}
+
+// --- Combo de estrelas ------------------------------------------------------
+// Cada acerto reinicia as três janelas de tempo. Um novo acerto dentro da
+// janela dourada (5s), prateada (10s) ou de bronze (15s) rende uma estrela do
+// respectivo metal.
+
+function starLevelByKey(key) {
+	for (let i = 0; i < starLevels.length; i++) {
+		if (starLevels[i].key === key) {
+			return starLevels[i];
+		}
+	}
+	return null;
+}
+
+function starElementId(prefix, key) {
+	return prefix + key.charAt(0).toUpperCase() + key.slice(1);
+}
+
+// Cores metálicas: realce claro → tom médio → sombra, para o brilho atravessar
+// a estrela como numa superfície polida.
+let starMetalStops = {
+	gold: ["#fff4bd", "#f2c200", "#a97900"],
+	silver: ["#ffffff", "#d6d8dc", "#85888e"],
+	bronze: ["#ffd9b0", "#cd7f32", "#7a4416"]
+};
+
+function createStarIcon(key) {
+	let stops = starMetalStops[key] || starMetalStops.gold;
+	let svgNamespace = "http://www.w3.org/2000/svg";
+	let gradientId = "starMetalGradient" + (starGradientSeq++);
+	let svg = document.createElementNS(svgNamespace, "svg");
+	svg.setAttribute("viewBox", "0 0 24 24");
+	svg.setAttribute("aria-hidden", "true");
+	svg.setAttribute("class", "starIcon");
+
+	let defs = document.createElementNS(svgNamespace, "defs");
+	let gradient = document.createElementNS(svgNamespace, "linearGradient");
+	gradient.setAttribute("id", gradientId);
+	gradient.setAttribute("x1", "0");
+	gradient.setAttribute("y1", "0");
+	gradient.setAttribute("x2", "0");
+	gradient.setAttribute("y2", "1");
+	stops.forEach(function (color, i) {
+		let stop = document.createElementNS(svgNamespace, "stop");
+		stop.setAttribute("offset", (i * 50) + "%");
+		stop.setAttribute("stop-color", color);
+		gradient.appendChild(stop);
+	});
+	defs.appendChild(gradient);
+	svg.appendChild(defs);
+
+	let path = document.createElementNS(svgNamespace, "path");
+	path.setAttribute("d", "M12 1.8l3.09 6.26 6.91 1-5 4.87 1.18 6.88L12 17.56l-6.18 3.25L7 13.93l-5-4.87 6.91-1z");
+	path.setAttribute("fill", "url(#" + gradientId + ")");
+	path.setAttribute("stroke", stops[2]);
+	path.setAttribute("stroke-width", "0.5");
+	path.setAttribute("stroke-linejoin", "round");
+	svg.appendChild(path);
+
+	return svg;
+}
+
+// A barra é criada uma única vez: recriar o DOM a cada frame destruiria o alvo
+// da animação da estrela (e custaria uma reconstrução por frame).
+function buildStarComboBar() {
+	let container = document.getElementById("starComboBar");
+	if (!container || container.childElementCount > 0) {
+		return;
+	}
+	starLevels.forEach(function (level) {
+		let item = document.createElement("div");
+		item.className = "starComboItem";
+
+		let circle = document.createElement("div");
+		circle.className = "starCircle";
+		circle.id = starElementId("starCircle", level.key);
+		item.appendChild(circle);
+
+		let icon = createStarIcon(level.key);
+		icon.id = starElementId("starIcon", level.key);
+		item.appendChild(icon);
+
+		let count = document.createElement("span");
+		count.className = "starCount";
+		count.id = starElementId("starCount", level.key);
+		count.textContent = level.count.toString();
+		item.appendChild(count);
+
+		container.appendChild(item);
+	});
+}
+
+function handleStarComboOnUserGuess() {
+	let now = Date.now();
+
+	buildStarComboBar();
+
+	if (lastGuessTimestamp === 0) {
+		lastGuessTimestamp = now;
+		consecutiveGuessCount = 1;
+		startStarCircleTimers();
+		return;
+	}
+
+	let diff = now - lastGuessTimestamp;
+	consecutiveGuessCount++;
+
+	if (consecutiveGuessCount >= 2) {
+		let earnedKey = null;
+		if (diff <= starLevels[0].limit) {
+			earnedKey = "gold";
+		} else if (diff <= starLevels[1].limit) {
+			earnedKey = "silver";
+		} else if (diff <= starLevels[2].limit) {
+			earnedKey = "bronze";
+		}
+		if (earnedKey) {
+			starLevelByKey(earnedKey).count++;
+			updateStarCounts();
+			starAnimationBusyUntil = now + starAnimationDelay + starCenterHold + starFlightDuration + 50;
+			// Deixa o mapa terminar de marcar as cidades antes de chamar a
+			// atenção para a estrela ganha.
+			setTimeout(function () {
+				triggerStarAnimation(earnedKey);
+			}, starAnimationDelay);
+		}
+		consecutiveGuessCount = 1;
+	}
+
+	lastGuessTimestamp = now;
+	startStarCircleTimers();
+}
+
+function updateStarCounts() {
+	starLevels.forEach(function (level) {
+		let count = document.getElementById(starElementId("starCount", level.key));
+		let text = level.count.toString();
+		if (count && count.textContent !== text) {
+			count.textContent = text;
+		}
+	});
+}
+
+// Reinicia os três temporizadores: todos voltam a cheios a cada acerto.
+function startStarCircleTimers() {
+	starTimerStart = Date.now();
+	updateStarComboBarAnimated(0);
+	if (!starAnimationFrame) {
+		starAnimationFrame = requestAnimationFrame(animateStarCircles);
+	}
+}
+
+function animateStarCircles() {
+	starAnimationFrame = null;
+	let elapsed = Date.now() - starTimerStart;
+	updateStarComboBarAnimated(elapsed);
+	if (elapsed < starLevels[starLevels.length - 1].limit) {
+		starAnimationFrame = requestAnimationFrame(animateStarCircles);
+	}
+}
+
+function updateStarComboBarAnimated(elapsed) {
+	buildStarComboBar();
+	updateStarCounts();
+
+	starLevels.forEach(function (level) {
+		let circle = document.getElementById(starElementId("starCircle", level.key));
+		if (!circle) {
+			return;
+		}
+		let remaining = starTimerStart ? Math.max(0, 1 - elapsed / level.limit) : 0;
+		if (remaining <= 0) {
+			circle.style.display = "none";
+			return;
+		}
+		circle.style.display = "block";
+		// Fatia branca translúcida que encolhe no sentido horário, de 360°
+		// (disco cheio) até desaparecer.
+		let degrees = remaining * 360;
+		circle.style.background = "conic-gradient(rgba(255, 255, 255, 0.35) " + degrees + "deg, transparent " + degrees + "deg)";
+	});
+}
+
+function updateStarComboBar() {
+	updateStarComboBarAnimated(0);
+}
+
+// Estrela grande na base da tela que encolhe até o ícone do contador.
+function triggerStarAnimation(key) {
+	let target = document.getElementById(starElementId("starIcon", key));
+	if (!target) {
+		return;
+	}
+	let targetRect = target.getBoundingClientRect();
+	if (!targetRect.width || !targetRect.height) {
+		return;
+	}
+
+	let flying = createStarIcon(key);
+	flying.classList.add("starFly");
+	let size = Math.min(window.innerWidth, window.innerHeight) * 0.225;
+	// Sobe a base da animação pela altura da toolbar, para a estrela não ficar
+	// escondida atrás dela.
+	let toolbar = document.getElementById("toolbar");
+	let toolbarHeight = toolbar ? toolbar.offsetHeight : 0;
+	let startY = window.innerHeight - size / 2 - toolbarHeight;
+	flying.style.width = size + "px";
+	flying.style.height = size + "px";
+	flying.style.left = (window.innerWidth / 2) + "px";
+	flying.style.top = startY + "px";
+	document.body.appendChild(flying);
+
+	// Lê o layout antes de trocar o transform, senão o browser agrupa os dois
+	// estados e a transição não acontece.
+	flying.getBoundingClientRect();
+
+	let dx = targetRect.left + targetRect.width / 2 - window.innerWidth / 2;
+	let dy = targetRect.top + targetRect.height / 2 - startY;
+	let targetScale = Math.max(0.04, targetRect.width / size);
+
+	// Mostra a estrela grande por um instante e só então a envia para o
+	// contador, para dar tempo de o jogador perceber o que ganhou.
+	setTimeout(function () {
+		flying.style.transform = "translate(-50%, -50%) translate(" + dx + "px, " + dy + "px) scale(" + targetScale + ")";
+	}, starCenterHold);
+
+	setTimeout(function () {
+		flying.remove();
+	}, starCenterHold + starFlightDuration + 50);
 }
