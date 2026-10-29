@@ -127,6 +127,9 @@ function applyI18n() {
 	document.querySelectorAll("[data-i18n]").forEach(element => {
 		element.textContent = i18n(element.getAttribute("data-i18n"));
 	});
+	document.querySelectorAll("[data-i18n-aria-label]").forEach(element => {
+		element.setAttribute("aria-label", i18n(element.getAttribute("data-i18n-aria-label")));
+	});
 }
 
 async function init() {
@@ -135,17 +138,25 @@ async function init() {
 	await processDB();
 	initMap();
 	document.addEventListener("keydown", event => {	searchFocus(); });
+	document.addEventListener("keydown", function(event) {
+		if (event.key === "Escape" && document.getElementById("infoScreen").classList.contains("open")) {
+			closeInfo();
+		}
+	});
 	document.addEventListener("visibilitychange", event => { searchFocus(); });
-	// Mantém a barra de progresso exibida por alguns segundos, mesmo que
-	// os arquivos já tenham sido baixados.
+	// Mantém a tela de splash exibida por alguns segundos, mesmo que os
+	// arquivos já tenham sido baixados.
 	let remainingTime = Math.max(0, 4000 - (Date.now() - splashStartTime));
 	setTimeout(function() {
-		document.getElementById("progressBar").style.display = "none";
 		startGame();
 	}, remainingTime);
 }
 
 function searchFocus() {
+	let infoScreen = document.getElementById("infoScreen");
+	if (infoScreen && infoScreen.classList.contains("open")) {
+		return;
+	}
 	if (document.activeElement.id != "search") {
 		document.getElementById("search").focus();
 	}
@@ -850,11 +861,10 @@ function celebrateCapital() {
 }
 
 function startGame() {
-	// A splash é ocultada aqui (após o tempo mínimo de exibição / download).
-	// A partir daí ela passa a ficar reduzida: título 40% + descrição, visível
-	// apenas quando o usuário clicar em "?" para reexibi-la.
-	document.getElementById("splash").classList.add("reduced");
-	document.getElementById("splash").style.display = "none";
+	// A splash é exibida apenas durante o carregamento; depois de ocultada,
+	// ela é removida do DOM e não é reaproveitada (a tela de informação é
+	// independente).
+	hideSplash();
 	cityGuessedLabelsLayerGroup.clearLayers();
 	cityRevealedLabelsLayerGroup.clearLayers();
 
@@ -934,13 +944,94 @@ function startGame() {
 	scheduleSummaryBarsUpdate();
 }
 
-function showSplash() {
-	document.getElementById("splash").style.display = "flex";
+// A splash existe apenas durante o carregamento inicial. Uma vez ocultada
+// (pelo tempo mínimo ou pelo botão de fechar), ela é removida do DOM.
+function hideSplash() {
+	let splash = document.getElementById("splash");
+	if (splash) {
+		splash.remove();
+	}
 }
 
-function closeSplash() {
-	document.getElementById("splash").style.display = "none";
+function showInfo() {
+	showInfoTab("general");
+	document.getElementById("infoScreen").classList.add("open");
+}
+
+function closeInfo() {
+	document.getElementById("infoScreen").classList.remove("open");
 	searchFocus();
+}
+
+function showInfoTab(tab) {
+	let sectionId = "info" + tab.charAt(0).toUpperCase() + tab.slice(1);
+	document.querySelectorAll(".infoSection").forEach(function (section) {
+		section.classList.toggle("active", section.id === sectionId);
+	});
+	document.querySelectorAll(".infoMenuButton").forEach(function (button) {
+		button.classList.toggle("active", button.getAttribute("data-info-tab") === tab);
+	});
+	if (tab === "statistics") {
+		renderInfoStats();
+	}
+}
+
+// Tabela de acertos por país: ignora países sem população descoberta, ordena
+// do maior percentual para o menor.
+function renderInfoStats() {
+	let table = document.getElementById("infoStatsTable");
+	let tbody = table.querySelector("tbody");
+	let empty = document.getElementById("infoStatsEmpty");
+	let rows = [];
+	countryStats.forEach(function (stats) {
+		if (!stats || !stats.totalPop || stats.markedPop <= 0) {
+			return;
+		}
+		let percent = stats.markedPop / stats.totalPop;
+		if (!(percent > 0)) {
+			return;
+		}
+		rows.push({
+			name: countryDisplayName(stats.code),
+			percent: percent,
+			code: stats.code,
+			medalLevel: getCountryMedalLevel(stats)
+		});
+	});
+	rows.sort(function (a, b) {
+		if (b.percent !== a.percent) {
+			return b.percent - a.percent;
+		}
+		return a.name.localeCompare(b.name);
+	});
+
+	tbody.innerHTML = "";
+	rows.forEach(function (row) {
+		let tr = document.createElement("tr");
+
+		let nameCell = document.createElement("td");
+		let nameSpan = document.createElement("span");
+		nameSpan.textContent = row.name;
+		if (row.medalLevel > 0) {
+			let medal = document.createElement("span");
+			medal.className = "countryMedal medal" + row.medalLevel;
+			if (row.medalLevel == 1) medal.textContent = "\ud83e\udd49";
+			else if (row.medalLevel == 2) medal.textContent = "\ud83e\udd48";
+			else medal.textContent = "\ud83e\udd47";
+			nameCell.appendChild(medal);
+		}
+		nameCell.appendChild(nameSpan);
+		tr.appendChild(nameCell);
+
+		let percentCell = document.createElement("td");
+		percentCell.textContent = (row.percent * 100).toFixed(2) + "%";
+		tr.appendChild(percentCell);
+
+		tbody.appendChild(tr);
+	});
+
+	table.style.display = rows.length ? "table" : "none";
+	empty.style.display = rows.length ? "none" : "block";
 }
 
 function searchName() {

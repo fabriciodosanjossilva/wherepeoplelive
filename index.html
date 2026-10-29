@@ -28,7 +28,7 @@
 						<path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
 					</svg>
 				</button>
-				<button type="button" id="showSplash" class="toolbarButton" title="About the game" aria-label="About the game" onclick="showSplash()">
+				<button type="button" id="showInfo" class="toolbarButton" title="About the game" aria-label="About the game" onclick="showInfo()">
 					<svg viewBox="0 0 24 24" aria-hidden="true">
 						<circle cx="12" cy="12" r="10"></circle>
 						<line x1="12" y1="16" x2="12" y2="12"></line>
@@ -40,18 +40,82 @@
 	</div>
 	<div id="capitalGlow"></div>
 	<div id="splash" class="fullscreen">
-		<div id="closeSplash" onclick="closeSplash()">&#x2715;</div>
-		<img id="titleImage" src="title.webp" alt="Where People Live">
-		<div id="splashDescription" data-i18n="I8N_SPLASH_DESCRIPTION"></div>
+		<div id="closeSplash" onclick="hideSplash()">&#x2715;</div>
+		<img id="titleImage" class="titleImage" src="title.webp" alt="Where People Live">
 		<div id="progressBar">
 			<div id="progressBarFill"></div>
 			<span id="progressBarLabel" data-i18n="I8N_LOADING"></span>
 		</div>
 		<div class="splash-footer">
 			<span data-i18n="I8N_SPLASH_BY"></span><span> Fabrício Silva</span><br/>
-			<a href="https://github.com/fabriciodosanjossilva/wherepeoplelive" target="_blank" rel="noopener">
-				<img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub" class="gh-icon">
-			</a>
+		</div>
+	</div>
+	<div id="infoScreen" class="fullscreen" role="dialog" aria-modal="true" aria-label="About the game">
+		<div id="closeInfo" onclick="closeInfo()" data-i18n-aria-label="I8N_CLOSE">&#x2715;</div>
+		<nav id="infoMenu">
+			<button type="button" class="infoMenuButton active" data-info-tab="general" data-i18n-aria-label="I8N_INFO_GENERAL" onclick="showInfoTab('general')">
+				<svg viewBox="0 0 24 24" aria-hidden="true">
+					<circle cx="12" cy="12" r="10"></circle>
+					<line x1="12" y1="16" x2="12" y2="12"></line>
+					<line x1="12" y1="8" x2="12.01" y2="8"></line>
+				</svg>
+				<span data-i18n="I8N_INFO_GENERAL"></span>
+			</button>
+			<button type="button" class="infoMenuButton" data-info-tab="instructions" data-i18n-aria-label="I8N_INFO_HOW_TO_PLAY" onclick="showInfoTab('instructions')">
+				<svg viewBox="0 0 24 24" aria-hidden="true">
+					<circle cx="12" cy="12" r="10"></circle>
+					<path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+					<line x1="12" y1="17" x2="12.01" y2="17"></line>
+				</svg>
+				<span data-i18n="I8N_INFO_HOW_TO_PLAY"></span>
+			</button>
+			<button type="button" class="infoMenuButton" data-info-tab="statistics" data-i18n-aria-label="I8N_INFO_STATISTICS" onclick="showInfoTab('statistics')">
+				<svg viewBox="0 0 24 24" aria-hidden="true">
+					<line x1="18" y1="20" x2="18" y2="10"></line>
+					<line x1="12" y1="20" x2="12" y2="4"></line>
+					<line x1="6" y1="20" x2="6" y2="14"></line>
+				</svg>
+				<span data-i18n="I8N_INFO_STATISTICS"></span>
+			</button>
+			<button type="button" class="infoMenuButton" data-info-tab="source" data-i18n-aria-label="I8N_INFO_SOURCE" onclick="showInfoTab('source')">
+				<svg viewBox="0 0 24 24" aria-hidden="true">
+					<polyline points="16 18 22 12 16 6"></polyline>
+					<polyline points="8 6 2 12 8 18"></polyline>
+				</svg>
+				<span data-i18n="I8N_INFO_SOURCE"></span>
+			</button>
+		</nav>
+		<div id="infoContent">
+			<section id="infoGeneral" class="infoSection active">
+				<img class="infoImage titleImage" src="title.webp" alt="Where People Live">
+				<div class="infoText" data-i18n="I8N_SPLASH_DESCRIPTION"></div>
+			</section>
+			<section id="infoInstructions" class="infoSection">
+				<h2 data-i18n="I8N_INFO_HOW_TO_PLAY"></h2>
+				<div class="infoText" data-i18n="I8N_INFO_INSTRUCTIONS"></div>
+			</section>
+			<section id="infoStatistics" class="infoSection">
+				<h2 data-i18n="I8N_INFO_STATISTICS"></h2>
+				<table id="infoStatsTable">
+					<thead>
+						<tr>
+							<th data-i18n="I8N_INFO_STATS_COUNTRY"></th>
+							<th>%</th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+				<p id="infoStatsEmpty" data-i18n="I8N_INFO_STATS_EMPTY"></p>
+			</section>
+			<section id="infoSource" class="infoSection">
+				<h2 data-i18n="I8N_INFO_SOURCE"></h2>
+				<p class="infoText" data-i18n="I8N_INFO_SOURCE_TEXT"></p>
+				<p>
+					<a href="https://github.com/fabriciodosanjossilva/wherepeoplelive" target="_blank" rel="noopener" style="color: black; font-size: 0.8em;">
+						<img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub" class="gh-icon" style="vertical-align: middle;"> @fabriciodosanjossilva/wherepeoplelive
+					</a>
+				</p>
+			</section>
 		</div>
 	</div>
 	<script>
