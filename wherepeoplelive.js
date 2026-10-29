@@ -661,7 +661,9 @@ function updateSummaryBars() {
 	// A barra do combo de estrelas mora dentro deste contêiner: remove só as
 	// linhas de resumo antigas para não destruí-la a cada atualização.
 	container.querySelectorAll(".summaryBar").forEach(function (row) {
-		row.remove();
+		if (row.id !== "starComboBar") {
+			row.remove();
+		}
 	});
 
 	if (!countryStats) {
@@ -705,7 +707,8 @@ function updateSummaryBars() {
 	appendSummaryText(medalsRow, bronze.toString());
 	container.appendChild(medalsRow);
 
-	// Capitais e população na linha seguinte, com valor absoluto e percentual.
+	// Capitais e população na linha seguinte: a população mundial exibe
+	// apenas o percentual, sem o valor absoluto.
 	let totalsRow = document.createElement("div");
 	totalsRow.className = "summaryBar";
 	let capitalsPercent = totalCapitalsCount > 0 ? (capitalsGuessedCount / totalCapitalsCount) * 100 : 0;
@@ -714,7 +717,7 @@ function updateSummaryBars() {
 	appendSummarySeparator(totalsRow);
 	let populationPercent = totalWorldPopulation > 0 ? (pointsPop / totalWorldPopulation) * 100 : 0;
 	appendSummaryIcon(totalsRow, "summaryBarIcon globe", "\ud83c\udf0d");
-	appendSummaryText(totalsRow, formatSummaryValue(pointsPop) + " (" + formatSummaryValue(populationPercent) + "%)");
+	appendSummaryText(totalsRow, formatSummaryValue(populationPercent) + "%");
 	container.appendChild(totalsRow);
 
 	// Mantém o combo de estrelas como a última linha do resumo.
@@ -1416,7 +1419,8 @@ function buildStarComboBar() {
 	if (!container || container.childElementCount > 0) {
 		return;
 	}
-	starLevels.forEach(function (level) {
+	container.classList.add("summaryBar");
+	starLevels.forEach(function (level, index) {
 		let item = document.createElement("div");
 		item.className = "starComboItem";
 
@@ -1436,6 +1440,13 @@ function buildStarComboBar() {
 		item.appendChild(count);
 
 		container.appendChild(item);
+		// Mesmo separador usado nas medalhas, entre as estrelas.
+		if (index < starLevels.length - 1) {
+			let separator = document.createElement("span");
+			separator.className = "summarySeparator";
+			separator.textContent = "|";
+			container.appendChild(separator);
+		}
 	});
 }
 
