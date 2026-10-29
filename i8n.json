@@ -256,7 +256,8 @@
 		"I8N_COUNTRY_YT": "Mayotte",
 		"I8N_COUNTRY_ZA": "South Africa",
 		"I8N_COUNTRY_ZM": "Zambia",
-		"I8N_COUNTRY_ZW": "Zimbabwe"
+		"I8N_COUNTRY_ZW": "Zimbabwe",
+		"I8N_INFO_SOURCE_PROJECTS": "Open projects we based ourselves on:"
 	},
 	"zh": {
 		"I8N_LOADING": "正在加载...",
@@ -515,7 +516,8 @@
 		"I8N_COUNTRY_YT": "马约特",
 		"I8N_COUNTRY_ZA": "南非",
 		"I8N_COUNTRY_ZM": "赞比亚",
-		"I8N_COUNTRY_ZW": "津巴布韦"
+		"I8N_COUNTRY_ZW": "津巴布韦",
+		"I8N_INFO_SOURCE_PROJECTS": "我们基于的开放项目："
 	},
 	"hi": {
 		"I8N_LOADING": "लोड हो रहा है...",
@@ -774,7 +776,8 @@
 		"I8N_COUNTRY_YT": "मायोते",
 		"I8N_COUNTRY_ZA": "दक्षिण अफ़्रीका",
 		"I8N_COUNTRY_ZM": "ज़ाम्बिया",
-		"I8N_COUNTRY_ZW": "ज़िम्बाब्वे"
+		"I8N_COUNTRY_ZW": "ज़िम्बाब्वे",
+		"I8N_INFO_SOURCE_PROJECTS": "खुली परियोजनाएँ जिन पर हमने स्वयं को आधारित किया:"
 	},
 	"es": {
 		"I8N_LOADING": "Cargando...",
@@ -1033,7 +1036,8 @@
 		"I8N_COUNTRY_YT": "Mayotte",
 		"I8N_COUNTRY_ZA": "Sudáfrica",
 		"I8N_COUNTRY_ZM": "Zambia",
-		"I8N_COUNTRY_ZW": "Zimbabue"
+		"I8N_COUNTRY_ZW": "Zimbabue",
+		"I8N_INFO_SOURCE_PROJECTS": "Proyectos abiertos en los que nos basamos:"
 	},
 	"fr": {
 		"I8N_LOADING": "Chargement...",
@@ -1292,7 +1296,8 @@
 		"I8N_COUNTRY_YT": "Mayotte",
 		"I8N_COUNTRY_ZA": "Afrique du Sud",
 		"I8N_COUNTRY_ZM": "Zambie",
-		"I8N_COUNTRY_ZW": "Zimbabwe"
+		"I8N_COUNTRY_ZW": "Zimbabwe",
+		"I8N_INFO_SOURCE_PROJECTS": "Projets ouverts sur lesquels nous nous sommes basés :"
 	},
 	"ar": {
 		"I8N_LOADING": "جارٍ التحميل...",
@@ -1551,7 +1556,8 @@
 		"I8N_COUNTRY_YT": "مايوت",
 		"I8N_COUNTRY_ZA": "جنوب أفريقيا",
 		"I8N_COUNTRY_ZM": "زامبيا",
-		"I8N_COUNTRY_ZW": "زيمبابوي"
+		"I8N_COUNTRY_ZW": "زيمبابوي",
+		"I8N_INFO_SOURCE_PROJECTS": "المشاريع المفتوحة التي اعتمدنا عليها:"
 	},
 	"bn": {
 		"I8N_LOADING": "লোড হচ্ছে...",
@@ -1810,7 +1816,8 @@
 		"I8N_COUNTRY_YT": "মায়োত্তে",
 		"I8N_COUNTRY_ZA": "দক্ষিণ আফ্রিকা",
 		"I8N_COUNTRY_ZM": "জাম্বিয়া",
-		"I8N_COUNTRY_ZW": "জিম্বাবোয়ে"
+		"I8N_COUNTRY_ZW": "জিম্বাবোয়ে",
+		"I8N_INFO_SOURCE_PROJECTS": "খোলা প্রকল্পগুলি আমরা নিজেদের উপর ভিত্তি করে:"
 	},
 	"pt": {
 		"I8N_LOADING": "Carregando...",
@@ -2069,7 +2076,8 @@
 		"I8N_COUNTRY_YT": "Mayotte",
 		"I8N_COUNTRY_ZA": "África do Sul",
 		"I8N_COUNTRY_ZM": "Zâmbia",
-		"I8N_COUNTRY_ZW": "Zimbábue"
+		"I8N_COUNTRY_ZW": "Zimbábue",
+		"I8N_INFO_SOURCE_PROJECTS": "Projetos abertos nos quais nos baseamos:"
 	},
 	"ru": {
 		"I8N_LOADING": "Загрузка...",
@@ -2328,7 +2336,8 @@
 		"I8N_COUNTRY_YT": "Майотта",
 		"I8N_COUNTRY_ZA": "Южно-Африканская Республика",
 		"I8N_COUNTRY_ZM": "Замбия",
-		"I8N_COUNTRY_ZW": "Зимбабве"
+		"I8N_COUNTRY_ZW": "Зимбабве",
+		"I8N_INFO_SOURCE_PROJECTS": "Открытые проекты, на которых мы основывались:"
 	},
 	"ur": {
 		"I8N_LOADING": "لوڈ ہو رہا ہے...",
@@ -2587,7 +2596,8 @@
 		"I8N_COUNTRY_YT": "مایوٹ",
 		"I8N_COUNTRY_ZA": "جنوبی افریقہ",
 		"I8N_COUNTRY_ZM": "زامبیا",
-		"I8N_COUNTRY_ZW": "زمبابوے"
+		"I8N_COUNTRY_ZW": "زمبابوے",
+		"I8N_INFO_SOURCE_PROJECTS": "وہ پروجیکٹ کھولیں جن پر ہم خود مبنی ہیں:"
 	},
 	"id": {
 		"I8N_LOADING": "Memuat...",
@@ -2846,7 +2856,8 @@
 		"I8N_COUNTRY_YT": "Mayotte",
 		"I8N_COUNTRY_ZA": "Afrika Selatan",
 		"I8N_COUNTRY_ZM": "Zambia",
-		"I8N_COUNTRY_ZW": "Zimbabwe"
+		"I8N_COUNTRY_ZW": "Zimbabwe",
+		"I8N_INFO_SOURCE_PROJECTS": "Buka proyek yang kami jadikan basis:"
 	},
 	"de": {
 		"I8N_LOADING": "Wird geladen...",
@@ -3105,7 +3116,8 @@
 		"I8N_COUNTRY_YT": "Mayotte",
 		"I8N_COUNTRY_ZA": "Südafrika",
 		"I8N_COUNTRY_ZM": "Sambia",
-		"I8N_COUNTRY_ZW": "Simbabwe"
+		"I8N_COUNTRY_ZW": "Simbabwe",
+		"I8N_INFO_SOURCE_PROJECTS": "Offene Projekte, auf denen wir uns basierten:"
 	},
 	"ja": {
 		"I8N_LOADING": "読み込み中...",
@@ -3364,7 +3376,8 @@
 		"I8N_COUNTRY_YT": "マヨット",
 		"I8N_COUNTRY_ZA": "南アフリカ",
 		"I8N_COUNTRY_ZM": "ザンビア",
-		"I8N_COUNTRY_ZW": "ジンバブエ"
+		"I8N_COUNTRY_ZW": "ジンバブエ",
+		"I8N_INFO_SOURCE_PROJECTS": "私たちがベースにしたオープンプロジェクト:"
 	},
 	"mr": {
 		"I8N_LOADING": "लोड होत आहे...",
@@ -3623,7 +3636,8 @@
 		"I8N_COUNTRY_YT": "मायोट्टे",
 		"I8N_COUNTRY_ZA": "दक्षिण आफ्रिका",
 		"I8N_COUNTRY_ZM": "झाम्बिया",
-		"I8N_COUNTRY_ZW": "झिम्बाब्वे"
+		"I8N_COUNTRY_ZW": "झिम्बाब्वे",
+		"I8N_INFO_SOURCE_PROJECTS": "आम्ही स्वतःवर आधारित असलेले प्रकल्प उघडा:"
 	},
 	"te": {
 		"I8N_LOADING": "లోడ్ అవుతోంది...",
@@ -3882,7 +3896,8 @@
 		"I8N_COUNTRY_YT": "మాయొట్",
 		"I8N_COUNTRY_ZA": "దక్షిణ ఆఫ్రికా",
 		"I8N_COUNTRY_ZM": "జాంబియా",
-		"I8N_COUNTRY_ZW": "జింబాబ్వే"
+		"I8N_COUNTRY_ZW": "జింబాబ్వే",
+		"I8N_INFO_SOURCE_PROJECTS": "మేము ఆధారపడిన ప్రాజెక్ట్‌లను తెరవండి:"
 	},
 	"tr": {
 		"I8N_LOADING": "Yükleniyor...",
@@ -4141,7 +4156,8 @@
 		"I8N_COUNTRY_YT": "Mayotte",
 		"I8N_COUNTRY_ZA": "Güney Afrika",
 		"I8N_COUNTRY_ZM": "Zambiya",
-		"I8N_COUNTRY_ZW": "Zimbabve"
+		"I8N_COUNTRY_ZW": "Zimbabve",
+		"I8N_INFO_SOURCE_PROJECTS": "Kendimizi temel aldığımız açık projeler:"
 	},
 	"ta": {
 		"I8N_LOADING": "ஏற்றுகிறது...",
@@ -4400,7 +4416,8 @@
 		"I8N_COUNTRY_YT": "மயோட்",
 		"I8N_COUNTRY_ZA": "தென் ஆப்பிரிக்கா",
 		"I8N_COUNTRY_ZM": "ஜாம்பியா",
-		"I8N_COUNTRY_ZW": "ஜிம்பாப்வே"
+		"I8N_COUNTRY_ZW": "ஜிம்பாப்வே",
+		"I8N_INFO_SOURCE_PROJECTS": "நாங்கள் சார்ந்த திட்டங்களைத் திறக்கவும்:"
 	},
 	"vi": {
 		"I8N_LOADING": "Đang tải...",
@@ -4659,7 +4676,8 @@
 		"I8N_COUNTRY_YT": "Mayotte",
 		"I8N_COUNTRY_ZA": "Nam Phi",
 		"I8N_COUNTRY_ZM": "Zambia",
-		"I8N_COUNTRY_ZW": "Zimbabwe"
+		"I8N_COUNTRY_ZW": "Zimbabwe",
+		"I8N_INFO_SOURCE_PROJECTS": "Mở các dự án mà chúng tôi dựa vào:"
 	},
 	"ko": {
 		"I8N_LOADING": "불러오는 중...",
@@ -4918,7 +4936,8 @@
 		"I8N_COUNTRY_YT": "마요트",
 		"I8N_COUNTRY_ZA": "남아프리카",
 		"I8N_COUNTRY_ZM": "잠비아",
-		"I8N_COUNTRY_ZW": "짐바브웨"
+		"I8N_COUNTRY_ZW": "짐바브웨",
+		"I8N_INFO_SOURCE_PROJECTS": "우리가 기반으로 한 공개 프로젝트:"
 	},
 	"fa": {
 		"I8N_LOADING": "در حال بارگذاری...",
@@ -5177,7 +5196,8 @@
 		"I8N_COUNTRY_YT": "مایوت",
 		"I8N_COUNTRY_ZA": "افریقای جنوبی",
 		"I8N_COUNTRY_ZM": "زامبیا",
-		"I8N_COUNTRY_ZW": "زیمبابوه"
+		"I8N_COUNTRY_ZW": "زیمبابوه",
+		"I8N_INFO_SOURCE_PROJECTS": "پروژه های باز که خودمان بر اساس آنها هستیم:"
 	},
 	"it": {
 		"I8N_LOADING": "Caricamento...",
@@ -5436,7 +5456,8 @@
 		"I8N_COUNTRY_YT": "Mayotte",
 		"I8N_COUNTRY_ZA": "Sudafrica",
 		"I8N_COUNTRY_ZM": "Zambia",
-		"I8N_COUNTRY_ZW": "Zimbabwe"
+		"I8N_COUNTRY_ZW": "Zimbabwe",
+		"I8N_INFO_SOURCE_PROJECTS": "Progetti aperti su cui ci siamo basati:"
 	},
 	"jv": {
 		"I8N_LOADING": "Muat...",
@@ -5695,7 +5716,8 @@
 		"I8N_COUNTRY_YT": "Mayotte",
 		"I8N_COUNTRY_ZA": "Afrika Kidul",
 		"I8N_COUNTRY_ZM": "Sambia",
-		"I8N_COUNTRY_ZW": "Simbabwe"
+		"I8N_COUNTRY_ZW": "Simbabwe",
+		"I8N_INFO_SOURCE_PROJECTS": "Bukak proyek sing adhedhasar:"
 	},
 	"pa": {
 		"I8N_LOADING": "ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...",
@@ -5954,7 +5976,8 @@
 		"I8N_COUNTRY_YT": "ਮਾਯੋਟੀ",
 		"I8N_COUNTRY_ZA": "ਦੱਖਣੀ ਅਫਰੀਕਾ",
 		"I8N_COUNTRY_ZM": "ਜ਼ਾਮਬੀਆ",
-		"I8N_COUNTRY_ZW": "ਜ਼ਿੰਬਾਬਵੇ"
+		"I8N_COUNTRY_ZW": "ਜ਼ਿੰਬਾਬਵੇ",
+		"I8N_INFO_SOURCE_PROJECTS": "ਓਪਨ ਪ੍ਰੋਜੈਕਟ ਜੋ ਅਸੀਂ ਆਪਣੇ ਆਪ ਨੂੰ ਆਧਾਰਿਤ ਕਰਦੇ ਹਾਂ:"
 	},
 	"ha": {
 		"I8N_LOADING": "Ana lodi...",
@@ -6213,7 +6236,8 @@
 		"I8N_COUNTRY_YT": "Mayoti",
 		"I8N_COUNTRY_ZA": "Afirka Ta Kudu",
 		"I8N_COUNTRY_ZM": "Zambiya",
-		"I8N_COUNTRY_ZW": "Zimbabuwe"
+		"I8N_COUNTRY_ZW": "Zimbabuwe",
+		"I8N_INFO_SOURCE_PROJECTS": "Bude ayyukan da muka dogara akan:"
 	},
 	"kn": {
 		"I8N_LOADING": "ಲೋಡ್ ಆಗುತ್ತಿದೆ...",
@@ -6472,7 +6496,8 @@
 		"I8N_COUNTRY_YT": "ಮಯೊಟ್ಟೆ",
 		"I8N_COUNTRY_ZA": "ದಕ್ಷಿಣ ಆಫ್ರಿಕಾ",
 		"I8N_COUNTRY_ZM": "ಜಾಂಬಿಯ",
-		"I8N_COUNTRY_ZW": "ಜಿಂಬಾಬ್ವೆ"
+		"I8N_COUNTRY_ZW": "ಜಿಂಬಾಬ್ವೆ",
+		"I8N_INFO_SOURCE_PROJECTS": "ನಾವು ಆಧರಿಸಿದ ಯೋಜನೆಗಳನ್ನು ತೆರೆಯಿರಿ:"
 	},
 	"gu": {
 		"I8N_LOADING": "લોડ થઈ રહ્યું છે...",
@@ -6731,7 +6756,8 @@
 		"I8N_COUNTRY_YT": "મેયોટ",
 		"I8N_COUNTRY_ZA": "દક્ષિણ આફ્રિકા",
 		"I8N_COUNTRY_ZM": "ઝામ્બિયા",
-		"I8N_COUNTRY_ZW": "ઝિમ્બાબ્વે"
+		"I8N_COUNTRY_ZW": "ઝિમ્બાબ્વે",
+		"I8N_INFO_SOURCE_PROJECTS": "ઓપન પ્રોજેક્ટ્સ અમે અમારી જાત પર આધારિત છીએ:"
 	},
 	"bho": {
 		"I8N_LOADING": "लोड होत बा...",
@@ -6990,7 +7016,8 @@
 		"I8N_COUNTRY_YT": "YT",
 		"I8N_COUNTRY_ZA": "ZA",
 		"I8N_COUNTRY_ZM": "ZM",
-		"I8N_COUNTRY_ZW": "ZW"
+		"I8N_COUNTRY_ZW": "ZW",
+		"I8N_INFO_SOURCE_PROJECTS": "खुला प्रोजेक्ट जवना पर हमनी के अपना के आधारित कइले बानी जा:"
 	},
 	"or": {
 		"I8N_LOADING": "ଲୋଡ୍ ହେଉଛି...",
@@ -7249,7 +7276,8 @@
 		"I8N_COUNTRY_YT": "ମାୟୋଟେ",
 		"I8N_COUNTRY_ZA": "ଦକ୍ଷିଣ ଆଫ୍ରିକା",
 		"I8N_COUNTRY_ZM": "ଜାମ୍ବିଆ",
-		"I8N_COUNTRY_ZW": "ଜିମ୍ବାୱେ"
+		"I8N_COUNTRY_ZW": "ଜିମ୍ବାୱେ",
+		"I8N_INFO_SOURCE_PROJECTS": "ଆମେ ନିଜ ଉପରେ ଆଧାରିତ ପ୍ରୋଜେକ୍ଟ ଖୋଲନ୍ତୁ:"
 	},
 	"uk": {
 		"I8N_LOADING": "Завантаження...",
@@ -7508,7 +7536,8 @@
 		"I8N_COUNTRY_YT": "Майотта",
 		"I8N_COUNTRY_ZA": "Південно-Африканська Республіка",
 		"I8N_COUNTRY_ZM": "Замбія",
-		"I8N_COUNTRY_ZW": "Зімбабве"
+		"I8N_COUNTRY_ZW": "Зімбабве",
+		"I8N_INFO_SOURCE_PROJECTS": "Відкриті проекти, на яких ми базуємося:"
 	},
 	"pl": {
 		"I8N_LOADING": "Ładowanie...",
@@ -7767,6 +7796,7 @@
 		"I8N_COUNTRY_YT": "Majotta",
 		"I8N_COUNTRY_ZA": "Republika Południowej Afryki",
 		"I8N_COUNTRY_ZM": "Zambia",
-		"I8N_COUNTRY_ZW": "Zimbabwe"
+		"I8N_COUNTRY_ZW": "Zimbabwe",
+		"I8N_INFO_SOURCE_PROJECTS": "Projekty otwarte, na których się wzorowaliśmy:"
 	}
 }
