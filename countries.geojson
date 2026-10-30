@@ -1084,13 +1084,13 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -53.1697471,
-          3.9709801
+          -53.2123662,
+          3.6551895
         ]
       },
       "properties": {
         "code": "GF",
-        "minor": true
+        "minor": false
       }
     },
     {
@@ -1146,7 +1146,7 @@
       },
       "properties": {
         "code": "GL",
-        "minor": true
+        "minor": false
       }
     },
     {
@@ -1272,7 +1272,7 @@
       },
       "properties": {
         "code": "GY",
-        "minor": true
+        "minor": false
       }
     },
     {
@@ -1286,7 +1286,7 @@
       },
       "properties": {
         "code": "HK",
-        "minor": false
+        "minor": true
       }
     },
     {
@@ -1440,7 +1440,7 @@
       },
       "properties": {
         "code": "IS",
-        "minor": true
+        "minor": false
       }
     },
     {
@@ -1714,8 +1714,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          9.52154,
-          47.14151
+          9.5560093,
+          47.1208633
         ]
       },
       "properties": {
@@ -1986,7 +1986,7 @@
       },
       "properties": {
         "code": "MO",
-        "minor": false
+        "minor": true
       }
     },
     {
@@ -2448,7 +2448,7 @@
       },
       "properties": {
         "code": "PS",
-        "minor": false
+        "minor": true
       }
     },
     {
@@ -2624,8 +2624,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          32.53241,
-          15.55177
+          29.2624928,
+          16.234813
         ]
       },
       "properties": {
@@ -2764,8 +2764,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -56.0135774,
-          4.3595184
+          -56.0211093,
+          5.1704848
         ]
       },
       "properties": {
@@ -3022,7 +3022,7 @@
       },
       "properties": {
         "code": "TT",
-        "minor": false
+        "minor": true
       }
     },
     {
