@@ -4,6 +4,7 @@ let cityGuessedLabelsLayerGroup;
 let cityRevealedLabelsLayerGroup;
 let countryBoundariesLayerGroup;
 let countryLabelsLayerGroup;
+let countryMinorLabelsLayerGroup;
 
 let countries;
 let cities;
@@ -61,6 +62,7 @@ let initCenter = [-13, -49];
 let initZoom = 3;
 let radiusKm = 60;
 let labelsMinZoom = 5;
+let minorLabelsMinZoom = 7;
 let firstGuess;
 let pointsPop;
 let state;
@@ -91,8 +93,8 @@ let splashStartTime = Date.now();
 // descompacta transparentemente.
 let citiesFile = location.hostname.includes("localhost") ? "cities5000.txt" : "cities5000.txt.br";
 let dbFilesPromise = i18nPromise.then(() => Promise.all([
-	fetch("boundaries.json"),
-	fetch("countries.json"),
+	fetch("boundaries.geojson"),
+	fetch("countries.geojson"),
 	fetch(citiesFile)
 ]));
 
@@ -313,7 +315,12 @@ function initMap() {
 	L.geoJSON(countryBoundaries, { style: {"color": "darkgray", "weight": 2, "dashArray": "6 6", "dashOffset": "6", "fillColor": "none", "opacity": 0.8} }).addTo(countryBoundariesLayerGroup);
 
 	countryLabelsLayerGroup = L.layerGroup();
-	countries.forEach(country => L.tooltip([country.lat, country.lon], {content: country.name, permanent: true, direction: "center", className: "countryLabel"}).addTo(countryLabelsLayerGroup));
+	countryMinorLabelsLayerGroup = L.layerGroup();
+	countries.features.forEach(feature => {
+		let country = feature.properties;
+		let layerGroup = country.minor ? countryMinorLabelsLayerGroup : countryLabelsLayerGroup;
+		L.tooltip([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {content: countryDisplayName(country.code), permanent: true, direction: "center", className: "countryLabel"}).addTo(layerGroup);
+	});
 
 	citiesRenderer = L.canvas({ padding: 0.5 });
 	renderedCities = new Set();
@@ -326,17 +333,26 @@ function initMap() {
 	});
 
 	// Rótulos e fronteiras só aparecem a partir do zoom definido em
-	// labelsMinZoom (não há controle do usuário sobre isso).
-	map.on('zoomend', function() {
-		let showLabels = map.getZoom() >= labelsMinZoom;
-		[cityGuessedLabelsLayerGroup, cityRevealedLabelsLayerGroup, countryLabelsLayerGroup, countryBoundariesLayerGroup].forEach(layer => {
-			if (showLabels) {
-				map.addLayer(layer);
-			}
-			else {
-				map.removeLayer(layer);
-			}
-		});
+	// labelsMinZoom (não há controle do usuário sobre isso). Rótulos de países
+	// minor só aparecem a partir de minorLabelsMinZoom; as fronteiras seguem
+	// visíveis desde labelsMinZoom.
+	map.on('zoomend', updateMapLayerVisibility);
+	updateMapLayerVisibility();
+}
+
+function updateMapLayerVisibility() {
+	let zoom = map.getZoom();
+	[[cityGuessedLabelsLayerGroup, labelsMinZoom],
+	 [cityRevealedLabelsLayerGroup, labelsMinZoom],
+	 [countryLabelsLayerGroup, labelsMinZoom],
+	 [countryMinorLabelsLayerGroup, minorLabelsMinZoom],
+	 [countryBoundariesLayerGroup, labelsMinZoom]].forEach(([layer, minZoom]) => {
+		if (zoom >= minZoom) {
+			map.addLayer(layer);
+		}
+		else {
+			map.removeLayer(layer);
+		}
 	});
 }
 
