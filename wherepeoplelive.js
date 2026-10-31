@@ -95,7 +95,7 @@ let splashStartTime = Date.now();
 // Em localhost nenhum servidor envia Content-Encoding: br, então baixa o
 // arquivo original; em produção (S3) baixa a versão brotli, que o browser
 // descompacta transparentemente.
-let citiesFile = location.hostname.includes("localhost") ? "cities5000.txt" : "cities5000.txt.br";
+let citiesFile = location.hostname.startsWith("localhost") || location.hostname.startsWith("127.") ? "cities5000.txt" : "cities5000.txt.br";
 let dbFilesPromise = i18nPromise.then(() => Promise.all([
 	fetch("boundaries.geojson"),
 	fetch("countries.geojson"),
@@ -360,14 +360,176 @@ function updateMapLayerVisibility() {
 	});
 }
 
-// Ordem de marcação: não capitais antes das capitais e, dentro de cada grupo,
-// menor população primeiro. A renderização usa a mesma ordem para que as
-// capitais fiquem por cima.
+// Ordem de marcação: não capitais antes das capitais. Dentro de cada grupo,
+// ordena-se como uma rota de menor deslocamento total iniciando no ponto
+// atual do mapa, passando por todas as cidades do grupo e terminando na
+// cidade de maior população daquele grupo.
 function compareMarkOrder(a, b) {
 	if (a.capital !== b.capital) {
 		return a.capital ? 1 : -1;
 	}
 	return a.properties.pop - b.properties.pop;
+}
+
+function orderCitiesByRoute(citiesList) {
+	if (!citiesList || citiesList.length === 0) {
+		return [];
+	}
+	if (!map) {
+		return citiesList.slice().sort(compareMarkOrder);
+	}
+
+	let center = map.getCenter();
+	let startPoint = turf.point([center.lng, center.lat]);
+
+	let nonCapitals = [];
+	let capitals = [];
+	for (let i = 0; i < citiesList.length; i++) {
+		if (citiesList[i].capital) {
+			capitals.push(citiesList[i]);
+		} else {
+			nonCapitals.push(citiesList[i]);
+		}
+	}
+
+	// Cidade de maior população entre todas as cidades a serem marcadas
+	// deve ser a última da sequência completa.
+	let overallEndIdx = 0;
+	for (let i = 1; i < citiesList.length; i++) {
+		if (citiesList[i].properties.pop > citiesList[overallEndIdx].properties.pop) {
+			overallEndIdx = i;
+		}
+	}
+	let overallEndCity = citiesList[overallEndIdx];
+
+	function orderGroup(group, routeStartPoint, forcedEndCity) {
+		if (group.length === 0) {
+			return { ordered: [], endPoint: routeStartPoint };
+		}
+		// Se a única cidade do grupo for justamente a cidade final global
+		// e não houver outras cidades neste grupo, tratamos caso a caso
+		if (group.length === 1) {
+			let c = group[0];
+			return { ordered: [c], endPoint: c };
+		}
+
+		let remaining = group.slice();
+		// Se houver uma cidade final forçada (maior população global),
+		// removê-la da lista intermediária para colocá-la apenas no final
+		// da sequência completa
+		if (forcedEndCity) {
+			for (let i = 0; i < remaining.length; i++) {
+				if (remaining[i] === forcedEndCity || remaining[i].properties.id === forcedEndCity.properties.id) {
+					// Só removemos se esta cidade não for a única do grupo
+					if (remaining.length > 1) {
+						remaining.splice(i, 1);
+						break;
+					}
+				}
+			}
+		} else {
+			// Termina na cidade de maior população do grupo
+			let endIdx = 0;
+			for (let i = 1; i < remaining.length; i++) {
+				if (remaining[i].properties.pop > remaining[endIdx].properties.pop) {
+					endIdx = i;
+				}
+			}
+			let endCity = remaining[endIdx];
+			remaining.splice(endIdx, 1);
+			let ordered = [];
+			let current = routeStartPoint;
+			while (remaining.length > 0) {
+				let bestIdx = 0;
+				let bestDist = turf.distance(current, remaining[0]);
+				for (let i = 1; i < remaining.length; i++) {
+					let d = turf.distance(current, remaining[i]);
+					if (d < bestDist) {
+						bestDist = d;
+						bestIdx = i;
+						if (bestDist === 0) {
+							break;
+						}
+					}
+				}
+				ordered.push(remaining[bestIdx]);
+				current = remaining[bestIdx];
+				remaining.splice(bestIdx, 1);
+			}
+			ordered.push(endCity);
+			return { ordered: ordered, endPoint: ordered[ordered.length - 1] };
+		}
+
+		let ordered = [];
+		let current = routeStartPoint;
+		while (remaining.length > 0) {
+			let bestIdx = 0;
+			let bestDist = turf.distance(current, remaining[0]);
+			for (let i = 1; i < remaining.length; i++) {
+				let d = turf.distance(current, remaining[i]);
+				if (d < bestDist) {
+					bestDist = d;
+					bestIdx = i;
+					if (bestDist === 0) {
+						break;
+					}
+				}
+			}
+			ordered.push(remaining[bestIdx]);
+			current = remaining[bestIdx];
+			remaining.splice(bestIdx, 1);
+		}
+		return { ordered: ordered, endPoint: ordered.length > 0 ? ordered[ordered.length - 1] : routeStartPoint };
+	}
+
+	let result = [];
+	let currentStart = startPoint;
+	// Processa não capitais primeiro (mantendo ordenação primária)
+	if (nonCapitals.length > 0) {
+		let isOverallEndInNonCapitals = (overallEndCity.capital === false) || nonCapitals.some(c => c === overallEndCity || c.properties.id === overallEndCity.properties.id && overallEndCity.capital === false);
+		// Verifica se a maior população global está neste grupo
+		let forcedEnd = null;
+		if (overallEndCity.capital === false) {
+			// Se é não capital, será o final global; mas também pode haver capitais depois
+			// A sequência completa termina na cidade de maior população global
+			// Se a maior global é não capital, ela vai ao final de tudo
+			forcedEnd = overallEndCity;
+		}
+		let res = orderGroup(nonCapitals, currentStart, forcedEnd && overallEndCity.capital === false && capitals.length === 0 ? forcedEnd : (overallEndCity.capital === false && capitals.length > 0 ? null : (capitals.length === 0 ? forcedEnd : null)));
+		// Se há capitais depois, o final global (se for não capital) não pode estar
+		// no meio - deve ir para o final absoluto. Mas primária é não capitais antes
+		// de capitais; a maior população global pode ser capital.
+		if (capitals.length > 0 && overallEndCity.capital === false) {
+			// Reordena: routeia não capitais sem forçar final global, deixando-a para o fim
+			let res2 = orderGroup(nonCapitals, currentStart, null);
+			result = result.concat(res2.ordered);
+			currentStart = res2.ordered.length > 0 ? res2.ordered[res2.ordered.length - 1] : currentStart;
+		} else {
+			result = result.concat(res.ordered);
+			currentStart = res.ordered.length > 0 ? res.ordered[res.ordered.length - 1] : currentStart;
+		}
+	}
+	if (capitals.length > 0) {
+		let forcedEnd = overallEndCity.capital === true ? overallEndCity : null;
+		let res = orderGroup(capitals, currentStart, forcedEnd);
+		result = result.concat(res.ordered);
+		currentStart = res.ordered.length > 0 ? res.ordered[res.ordered.length - 1] : currentStart;
+	}
+	// Garante que a cidade de maior população global seja a última
+	if (result.length > 0) {
+		let last = result[result.length - 1];
+		if (!(last === overallEndCity || last.properties.id === overallEndCity.properties.id)) {
+			// Move para o final
+			for (let i = 0; i < result.length; i++) {
+				if (result[i] === overallEndCity || result[i].properties.id === overallEndCity.properties.id) {
+					result.splice(i, 1);
+					break;
+				}
+			}
+			result.push(overallEndCity);
+		}
+	}
+	return result;
 }
 
 // Renderiza apenas as cidades visíveis na viewport, e somente a partir do zoom
@@ -1109,13 +1271,11 @@ function searchName() {
 	// faz o handler antigo continuar a cadeia antiga.
 	let pendingMedals = cancelActiveGuess(false);
 
-	// Ordem de marcação (não de renderização): não capitais antes das capitais
-	// e, dentro de cada grupo, menor população primeiro.
-	citiesGuessed.sort(compareMarkOrder);
-	if (citiesGuessed.length > 0) {
-		let lastCity = citiesGuessed[citiesGuessed.length - 1];
-		map.setView([lastCity.geometry.coordinates[1], lastCity.geometry.coordinates[0]], Math.max(6, map.getZoom()), {animate: false});
-	}
+	// Ordem de marcação: não capitais antes das capitais. Dentro de cada grupo,
+	// rota de menor deslocamento total iniciando no ponto atual do mapa,
+	// passando pelas cidades a serem marcadas e terminando na cidade de maior
+	// população.
+	citiesGuessed = orderCitiesByRoute(citiesGuessed);
 
 	document.getElementById("search").value = "";
 	hideMessage();
@@ -1264,9 +1424,9 @@ function nearCities(city) {
 			result.push(city2);
 		}
 	}
-	// A marcação dos arredores segue a mesma ordem usada para as cidades
-	// digitadas: não capitais antes das capitais e menor população primeiro.
-	result.sort(compareMarkOrder);
+	// A marcação segue a ordem por rota de menor deslocamento total,
+	// mantendo não capitais antes das capitais.
+	result = orderCitiesByRoute(result);
 	return result;
 }
 
