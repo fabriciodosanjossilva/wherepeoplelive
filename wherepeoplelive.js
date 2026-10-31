@@ -76,6 +76,10 @@ let medalTriggerCountry = null;
 let guessToken = 0;
 let activeGuessToken = 0;
 let activeGuessList = [];
+// Handler do moveend do voo em curso. Guardado para poder ser removido no
+// cancelamento: se ficasse registado, só dispararia no moveend do voo seguinte
+// e poderia marcar/continuar a cadeia antiga depois de já haver um voo novo.
+let activeGuessMoveendHandler = null;
 
 // Inicia o download do repositório de traduções em segundo plano, enquanto a
 // splash screen é exibida. Os textos traduzíveis começam vazios no HTML (via
@@ -887,6 +891,16 @@ function startGame() {
 	cityGuessedLabelsLayerGroup.clearLayers();
 	cityRevealedLabelsLayerGroup.clearLayers();
 
+	// Um voo pendente pertence ao estado anterior: invalida-o sem marcar
+	// cidades, senão o próximo moveend marcaria cidades na rodada nova.
+	guessToken++;
+	activeGuessToken = guessToken;
+	if (activeGuessMoveendHandler) {
+		map.off("moveend", activeGuessMoveendHandler);
+		activeGuessMoveendHandler = null;
+	}
+	activeGuessList = [];
+
 	// Reset star combo
 	lastGuessTimestamp = 0;
 	consecutiveGuessCount = 0;
@@ -1059,24 +1073,10 @@ function searchName() {
     }
 	let name = document.getElementById("search").value;
 	if(name.trim() == "") {
-		if (activeGuessList.length > 0) {
-			let tokenEmpty = ++guessToken;
-			activeGuessToken = tokenEmpty;
-			for (let i = 0; i < activeGuessList.length; i++) {
-				let prevCity = activeGuessList[i];
-				let nearbyCities = nearCities(prevCity);
-				for (let n = 0; n < nearbyCities.length; n++) {
-					let nearbyCity = nearbyCities[n];
-					let guessedNowPrev = nearbyCity.properties.id == prevCity.properties.id;
-					markCity(nearbyCity, guessedNowPrev, false, true);
-				}
-			}
-			if (activeGuessList.length > 0) {
-				let lastCity = activeGuessList[activeGuessList.length - 1];
-				map.setView([lastCity.geometry.coordinates[1], lastCity.geometry.coordinates[0]], Math.max(6, map.getZoom()), {animate: false});
-			}
-			activeGuessList = [];
-		}
+		// Enter vazio também cancela o voo em andamento: as cidades que ainda
+		// faltavam são marcadas de imediato (pontuação/medalhas preservados) e
+		// o mapa fica na última delas.
+		cancelActiveGuess(true);
         return;
     }
 
@@ -1104,19 +1104,11 @@ function searchName() {
 		return;
 	}
 
-	let token = ++guessToken;
-	if (activeGuessList.length > 0 && activeGuessToken != token) {
-		for (let i = 0; i < activeGuessList.length; i++) {
-			let prevCity = activeGuessList[i];
-			let nearbyCities = nearCities(prevCity);
-			for (let n = 0; n < nearbyCities.length; n++) {
-				let nearbyCity = nearbyCities[n];
-				let guessedNowPrev = nearbyCity.properties.id == prevCity.properties.id;
-				markCity(nearbyCity, guessedNowPrev, false, true);
-			}
-		}
-		activeGuessList = [];
-	}
+	// Cancela a cadeia anterior (se houver) antes de mexer no mapa. O token é
+	// invalidado dentro de cancelActiveGuess, portanto o setView abaixo não
+	// faz o handler antigo continuar a cadeia antiga.
+	let pendingMedals = cancelActiveGuess(false);
+
 	// Ordem de marcação (não de renderização): não capitais antes das capitais
 	// e, dentro de cada grupo, menor população primeiro.
 	citiesGuessed.sort(compareMarkOrder);
@@ -1127,18 +1119,64 @@ function searchName() {
 
 	document.getElementById("search").value = "";
 	hideMessage();
-	activeGuessToken = token;
 	activeGuessList = citiesGuessed.slice();
 	// Track star combo for user guess
 	if (typeof handleStarComboOnUserGuess === 'function') {
 		handleStarComboOnUserGuess();
 	}
-	cityGuessed(citiesGuessed.slice(), true, token);
+	cityGuessed(citiesGuessed.slice(), true, activeGuessToken);
+	// cityGuessed limpa medalQueue ao iniciar a cadeia; devolve as medalhas
+	// ganhas pelas cidades marcadas no cancelamento para que também animem.
+	if (pendingMedals.length > 0) {
+		medalQueue = pendingMedals.concat(medalQueue);
+	}
+}
+
+// Marca a cidade e os arredores dela, com os mesmos efeitos da chegada de um
+// voo (pontuação, medalha do país, brilho/som de capital).
+function markGuessedCity(city, fromUserInput) {
+	let nearbyCities = nearCities(city);
+	nearbyCities.forEach(nearbyCity => {
+		let guessedNow = nearbyCity.properties.id == city.properties.id;
+		markCity(nearbyCity, guessedNow, false, fromUserInput);
+		// Conquista só quando o jogador digitou o nome (fromUserInput);
+		// a restauração do estado anterior também entra por aqui e não
+		// deve tocar som nem acender a borda.
+		if (guessedNow && fromUserInput && nearbyCity.capital) {
+			celebrateCapital();
+		}
+	});
+	scheduleSummaryBarsUpdate();
+}
+
+// Cancela o voo em curso marcando de imediato todas as cidades que ainda
+// faltavam. O token é invalidado ANTES de qualquer operação no mapa, porque
+// setView() dispara moveend de forma síncrona e o handler pendente do voo
+// antigo não pode marcar cidades nem continuar a cadeia antiga.
+function cancelActiveGuess(moveMap) {
+	let pending = activeGuessList;
+	activeGuessList = [];
+	activeGuessToken = ++guessToken;
+	if (activeGuessMoveendHandler) {
+		map.off("moveend", activeGuessMoveendHandler);
+		activeGuessMoveendHandler = null;
+	}
+	if (pending.length == 0) {
+		return [];
+	}
+	for (let i = 0; i < pending.length; i++) {
+		markGuessedCity(pending[i], true);
+	}
+	let pendingMedals = medalQueue.slice();
+	if (moveMap) {
+		let lastCity = pending[pending.length - 1];
+		map.setView([lastCity.geometry.coordinates[1], lastCity.geometry.coordinates[0]], Math.max(6, map.getZoom()), {animate: false});
+	}
+	return pendingMedals;
 }
 
 function cityGuessed(citiesGuessed, fromUserInput, token) {
 	if (fromUserInput && token !== undefined && token !== activeGuessToken) {
-		activeGuessList = [];
 		return;
 	}
 	let city = citiesGuessed[0];
@@ -1147,7 +1185,6 @@ function cityGuessed(citiesGuessed, fromUserInput, token) {
 	}
 	track("guess", { city: city.properties.displayName, pop: city.properties.pop, capital: city.capital });
 	if (fromUserInput && token !== undefined && token !== activeGuessToken) {
-		activeGuessList = [];
 		return;
 	}
 	map.flyTo([city.geometry.coordinates[1], city.geometry.coordinates[0]], Math.max(6, map.getZoom()));
@@ -1155,22 +1192,16 @@ function cityGuessed(citiesGuessed, fromUserInput, token) {
 		firstGuess = false;
 	}
 
-	map.once('moveend', function() {
+	let onMoveEnd = function() {
 		if (fromUserInput && token !== undefined && token !== activeGuessToken) {
-			activeGuessList = [];
+			// Cadeia cancelada: não tocar em activeGuessList (ela já pertence
+			// ao voo novo).
 			return;
 		}
-		let nearbyCities = nearCities(city);
-		nearbyCities.forEach(nearbyCity => {
-			let guessedNow = nearbyCity.properties.id == city.properties.id;
-			markCity(nearbyCity, guessedNow, false, fromUserInput);
-			// Conquista só quando o jogador digitou o nome (fromUserInput);
-			// a restauração do estado anterior também entra por aqui e não
-			// deve tocar som nem acender a borda.
-			if (guessedNow && fromUserInput && nearbyCity.capital) {
-				celebrateCapital();
-			}
-		});
+		if (fromUserInput) {
+			activeGuessMoveendHandler = null;
+		}
+		markGuessedCity(city, fromUserInput);
 
 		citiesGuessed.shift();
 		if (activeGuessList.length > 0) {
@@ -1183,7 +1214,6 @@ function cityGuessed(citiesGuessed, fromUserInput, token) {
 		}
 		if (citiesGuessed.length>0) {
 			if (fromUserInput && token !== undefined && token !== activeGuessToken) {
-				activeGuessList = [];
 				return;
 			}
 			cityGuessed(citiesGuessed, fromUserInput, token);
@@ -1193,7 +1223,11 @@ function cityGuessed(citiesGuessed, fromUserInput, token) {
 			}
 		}
 		scheduleSummaryBarsUpdate();
-	});
+	};
+	if (fromUserInput) {
+		activeGuessMoveendHandler = onMoveEnd;
+	}
+	map.once('moveend', onMoveEnd);
 }
 
 // Pré-filtro por caixa delimitadora antes da distância de grande círculo: em
