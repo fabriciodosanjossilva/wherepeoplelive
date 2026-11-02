@@ -61,6 +61,9 @@ function updateCountryMedalLevel(stats) {
 let initCenter = [-13, -49];
 let initZoom = 3;
 let radiusKm = 60;
+// Override em relação ao cities5000.txt: o GeoNames marca Tel Aviv como PPLA,
+// mas ela deve ser tratada como capital de Israel (geonameid 293397).
+let capitalOverrides = new Set(["293397"]);
 let labelsMinZoom = 5;
 let minorLabelsMinZoom = 7;
 let firstGuess;
@@ -218,7 +221,7 @@ async function processDB() {
 			countryStats.set(countryCode, stats);
 		}
 		city.properties.countryCode = stats.code;
-		city.capital = cityRow[7] == "PPLC" && countryCodeController == "";
+		city.capital = capitalOverrides.has(city.properties.id) || (cityRow[7] == "PPLC" && countryCodeController == "");
 		city.guessed = false;
 		city.revealed = false;
 		city.marked = false;

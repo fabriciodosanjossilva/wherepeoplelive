@@ -188,20 +188,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          19.93481,
-          60.09726
-        ]
-      },
-      "properties": {
-        "code": "AX",
-        "minor": true
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           47.7147114,
           40.3443785
         ]
@@ -888,20 +874,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -13.8792183,
-          25.0194665
-        ]
-      },
-      "properties": {
-        "code": "EH",
-        "minor": true
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           37.8478943,
           15.6481424
         ]
@@ -992,20 +964,6 @@
       },
       "properties": {
         "code": "FM",
-        "minor": true
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -6.77164,
-          62.00973
-        ]
-      },
-      "properties": {
-        "code": "FO",
         "minor": true
       }
     },
@@ -1455,20 +1413,6 @@
       "properties": {
         "code": "IT",
         "minor": false
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -2.10491,
-          49.18804
-        ]
-      },
-      "properties": {
-        "code": "JE",
-        "minor": true
       }
     },
     {
@@ -2442,20 +2386,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          34.6626015,
-          31.3389614
-        ]
-      },
-      "properties": {
-        "code": "PS",
-        "minor": true
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           -8.7135137,
           39.3019776
         ]
@@ -2925,20 +2855,6 @@
       "properties": {
         "code": "TJ",
         "minor": false
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -171.84804,
-          -9.20045
-        ]
-      },
-      "properties": {
-        "code": "TK",
-        "minor": true
       }
     },
     {
