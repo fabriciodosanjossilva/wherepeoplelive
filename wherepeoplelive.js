@@ -5,6 +5,8 @@ let cityRevealedLabelsLayerGroup;
 let countryBoundariesLayerGroup;
 let countryLabelsLayerGroup;
 let countryMinorLabelsLayerGroup;
+let territoryLabelsLayerGroup;
+let territoryMinorLabelsLayerGroup;
 
 let countries;
 let cities;
@@ -363,14 +365,24 @@ function initMap() {
 	countryMinorLabelsLayerGroup = L.layerGroup();
 	countries.features.forEach(feature => {
 		let country = feature.properties;
-		// Só rotula países que existem nas cidades carregadas. Territórios com
-		// override (por exemplo, PN, que conta para GB) não têm estatísticas
-		// próprias e não devem aparecer como país no mapa.
 		if (!countryStats.has(country.code)) {
 			return;
 		}
 		let layerGroup = country.minor ? countryMinorLabelsLayerGroup : countryLabelsLayerGroup;
 		L.tooltip([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {content: countryDisplayName(country.code), permanent: true, direction: "center", className: "countryLabel"}).addTo(layerGroup);
+	});
+
+	// Nova camada para territórios que não têm estatísticas próprias (ignorados
+	// pela camada de países por causa dos overrides de territórios overseas).
+	territoryLabelsLayerGroup = L.layerGroup();
+	territoryMinorLabelsLayerGroup = L.layerGroup();
+	countries.features.forEach(feature => {
+		let country = feature.properties;
+		if (countryStats.has(country.code)) {
+			return;
+		}
+		let layerGroup = country.minor ? territoryMinorLabelsLayerGroup : territoryLabelsLayerGroup;
+		L.tooltip([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {content: countryDisplayName(country.code), permanent: true, direction: "center", className: "territoryLabel"}).addTo(layerGroup);
 	});
 
 	citiesRenderer = L.canvas({ padding: 0.5 });
@@ -397,7 +409,9 @@ function updateMapLayerVisibility() {
 	 [cityRevealedLabelsLayerGroup, labelsMinZoom],
 	 [countryLabelsLayerGroup, labelsMinZoom],
 	 [countryMinorLabelsLayerGroup, minorLabelsMinZoom],
-	 [countryBoundariesLayerGroup, labelsMinZoom]].forEach(([layer, minZoom]) => {
+	 [countryBoundariesLayerGroup, labelsMinZoom],
+	 [territoryLabelsLayerGroup, labelsMinZoom],
+	 [territoryMinorLabelsLayerGroup, minorLabelsMinZoom]].forEach(([layer, minZoom]) => {
 		if (zoom >= minZoom) {
 			map.addLayer(layer);
 		}
