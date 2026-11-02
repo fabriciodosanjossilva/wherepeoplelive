@@ -64,6 +64,24 @@ let radiusKm = 60;
 // Override em relação ao cities5000.txt: o GeoNames marca Tel Aviv como PPLA,
 // mas ela deve ser tratada como capital de Israel (geonameid 293397).
 let capitalOverrides = new Set(["293397"]);
+// Override em relação ao cities5000.txt: territórios ultramarinos que o GeoNames
+// não marca com o país controlador na coluna cc2. Uma cidade de um território
+// listado passa a contar para o país controlador.
+let overseasTerritoriesOverrides = {
+	GB: ["AI", "BM", "GS", "GI", "KY", "FK", "PN", "TC", "VG", "MS", "SH", "IO"],
+	FR: ["GP", "GF", "MQ", "YT", "NC", "PF", "RE", "BL", "MF", "PM", "TF", "WF"],
+	NL: ["AW", "CW", "BQ", "SX"],
+	US: ["GU", "MP", "UM", "VI", "PR", "AS"],
+	IL: ["PS"],
+	CN: ["HK", "MO"]
+};
+// Invertido para consulta rápida por código de território no processamento do DB.
+let overseasTerritories = new Map();
+for (let controllingCode in overseasTerritoriesOverrides) {
+	for (let territoryCode of overseasTerritoriesOverrides[controllingCode]) {
+		overseasTerritories.set(territoryCode, controllingCode);
+	}
+}
 let labelsMinZoom = 5;
 let minorLabelsMinZoom = 7;
 let firstGuess;
@@ -209,11 +227,21 @@ async function processDB() {
 		city.properties.id = copyString(cityRow[0]);
 		city.properties.pop = parseInt(cityRow[14], 10);
 		city.properties.displayName = displayName;
+		let cityType = cityRow[7];
+		city.capital = capitalOverrides.has(city.properties.id) || cityType == "PPLC";
+		let countryCode = cityRow[8];
 		let countryCodeController = cityRow[9];
-		let countryCodeRaw = (countryCodeController == "" ? cityRow[8]: countryCodeController);
-		let countryCode = String(countryCodeRaw || "").trim().substring(0, 2).toUpperCase();
+		let overseasController = overseasTerritories.get(countryCode);
+		if (overseasController) {
+			countryCodeController = overseasController;
+		}
+		if (countryCodeController.length >= 1) {
+			countryCode = countryCodeController;
+			city.capital = false;
+		}
+		countryCode = String(countryCode || "").trim().substring(0, 2).toUpperCase();
 		if (countryCode == "") {
-			countryCode = String(countryCodeRaw || "").trim();
+			countryCode = String(countryCode || "").trim();
 		}
 		let stats = countryStats.get(countryCode);
 		if (!stats) {
@@ -232,7 +260,6 @@ async function processDB() {
 			countryStats.set(countryCode, stats);
 		}
 		city.properties.countryCode = stats.code;
-		city.capital = capitalOverrides.has(city.properties.id) || (cityRow[7] == "PPLC" && countryCodeController == "");
 		city.guessed = false;
 		city.revealed = false;
 		city.marked = false;
@@ -336,6 +363,12 @@ function initMap() {
 	countryMinorLabelsLayerGroup = L.layerGroup();
 	countries.features.forEach(feature => {
 		let country = feature.properties;
+		// Só rotula países que existem nas cidades carregadas. Territórios com
+		// override (por exemplo, PN, que conta para GB) não têm estatísticas
+		// próprias e não devem aparecer como país no mapa.
+		if (!countryStats.has(country.code)) {
+			return;
+		}
 		let layerGroup = country.minor ? countryMinorLabelsLayerGroup : countryLabelsLayerGroup;
 		L.tooltip([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {content: countryDisplayName(country.code), permanent: true, direction: "center", className: "countryLabel"}).addTo(layerGroup);
 	});
