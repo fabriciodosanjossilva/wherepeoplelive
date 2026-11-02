@@ -739,6 +739,15 @@ function formatSummaryValue(value) {
 	return (value < 0 ? "-" : "") + rounded.toString() + suffixes[suffixIndex];
 }
 
+// Percentuais também usam 3 dígitos significativos, mas mantendo os zeros à
+// direita (ex.: 45.0%): formatSummaryValue() os descartaria e mostraria "45%".
+function formatSummaryPercent(value) {
+	if (!isFinite(value) || value == 0) {
+		return "0";
+	}
+	return value.toPrecision(3);
+}
+
 function appendSummaryIcon(container, className, text) {
 	let icon = document.createElement("span");
 	icon.className = className;
@@ -821,11 +830,11 @@ function updateSummaryBars() {
 	totalsRow.className = "summaryBar";
 	let capitalsPercent = totalCapitalsCount > 0 ? (capitalsGuessedCount / totalCapitalsCount) * 100 : 0;
 	appendSummaryIcon(totalsRow, "capitalIcon", "");
-	appendSummaryText(totalsRow, formatSummaryValue(capitalsGuessedCount) + " (" + formatSummaryValue(capitalsPercent) + "%)");
+	appendSummaryText(totalsRow, formatSummaryValue(capitalsGuessedCount) + " (" + formatSummaryPercent(capitalsPercent) + "%)");
 	appendSummarySeparator(totalsRow);
 	let populationPercent = totalWorldPopulation > 0 ? (pointsPop / totalWorldPopulation) * 100 : 0;
 	appendSummaryIcon(totalsRow, "summaryBarIcon globe", "\ud83c\udf0d");
-	appendSummaryText(totalsRow, formatSummaryValue(populationPercent) + "%");
+	appendSummaryText(totalsRow, formatSummaryPercent(populationPercent) + "%");
 	container.appendChild(totalsRow);
 
 	// Mantém o combo de estrelas como a última linha do resumo.
@@ -1001,6 +1010,7 @@ function startGame() {
 	starLevels.forEach(function (level) {
 		level.count = 0;
 	});
+	loadStarCounts();
 	document.querySelectorAll(".starFly").forEach(function (element) {
 		element.remove();
 	});
@@ -1460,6 +1470,7 @@ function restartGame() {
 		}
 		localStorage.removeItem("state");
 		localStorage.removeItem("roundStart");
+		localStorage.removeItem("starCounts");
 		startGame();
 	}
 }
@@ -1490,6 +1501,33 @@ function convertSearchName(name) {
 // Cada acerto reinicia as três janelas de tempo. Um novo acerto dentro da
 // janela dourada (5s), prateada (10s) ou de bronze (15s) rende uma estrela do
 // respectivo metal.
+
+// Contagem de estrelas guardada em localStorage para sobreviver a reloads no
+// meio da rodada. restartGame() remove a chave, então o reinício zera o combo.
+function saveStarCounts() {
+	let counts = {};
+	starLevels.forEach(function (level) {
+		counts[level.key] = level.count;
+	});
+	localStorage.setItem("starCounts", JSON.stringify(counts));
+}
+
+function loadStarCounts() {
+	let saved = localStorage.getItem("starCounts");
+	if (!saved) {
+		return;
+	}
+	try {
+		let counts = JSON.parse(saved);
+		starLevels.forEach(function (level) {
+			let count = parseInt(counts[level.key], 10);
+			level.count = isFinite(count) && count > 0 ? count : 0;
+		});
+	}
+	catch (error) {
+		// Valor corrompido: ignora e recomeça a contagem do zero.
+	}
+}
 
 function starLevelByKey(key) {
 	for (let i = 0; i < starLevels.length; i++) {
@@ -1613,6 +1651,7 @@ function handleStarComboOnUserGuess() {
 		if (earnedKey) {
 			starLevelByKey(earnedKey).count++;
 			updateStarCounts();
+			saveStarCounts();
 			starAnimationBusyUntil = now + starAnimationDelay + starCenterHold + starFlightDuration + 50;
 			// Deixa o mapa terminar de marcar as cidades antes de chamar a
 			// atenção para a estrela ganha.
