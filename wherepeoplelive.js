@@ -88,6 +88,10 @@ let activeGuessMoveendHandler = null;
 // splash screen é exibida. Os textos traduzíveis começam vazios no HTML (via
 // data-i18n) e só são preenchidos em applyI18n(), após definir o idioma.
 let i18nStrings = {};
+// Textos em inglês, usados como fallback quando uma chave não existe no
+// idioma escolhido (hoje isso não acontece: todos os idiomas têm as mesmas
+// chaves, mas o arquivo é editado à mão e pode ficar incompleto).
+let i18nEnStrings = {};
 let i18nPromise = loadI18n();
 
 // Inicia o download dos arquivos de dados em segundo plano, mas somente após o
@@ -109,27 +113,34 @@ async function loadI18n() {
 	try {
 		let response = await fetch("i8n.json");
 		let translations = await response.json();
-		// navigator.language devolve algo como "pt-BR"; usa apenas o código
-		// base ("pt"), já que o repositório não varia por região.
-		let browserLanguages = navigator.languages || [navigator.language || "en"];
-		for (let browserLanguage of browserLanguages) {
-			let base = browserLanguage.split("-")[0].toLowerCase();
-			if (translations[base]) {
-				i18nStrings = translations[base];
-				currentLanguage = base;
-				return;
-			}
+		i18nEnStrings = translations["en"] || {};
+		// Respeita a ordem de preferência do navegador: só o idioma
+		// preferencial (o primeiro de navigator.languages) é considerado, e
+		// "pt-BR" vira "pt", já que o repositório não varia por região. Se ele
+		// não estiver no arquivo, usa o inglês.
+		let preferred = (navigator.languages && navigator.languages[0]) || navigator.language || "en";
+		let base = preferred.split("-")[0].toLowerCase();
+		if (translations[base]) {
+			i18nStrings = translations[base];
+			currentLanguage = base;
+			return;
 		}
-		i18nStrings = translations["en"];
+		i18nStrings = i18nEnStrings;
 	}
 	catch (error) {
 		// Sem traduções disponíveis: os textos permanecem vazios.
 		i18nStrings = {};
+		i18nEnStrings = {};
 	}
 }
 
 function i18n(key) {
-	return i18nStrings[key] || "";
+	// Chave ausente no idioma escolhido cai para o texto em inglês.
+	let text = i18nStrings[key];
+	if (text === undefined) {
+		text = i18nEnStrings[key];
+	}
+	return text || "";
 }
 
 function applyI18n() {
