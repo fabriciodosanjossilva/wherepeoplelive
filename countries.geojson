@@ -1238,20 +1238,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          114.5986115,
-          22.4041181
-        ]
-      },
-      "properties": {
-        "code": "HK",
-        "minor": true
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           -87.0836939,
           15.1185824
         ]
@@ -1917,20 +1903,6 @@
       "properties": {
         "code": "MN",
         "minor": false
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          113.4672309,
-          21.9379402
-        ]
-      },
-      "properties": {
-        "code": "MO",
-        "minor": true
       }
     },
     {
