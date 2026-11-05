@@ -155,12 +155,16 @@ async function loadI18n() {
 }
 
 function i18n(key) {
-	// Chave ausente no idioma escolhido cai para o texto em inglês.
+	// Chave ausente no idioma escolhido cai para o texto em inglês; se também
+	// não existir em inglês, devolve a própria chave para facilitar o diagnóstico.
 	let text = i18nStrings[key];
 	if (text === undefined) {
 		text = i18nEnStrings[key];
 	}
-	return text || "";
+	if (text === undefined) {
+		text = key;
+	}
+	return text;
 }
 
 function applyI18n() {
