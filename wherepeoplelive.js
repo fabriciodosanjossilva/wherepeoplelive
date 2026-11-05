@@ -5,8 +5,8 @@ let cityRevealedLabelsLayerGroup;
 let countryBoundariesLayerGroup;
 let countryLabelsLayerGroup;
 let countryMinorLabelsLayerGroup;
-let territoryLabelsLayerGroup;
-let territoryMinorLabelsLayerGroup;
+let nonAutonomousLabelsLayerGroup;
+let nonAutonomousMinorLabelsLayerGroup;
 
 let countries;
 let cities;
@@ -15,6 +15,10 @@ let citiesRenderer;
 let renderedCities;
 
 let countryStats = new Map();
+// Códigos de país que aparecem no cities5000.txt, antes de qualquer substituição
+// pelo país controlador. Usado para decidir quais nomes de países não autônomos
+// têm dados e devem ser exibidos.
+let countriesInTxt = new Set();
 let currentLanguage = "en";
 let countryDisplayNames = null;
 let countryBarsUpdatePending = false;
@@ -66,24 +70,6 @@ let radiusKm = 60;
 // Override em relação ao cities5000.txt: o GeoNames marca Tel Aviv como PPLA,
 // mas ela deve ser tratada como capital de Israel (geonameid 293397).
 let capitalOverrides = new Set(["293397"]);
-// Override em relação ao cities5000.txt: territórios ultramarinos que o GeoNames
-// não marca com o país controlador na coluna cc2. Uma cidade de um território
-// listado passa a contar para o país controlador.
-let overseasTerritoriesOverrides = {
-	GB: ["AI", "BM", "GS", "GI", "KY", "FK", "PN", "TC", "VG", "MS", "SH", "IO"],
-	FR: ["GP", "GF", "MQ", "YT", "NC", "PF", "RE", "BL", "MF", "PM", "TF", "WF"],
-	NL: ["AW", "CW", "BQ", "SX"],
-	US: ["GU", "MP", "UM", "VI", "PR", "AS"],
-	IL: ["PS"],
-	CN: ["HK", "MO"]
-};
-// Invertido para consulta rápida por código de território no processamento do DB.
-let overseasTerritories = new Map();
-for (let controllingCode in overseasTerritoriesOverrides) {
-	for (let territoryCode of overseasTerritoriesOverrides[controllingCode]) {
-		overseasTerritories.set(territoryCode, controllingCode);
-	}
-}
 let labelsMinZoom = 5;
 let minorLabelsMinZoom = 7;
 let firstGuess;
@@ -210,6 +196,15 @@ async function processDB() {
 	let [boundariesResponse, countriesResponse, response] = await dbFilesPromise;
 	countryBoundaries = await boundariesResponse.json();
 	countries = await countriesResponse.json();
+	// Países não autônomos têm "controller" no countries.geojson; a ausência da
+	// propriedade significa que o país é autônomo.
+	let countryControllersByCode = new Map();
+	countries.features.forEach(feature => {
+		let country = feature.properties;
+		if (country.controller) {
+			countryControllersByCode.set(country.code, country.controller);
+		}
+	});
 	let citiesText = new TextDecoder("utf-8").decode(await response.arrayBuffer());
 	let cityRows = citiesText.split(/\r?\n/).filter(line => line.trim() != "").map(line => line.split("\t"));
 	citiesText = null;
@@ -226,6 +221,7 @@ async function processDB() {
 	nameIndex = new Map();
 	cities = new Array(cityRows.length);
 	countryStats = new Map();
+	countriesInTxt = new Set();
 	for (let c = 0; c < order.length; c++) {
 		let cityRow = cityRows[order[c]];
 		let displayName = copyString(cityRow[1]);
@@ -235,19 +231,15 @@ async function processDB() {
 		city.properties.displayName = displayName;
 		let cityType = cityRow[7];
 		city.capital = capitalOverrides.has(city.properties.id) || cityType == "PPLC";
-		let countryCode = cityRow[8];
-		let countryCodeController = cityRow[9];
-		let overseasController = overseasTerritories.get(countryCode);
-		if (overseasController) {
-			countryCodeController = overseasController;
+		let txtCountryCode = String(cityRow[8] || "").trim().substring(0, 2).toUpperCase();
+		let countryCode = txtCountryCode;
+		if (txtCountryCode != "") {
+			countriesInTxt.add(txtCountryCode);
 		}
-		if (countryCodeController.length >= 1) {
-			countryCode = countryCodeController;
+		let countryController = countryControllersByCode.get(txtCountryCode);
+		if (countryController) {
+			countryCode = countryController;
 			city.capital = false;
-		}
-		countryCode = String(countryCode || "").trim().substring(0, 2).toUpperCase();
-		if (countryCode == "") {
-			countryCode = String(countryCode || "").trim();
 		}
 		let stats = countryStats.get(countryCode);
 		if (!stats) {
@@ -343,6 +335,12 @@ function addNameIndex(name, cityIndex) {
 	}
 }
 
+// "show" ausente vale true no countries.geojson; a propriedade só é gravada
+// quando o valor é false. "minor" ausente vale false e é usado como booleano.
+function countryShown(country) {
+	return country.show === undefined || country.show === true || country.show === "true";
+}
+
 function initMap() {
 	map = L.map('map', {
 		center: initCenter,
@@ -369,24 +367,26 @@ function initMap() {
 	countryMinorLabelsLayerGroup = L.layerGroup();
 	countries.features.forEach(feature => {
 		let country = feature.properties;
-		if (!countryStats.has(country.code)) {
+		if (!countryStats.has(country.code) || country.controller) {
 			return;
 		}
 		let layerGroup = country.minor ? countryMinorLabelsLayerGroup : countryLabelsLayerGroup;
 		L.tooltip([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {content: countryDisplayName(country.code), permanent: true, direction: "center", className: "countryLabel"}).addTo(layerGroup);
 	});
 
-	// Nova camada para territórios que não têm estatísticas próprias (ignorados
-	// pela camada de países por causa dos overrides de territórios overseas).
-	territoryLabelsLayerGroup = L.layerGroup();
-	territoryMinorLabelsLayerGroup = L.layerGroup();
+	// Camada dos países não autônomos que aparecem no cities5000.txt. O nome é
+	// exibido na posição do próprio país, mesmo que as cidades contem para o
+	// controlador. O campo "show" do countries.geojson permite ocultar itens;
+	// quando ausente, o país é exibido.
+	nonAutonomousLabelsLayerGroup = L.layerGroup();
+	nonAutonomousMinorLabelsLayerGroup = L.layerGroup();
 	countries.features.forEach(feature => {
 		let country = feature.properties;
-		if (countryStats.has(country.code)) {
+		if (!countriesInTxt.has(country.code) || !country.controller || !countryShown(country)) {
 			return;
 		}
-		let layerGroup = country.minor ? territoryMinorLabelsLayerGroup : territoryLabelsLayerGroup;
-		L.tooltip([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {content: countryDisplayName(country.code), permanent: true, direction: "center", className: "territoryLabel"}).addTo(layerGroup);
+		let layerGroup = country.minor ? nonAutonomousMinorLabelsLayerGroup : nonAutonomousLabelsLayerGroup;
+		L.tooltip([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], {content: countryDisplayName(country.code), permanent: true, direction: "center", className: "nonAutonomousLabel"}).addTo(layerGroup);
 	});
 
 	citiesRenderer = L.canvas({ padding: 0.5 });
@@ -414,8 +414,8 @@ function updateMapLayerVisibility() {
 	 [countryLabelsLayerGroup, labelsMinZoom],
 	 [countryMinorLabelsLayerGroup, minorLabelsMinZoom],
 	 [countryBoundariesLayerGroup, labelsMinZoom],
-	 [territoryLabelsLayerGroup, labelsMinZoom],
-	 [territoryMinorLabelsLayerGroup, minorLabelsMinZoom]].forEach(([layer, minZoom]) => {
+	 [nonAutonomousLabelsLayerGroup, labelsMinZoom],
+	 [nonAutonomousMinorLabelsLayerGroup, minorLabelsMinZoom]].forEach(([layer, minZoom]) => {
 		if (zoom >= minZoom) {
 			map.addLayer(layer);
 		}
